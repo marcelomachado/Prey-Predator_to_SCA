@@ -7,19 +7,16 @@ import java.util.Random;
  * @author gtbavi
  */
 public class Individual {
-    
     private int size;
-    private int quantity;
+    private int id;
+    private int[] prey;
+    private Double survival_value;
 
-    public Individual() {
-    }
-
-    public Individual(int quantity,int size) {
-        this.quantity = quantity;
+    public Individual(int size, int id) {
         this.size = size;
-        
+        this.id = id;
+        this.prey = new int[size];
     }
-    
 
     public int getSize() {
         return size;
@@ -29,31 +26,37 @@ public class Individual {
         this.size = size;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getId() {
+        return id;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setId(int id) {
+        this.id = id;
+    }   
+
+    public int[] getPrey() {
+        return prey;
     }
-   
-    private int[] generateRandomIndividual(){
-        int[] individual = new int[size];
+
+    public void setPrey(int[] prey) {
+        this.prey = prey;
+    }
+
+    public Double getSurvival_value() {
+        return survival_value;
+    }
+
+    public void setSurvival_value(Double survival_value) {
+        this.survival_value = survival_value;
+    }    
+    
+    public void generateRandomIndividual(){
+        //int[] individual = new int[size];
         Random random = new Random();
         for(int i =0; i<size;i++){
-            individual[i] = random.nextInt(2);
+            this.prey[i] = random.nextInt(2);
         }
-        return individual;
-    }
-    
-    public int[][] generatePopulation(){
-        int[][] population = new int[quantity][];
-        
-        for(int i=0; i< quantity; i++){
-            population[i] = generateRandomIndividual();
-        }
-        
-        return population;
+
     }
     
     

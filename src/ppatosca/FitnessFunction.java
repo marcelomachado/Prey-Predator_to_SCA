@@ -4,9 +4,9 @@ package ppatosca;
  *
  * @author gtbavi
  */
-public class PPA {
+public class FitnessFunction {
 
-    public Double FitnessFunction(Double... objetiveFunctions) {
+    public static Double ExecuteFitnessFunction(Double... objetiveFunctions) {
         Double fitnessValue = 0d;
         for (Double objtiveFunction : objetiveFunctions) {
             fitnessValue += objtiveFunction;
@@ -15,7 +15,7 @@ public class PPA {
     }
 
     // O1
-    public Double ConceptsOF(LearningMaterial[] LMs, int[] individual, Learner learner, Concept[] concepts) {
+    public static Double ConceptsOF(LearningMaterial[] LMs, int[] individual, Learner learner, Concept[] concepts) {
         int qntt_1 = 0;
         Double sum = 0d;
 
@@ -33,7 +33,7 @@ public class PPA {
     }
 
     // O2
-    public Double DifficultyOF(LearningMaterial[] LMs, int[] individual, Learner learner) {
+    public static Double DifficultyOF(LearningMaterial[] LMs, int[] individual, Learner learner) {
         Double sum = 0d;
         int qntt_1 = 0;
         for (int i = 0; i < individual.length; i++) {
@@ -49,7 +49,7 @@ public class PPA {
     }
 
     // O3
-    public Double TimeOF(LearningMaterial[] LMs, int[] individual, Learner learner) {
+    public static Double TimeOF(LearningMaterial[] LMs, int[] individual, Learner learner) {
 
         int time_total = 0;
 
@@ -60,7 +60,7 @@ public class PPA {
     }
 
     // O4
-    public Double BalanceOF(LearningMaterial[] LMs, int[] individual, Learner learner, Concept[] concepts) {
+    public static Double BalanceOF(LearningMaterial[] LMs, int[] individual, Learner learner, Concept[] concepts) {
 
         Double sum = 0d;
         int learningGoal;
