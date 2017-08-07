@@ -15,18 +15,17 @@ public class PPA {
     }
 
     // O1
-    public Double ConceptsOF(LearningMaterial[] LMs, Individual individual, Learner learner, Concept[] concepts) {
-        short[] ind = individual.getIndividual();
+    public Double ConceptsOF(LearningMaterial[] LMs, int[] individual, Learner learner, Concept[] concepts) {
         int qntt_1 = 0;
         Double sum = 0d;
 
-        for (int i = 0; i < ind.length; i++) {
-            qntt_1 += ind[i];
+        for (int i = 0; i < individual.length; i++) {
+            qntt_1 += individual[i];
         }
 
-        for (int i = 0; i < ind.length; i++) {
+        for (int i = 0; i < individual.length; i++) {
             for (Concept concept : concepts) {
-                sum += ind[i] * Math.abs((concept.getLMs().contains(LMs[i]) ? 1 : 0) - ((learner.getLearningGoals().contains(concept)) ? 1 : 0));
+                sum += individual[i] * Math.abs((concept.getLMs().contains(LMs[i]) ? 1 : 0) - ((learner.getLearningGoals().contains(concept)) ? 1 : 0));
             }
         }
 
@@ -34,16 +33,15 @@ public class PPA {
     }
 
     // O2
-    public Double DifficultyOF(LearningMaterial[] LMs, Individual individual, Learner learner) {
-        short[] ind = individual.getIndividual();
+    public Double DifficultyOF(LearningMaterial[] LMs, int[] individual, Learner learner) {
         Double sum = 0d;
         int qntt_1 = 0;
-        for (int i = 0; i < ind.length; i++) {
-            sum += ind[i] * Math.abs(LMs[i].getDificulty() - learner.getAbilityLevel());
+        for (int i = 0; i < individual.length; i++) {
+            sum += individual[i] * Math.abs(LMs[i].getDificulty() - learner.getAbilityLevel());
         }
 
-        for (int i = 0; i < ind.length; i++) {
-            qntt_1 += ind[i];
+        for (int i = 0; i < individual.length; i++) {
+            qntt_1 += individual[i];
         }
 
         return sum / qntt_1;
@@ -51,27 +49,26 @@ public class PPA {
     }
 
     // O3
-    public Double TimeOF(LearningMaterial[] LMs, Individual individual, Learner learner) {
-        short[] ind = individual.getIndividual();
+    public Double TimeOF(LearningMaterial[] LMs, int[] individual, Learner learner) {
+
         int time_total = 0;
 
-        for (int i = 0; i < ind.length; i++) {
-            time_total += LMs[i].getTime() * ind[i];
+        for (int i = 0; i < individual.length; i++) {
+            time_total += LMs[i].getTime() * individual[i];
         }
         return Math.max(0d, (learner.getLower_time() - time_total)) + Math.max(0d, (time_total - learner.getUpper_time()));
     }
 
     // O4
-    public Double BalanceOF(LearningMaterial[] LMs, Individual individual, Learner learner, Concept[] concepts) {
-        short[] ind = individual.getIndividual();
+    public Double BalanceOF(LearningMaterial[] LMs, int[] individual, Learner learner, Concept[] concepts) {
 
         Double sum = 0d;
         int learningGoal;
 
         int relevantConcepts_k = 0;
-        for (int k = 0; k < ind.length; k++) {
+        for (int k = 0; k < individual.length; k++) {
             for (Concept concept_k : concepts) {
-                relevantConcepts_k += ind[k] * (concept_k.getLMs().contains(LMs[k]) ? 1 : 0);
+                relevantConcepts_k += individual[k] * (concept_k.getLMs().contains(LMs[k]) ? 1 : 0);
             }
         }
 
@@ -90,8 +87,8 @@ public class PPA {
                 continue;
             }
 
-            for (int i = 0; i < ind.length; i++) {
-                relevantConcepts += ind[i] * (concept.getLMs().contains(LMs[i]) ? 1 : 0);
+            for (int i = 0; i < individual.length; i++) {
+                relevantConcepts += individual[i] * (concept.getLMs().contains(LMs[i]) ? 1 : 0);
             }
 
             sum += learningGoal * Math.abs(relevantConcepts - div);
