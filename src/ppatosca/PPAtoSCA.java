@@ -64,7 +64,7 @@ public class PPAtoSCA {
         Double better_survival_value = 9999999999d;
         
         ArrayList<Individual> individuals = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             Individual individual = new Individual(3, i);
             individual.generateRandomIndividual();
             individual.setSurvival_value(FitnessFunction.ExecuteFitnessFunction(FitnessFunction.ConceptsOF(LMs, individual.getPrey(), learner, conc), 
@@ -87,10 +87,17 @@ public class PPAtoSCA {
         population.setBest_prey_id(better_survival_value_id);
         population.setPredator_id(worst_survival_value_id);
         System.out.println(population.toString());
-       
-//        for(Individual individual : population.getIndividuals()){
-//            System.out.println(FitnessFunction.ExecuteFitnessFunction(FitnessFunction.ConceptsOF(LMs, individual.getPrey(), learner, conc), FitnessFunction.DifficultyOF(LMs, individual.getPrey(), learner), FitnessFunction.TimeOF(LMs, individual.getPrey(), learner), FitnessFunction.BalanceOF(LMs, individual.getPrey(), learner, conc)));
-//        }
+        
+        population.movePrey(better_survival_value_id, worst_survival_value_id);
+        // teste similaridade
+//        Individual individual_0 = new Individual(3, 0);
+//        Individual individual_1 = new Individual(3, 1);
+//        int [] p = {1,0,1};
+//        int [] k = {1,1,0};
+//        individual_0.setPrey(p);
+//        individual_1.setPrey(k);
+//        System.out.printf("%.2f",Population.similarity(individual_0, individual_1));
+
     }
 
 }

@@ -62,7 +62,7 @@ public class Population {
         this.ordinary_preys_ids = ordinary_preys_ids;
     }
     
-    public void MovePrey(int prey_id, int predator_id ){
+    public void movePrey(int prey_id, int predator_id ){
         HashMap<Integer,Double> follow_up_value = new HashMap<>();
         Double follow_up;
         Individual prey_following = individuals.get(prey_id);
@@ -72,15 +72,48 @@ public class Population {
                 preys_followed.add(ind);
                 follow_up = similarity(prey_following, ind)/ind.getSurvival_value();
                 follow_up_value.put(ind.getId(),follow_up);
+                
                 System.out.println("seguida: "+ind.getId()+" follow up: "+follow_up);
             }
         }
-        
+        int [ ]roullet = createRoullet(follow_up_value);
+        System.out.println("Roleta: ");
+        for(int i =0; i<roullet.length;i++){
+            System.out.print(roullet[i]+" ");
+            
+        }
                 
     }
     
-    public void MovePredator(int predator_id){
+    public void movePredator(int predator_id){
         
+    }
+    
+    public int[] createRoullet(HashMap<Integer,Double> follow_up_value){
+        int[] roullet = new int[follow_up_value.size()];        
+        Double div = 0d;
+        int roullet_start = 0;
+        int roullet_quantity = 0;
+        for (Double value: follow_up_value.values()){
+            div +=Math.pow(value, 2);
+        }
+        
+        for(Integer key: follow_up_value.keySet()){
+            roullet_quantity += Math.floor((Math.pow(follow_up_value.get(key),2)/div)*(follow_up_value.size()));
+            for(int i =roullet_start; i<roullet_quantity;i++){
+                roullet[i] = key;
+            }
+            roullet_start = roullet_quantity;
+        }
+               
+        return roullet;
+    }
+    
+    public int roulletResult(int[] roullet){
+        Random random = new Random();
+        int random_number = random.nextInt(roullet.length);
+        
+        return roullet[random_number];
     }
     
     public static Double similarity(Individual x, Individual y)
