@@ -5,6 +5,8 @@ package ppatosca;
  * @author gtbavi
  */
 public class FitnessFunction {
+    
+    private static final Double COMPLETED_COURSE = 999999999d;
 
     public static Double ExecuteFitnessFunction(Double... objetiveFunctions) {
         Double fitnessValue = 0d;
@@ -29,7 +31,7 @@ public class FitnessFunction {
             }
         }
 
-        return sum / qntt_1;
+        return (qntt_1 !=0) ? (sum/qntt_1): COMPLETED_COURSE;
     }
 
     // O2
@@ -44,7 +46,7 @@ public class FitnessFunction {
             qntt_1 += individual[i];
         }
 
-        return sum / qntt_1;
+        return (qntt_1 !=0) ? (sum/qntt_1): COMPLETED_COURSE;
 
     }
 

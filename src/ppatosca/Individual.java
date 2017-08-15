@@ -7,6 +7,7 @@ import java.util.Random;
  * @author gtbavi
  */
 public class Individual {
+
     private int size;
     private int id;
     private int[] prey;
@@ -32,7 +33,7 @@ public class Individual {
 
     public void setId(int id) {
         this.id = id;
-    }   
+    }
 
     public int[] getPrey() {
         return prey;
@@ -48,16 +49,39 @@ public class Individual {
 
     public void setSurvival_value(Double survival_value) {
         this.survival_value = survival_value;
-    }    
-    
-    public void generateRandomIndividual(){
+    }
+
+    public void generateRandomIndividual() {
         //int[] individual = new int[size];
         Random random = new Random();
-        for(int i =0; i<size;i++){
+        for (int i = 0; i < size; i++) {
             this.prey[i] = random.nextInt(2);
         }
 
     }
-    
-    
+
+    public void generateIndividualTest(int i) {
+        switch (i) {
+            case 1:
+                this.prey = new int[]{1, 1, 1, 0, 0};
+                break;
+            case 2:
+                this.prey = new int[]{0, 1, 1, 1, 0};
+                break;
+            case 3:
+                this.prey = new int[]{0, 1, 1, 0, 1};
+                break;
+            case 4:
+                this.prey = new int[]{0, 1, 0, 1, 1};
+                break;
+            case 5:
+                this.prey = new int[]{0, 1, 0, 0, 0};
+                break;
+            default:
+                generateRandomIndividual();
+                
+        }
+
+    }
+
 }
