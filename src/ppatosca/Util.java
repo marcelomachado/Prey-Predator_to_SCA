@@ -48,5 +48,21 @@ public class Util {
         }
         return result;
     }
+            
+    public static Double similarity(Individual x, Individual y) {
+        int div = 0;
+        for (int i = 0; i < x.getSize(); i++) {
+            div += x.getPrey()[i] * y.getPrey()[i];
+        }
+        return div / (norm(x) * norm(y));
+    }
+
+    public static Double norm(Individual x) {
+        Double norm = 0d;
+        for (int i = 0; i < x.getSize(); i++) {
+            norm += Math.pow(x.getPrey()[i], 2);
+        }
+        return Math.sqrt(norm);
+    }
 
 }

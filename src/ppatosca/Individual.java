@@ -82,9 +82,7 @@ public class Individual {
                 
         }
     }
-    //TODO utilizar função de fitness pra calcular SV
-    public static Double generateSurvivalValue(int[] prey){
-        return Double.MAX_VALUE;
-    }
+
+
 
 }

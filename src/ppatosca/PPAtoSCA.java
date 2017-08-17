@@ -85,14 +85,17 @@ public class PPAtoSCA {
         Double better_survival_value = 9999999999d;
         
         ArrayList<Individual> individuals = new ArrayList<>();
+        PPA ppa = new PPA(LMs, learner, conc);
         for (int i = 1; i <=5; i++) {
             Individual individual = new Individual(5, i);
             //individual.generateRandomIndividual();
             individual.generateIndividualTest(i);
-            individual.setSurvival_value(FitnessFunction.ExecuteFitnessFunction(FitnessFunction.ConceptsOF(LMs, individual.getPrey(), learner, conc), 
-                    FitnessFunction.DifficultyOF(LMs, individual.getPrey(), learner), 
-                    FitnessFunction.TimeOF(LMs, individual.getPrey(), learner), 
-                    FitnessFunction.BalanceOF(LMs, individual.getPrey(), learner, conc)));
+            
+            
+            individual.setSurvival_value(ppa.executeFitnessFunction(ppa.conceptsObjetiveFunction(individual.getPrey()), 
+                    ppa.difficultyObjetiveFunction(individual.getPrey()), 
+                    ppa.timeObjetiveFunction(individual.getPrey()), 
+                    ppa.balanceObjetiveFunction(individual.getPrey())));
             
             individuals.add(individual);
             
@@ -108,17 +111,18 @@ public class PPAtoSCA {
         Population population = new Population(individuals);
         population.setBest_prey_id(better_survival_value_id);
         population.setPredator_id(worst_survival_value_id);
+        ppa.setPopulation(population);
         System.out.println(population.toString());
         
-        Individual new_indiIndividual = population.movePrey(better_survival_value_id, worst_survival_value_id,1d,1d);
+        Individual new_indiIndividual = ppa.movePrey(better_survival_value_id, worst_survival_value_id,1d,1d);
         
         individuals.get(better_survival_value_id -1).setId(new_indiIndividual.getId());
         individuals.get(better_survival_value_id -1).setPrey(new_indiIndividual.getPrey());
         individuals.get(better_survival_value_id -1).setSize(new_indiIndividual.getSize());
-        individuals.get(better_survival_value_id -1).setSurvival_value(FitnessFunction.ExecuteFitnessFunction(FitnessFunction.ConceptsOF(LMs, new_indiIndividual.getPrey(), learner, conc), 
-                    FitnessFunction.DifficultyOF(LMs, new_indiIndividual.getPrey(), learner), 
-                    FitnessFunction.TimeOF(LMs, new_indiIndividual.getPrey(), learner), 
-                    FitnessFunction.BalanceOF(LMs, new_indiIndividual.getPrey(), learner, conc)));
+        individuals.get(better_survival_value_id -1).setSurvival_value(ppa.executeFitnessFunction(ppa.conceptsObjetiveFunction(new_indiIndividual.getPrey()), 
+                    ppa.difficultyObjetiveFunction(new_indiIndividual.getPrey()), 
+                    ppa.timeObjetiveFunction(new_indiIndividual.getPrey()), 
+                    ppa.balanceObjetiveFunction(new_indiIndividual.getPrey())));
         
         System.out.println(population.toString());
         // teste similaridade
