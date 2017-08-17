@@ -80,7 +80,7 @@ public class PPAtoSCA {
         
         
         int worst_survival_value_id=0;
-        int better_survival_value_id=0;
+        int best_survival_value_id=0;
         Double worst_survival_value = 0d;
         Double better_survival_value = 9999999999d;
         
@@ -90,12 +90,8 @@ public class PPAtoSCA {
             Individual individual = new Individual(5, i);
             //individual.generateRandomIndividual();
             individual.generateIndividualTest(i);
-            
-            
-            individual.setSurvival_value(ppa.executeFitnessFunction(ppa.conceptsObjetiveFunction(individual.getPrey()), 
-                    ppa.difficultyObjetiveFunction(individual.getPrey()), 
-                    ppa.timeObjetiveFunction(individual.getPrey()), 
-                    ppa.balanceObjetiveFunction(individual.getPrey())));
+                        
+            individual.setSurvival_value(ppa.generateSurvivalValue(individual.getPrey()));
             
             individuals.add(individual);
             
@@ -105,24 +101,21 @@ public class PPAtoSCA {
             }
             if(individual.getSurvival_value() < better_survival_value){
                 better_survival_value = individual.getSurvival_value();
-                better_survival_value_id = i;                
+                best_survival_value_id = i;                
             }
         }
         Population population = new Population(individuals);
-        population.setBest_prey_id(better_survival_value_id);
+        population.setBest_prey_id(best_survival_value_id);
         population.setPredator_id(worst_survival_value_id);
         ppa.setPopulation(population);
         System.out.println(population.toString());
         
-        Individual new_indiIndividual = ppa.movePrey(better_survival_value_id, worst_survival_value_id,1d,1d);
+        Individual new_indiIndividual = ppa.movePrey(best_survival_value_id, worst_survival_value_id,1d,1d);
         
-        individuals.get(better_survival_value_id -1).setId(new_indiIndividual.getId());
-        individuals.get(better_survival_value_id -1).setPrey(new_indiIndividual.getPrey());
-        individuals.get(better_survival_value_id -1).setSize(new_indiIndividual.getSize());
-        individuals.get(better_survival_value_id -1).setSurvival_value(ppa.executeFitnessFunction(ppa.conceptsObjetiveFunction(new_indiIndividual.getPrey()), 
-                    ppa.difficultyObjetiveFunction(new_indiIndividual.getPrey()), 
-                    ppa.timeObjetiveFunction(new_indiIndividual.getPrey()), 
-                    ppa.balanceObjetiveFunction(new_indiIndividual.getPrey())));
+//        individuals.get(best_survival_value_id -1).setId(new_indiIndividual.getId());
+//        individuals.get(best_survival_value_id -1).setPrey(new_indiIndividual.getPrey());
+//        individuals.get(best_survival_value_id -1).setSize(new_indiIndividual.getSize());
+//        individuals.get(best_survival_value_id -1).setSurvival_value(ppa.generateSurvivalValue(new_indiIndividual.getPrey()));
         
         System.out.println(population.toString());
         // teste similaridade

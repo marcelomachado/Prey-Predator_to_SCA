@@ -1,6 +1,7 @@
 package ppatosca;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -61,12 +62,27 @@ public class PPA {
     public void setPopulation(Population population) {
         this.population = population;
     }
+    /**
+     * Update population values after movements
+     */
+    public void updatePopulation(){
+
+        Map<Integer,Double> population_survival_values = new HashMap<>();
+        for(Individual individual: population.getIndividuals()){
+            population_survival_values.put(individual.getId(),individual.getSurvival_value());
+        }
+        population_survival_values = Util.sortByValueAsc(population_survival_values);
+        
+        population.setBest_prey_id((int)population_survival_values.keySet().toArray()[0]);
+        population.setBest_prey_id((int)population_survival_values.keySet().toArray()[population.getSize_population()]);
+        
+    }
 
     public Individual movePrey(int prey_id, int predator_id, Double distance_factor, Double survival_value_factor) {
         Map<Integer, Double> follow_up_value = new HashMap<>();
         ArrayList<Individual> individuals = population.getIndividuals();
         Double follow_up;
-        // Identificadores começam sempre de 1 porém array list começa do zero portanto é necessário diminuir 1
+        // IDs always begin with 1, but arraylist begin from 0 then is necessary decrement 1
         Individual prey_following = individuals.get(prey_id - 1);
         for (Individual ind : individuals) {
             if (ind.getId() != prey_id && ind.getId() != predator_id) {
@@ -101,7 +117,8 @@ public class PPA {
                 individual.getPrey()[i] = individuals.get(followed_prey - 1).getPrey()[i];
             }
         }
-
+        individual.setSurvival_value(generateSurvivalValue(individual.getPrey()));
+        updatePopulation();
         return individual;
     }
 
