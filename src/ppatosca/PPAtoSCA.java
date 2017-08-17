@@ -110,7 +110,7 @@ public class PPAtoSCA {
         population.setPredator_id(worst_survival_value_id);
         System.out.println(population.toString());
         
-        Individual new_indiIndividual = population.movePrey(better_survival_value_id, worst_survival_value_id);
+        Individual new_indiIndividual = population.movePrey(better_survival_value_id, worst_survival_value_id,1d,1d);
         
         individuals.get(better_survival_value_id -1).setId(new_indiIndividual.getId());
         individuals.get(better_survival_value_id -1).setPrey(new_indiIndividual.getPrey());

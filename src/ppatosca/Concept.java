@@ -13,7 +13,6 @@ public class Concept {
     private ArrayList<Concept> outcomes;
     private ArrayList<LearningMaterial> LMs;
     
-
     public Concept() {
     }
 
@@ -23,7 +22,6 @@ public class Concept {
         this.LMs = LMs;
     }
     
-
     public int getId() {
         return id;
     }
@@ -55,8 +53,5 @@ public class Concept {
     public void setLMs(ArrayList<LearningMaterial> LMs) {
         this.LMs = LMs;
     }
-    
-    
-    
-    
+       
 }

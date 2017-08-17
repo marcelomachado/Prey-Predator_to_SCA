@@ -51,13 +51,13 @@ public class Individual {
         this.survival_value = survival_value;
     }
 
-    public void generateRandomIndividual() {
-        //int[] individual = new int[size];
+    public static int[] generateRandomPrey(int size) {
+        int[] prey = new int[size];
         Random random = new Random();
         for (int i = 0; i < size; i++) {
-            this.prey[i] = random.nextInt(2);
+            prey[i] = random.nextInt(2);
         }
-
+        return prey;
     }
 
     public void generateIndividualTest(int i) {
@@ -78,10 +78,13 @@ public class Individual {
                 this.prey = new int[]{0, 1, 0, 0, 0};
                 break;
             default:
-                generateRandomIndividual();
+                this.prey = generateRandomPrey(size);
                 
         }
-
+    }
+    //TODO utilizar função de fitness pra calcular SV
+    public static Double generateSurvivalValue(int[] prey){
+        return Double.MAX_VALUE;
     }
 
 }

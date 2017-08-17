@@ -61,36 +61,69 @@ public class Population {
         this.ordinary_preys_ids = ordinary_preys_ids;
     }
 
-    public Individual movePrey(int prey_id, int predator_id) {
+    public Individual movePrey(int prey_id, int predator_id, Double distance_factor, Double survival_value_factor) {
         Map<Integer, Double> follow_up_value = new HashMap<>();
 
         Double follow_up;
         // Identificadores começam sempre de 1 porém array list começa do zero portanto é necessário diminuir 1
         Individual prey_following = individuals.get(prey_id - 1);
-        ArrayList<Individual> preys_followed = new ArrayList<>();
         for (Individual ind : individuals) {
             if (ind.getId() != prey_id && ind.getId() != predator_id) {
-                preys_followed.add(ind);
-                follow_up = similarity(prey_following, ind) / ind.getSurvival_value();
+                follow_up = (distance_factor*similarity(prey_following, ind))+ (survival_value_factor*(1/ind.getSurvival_value()));
                 follow_up_value.put(ind.getId(), follow_up);
 
                 System.out.println("seguida: " + ind.getId() + " follow up: " + follow_up);
             }
         }
-
-        int[] roullet = createRoullet(follow_up_value);
+        int [] roullet = createRoullet(follow_up_value);
         System.out.println("Roleta: ");
         for (int i = 0; i < roullet.length; i++) {
             System.out.print(roullet[i] + " ");
 
         }
-        return moveByRoulletResult(prey_following, roullet);
+        System.out.println("\n");
+        return moveDirectionByRoulletResult(prey_following,roullet);
+    }    
+    /**
+     * 
+     * @param individual
+     * @param roullet
+     * @return 
+     */
+    private Individual moveDirectionByRoulletResult(Individual individual, int[] roullet) {
+        int followed_prey;
+        for(int i=0;i<individual.getPrey().length;i++){
+            followed_prey = roulletResult(roullet);
+            if(followed_prey!=0){
+                individual.getPrey()[i] = individuals.get(followed_prey -1).getPrey()[i];
+            }                       
+        }
+        
+        return individual;
     }
-
-    public void movePredator(int predator_id) {
-
+    /**
+     * 
+     * @param prey_id
+     * @param direction_length
+     * @return 
+     */
+    private Individual localSearchDirection(int prey_id, int direction_length){
+        Individual individual = individuals.get(prey_id - 1);
+        int size = individual.getSize();
+        int[] random_direction;
+        Double new_survival_value;
+        
+        for(int i=0;i<direction_length;i++){            
+            random_direction = Individual.generateRandomPrey(size);
+            new_survival_value = Individual.generateSurvivalValue(random_direction);            
+             if(new_survival_value < individual.getSurvival_value()){
+                individual.setPrey(random_direction);          
+                individual.setSurvival_value(new_survival_value);
+            }
+        }
+        return individual;
     }
-
+    
     public int[] createRoullet(Map<Integer, Double> follow_up_value) {
         follow_up_value = Util.sortByValueDesc(follow_up_value);
         int[] roullet = new int[follow_up_value.size()];
@@ -113,22 +146,15 @@ public class Population {
     }
 
     public int roulletResult(int[] roullet) {
-        Random random = new Random();
-        int random_number = random.nextInt(roullet.length);
-
-        return roullet[random_number];
+        return roullet[new Random().nextInt(roullet.length)];
     }
+    
+    public Individual moveDirectionBestPrey(int prey_id){
+        return new Individual(prey_id, prey_id);
+    }
+    
+    public void movePredator(int predator_id) {
 
-    private Individual moveByRoulletResult(Individual individual, int[] roullet) {
-        int followed_prey;
-        for(int i=0;i<individual.getPrey().length;i++){
-            followed_prey = roulletResult(roullet);
-            if(followed_prey!=0){
-                individual.getPrey()[i] = individuals.get(followed_prey -1).getPrey()[i];
-            }                       
-        }
-        
-        return individual;
     }
 
     public static Double similarity(Individual x, Individual y) {
