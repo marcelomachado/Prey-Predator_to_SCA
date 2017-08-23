@@ -64,5 +64,12 @@ public class Util {
         }
         return Math.sqrt(norm);
     }
+    
+    public static void printPrey(int[] prey){
+        for(int i=0;i<prey.length;i++){
+            System.out.print(prey[i]+" ");
+        }
+        System.out.println("");
+    }
 
 }
