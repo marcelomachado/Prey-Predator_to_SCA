@@ -5,13 +5,12 @@ package ppatosca;
  * @author gtbavi
  */
 public class LearningMaterial {
-    
+
     private String type;
     private Double dificulty;
-    private int time;
+    private int typical_learning_time;
     private int id;
     private String name;
-    
 
     public LearningMaterial() {
     }
@@ -32,12 +31,12 @@ public class LearningMaterial {
         this.dificulty = dificulty;
     }
 
-    public int getTime() {
-        return time;
+    public int getTypical_learning_time() {
+        return typical_learning_time;
     }
 
-    public void setTime(int time) {
-        this.time = time;
+    public void setTypical_learning_time(int typical_learning_time) {
+        this.typical_learning_time = typical_learning_time;
     }
 
     public int getId() {
@@ -54,6 +53,6 @@ public class LearningMaterial {
 
     public void setName(String name) {
         this.name = name;
-    }        
-    
+    }
+
 }

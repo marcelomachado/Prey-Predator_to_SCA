@@ -16,27 +16,27 @@ public class PPAtoSCA {
         LearningMaterial lm_1 = new LearningMaterial();
         lm_1.setId(1);
         lm_1.setDificulty(10d);
-        lm_1.setTime(50);
+        lm_1.setTypical_learning_time(50);
 
         LearningMaterial lm_2 = new LearningMaterial();
         lm_2.setId(2);
         lm_2.setDificulty(10d);
-        lm_2.setTime(50);
+        lm_2.setTypical_learning_time(50);
 
         LearningMaterial lm_3 = new LearningMaterial();
         lm_3.setId(3);
         lm_3.setDificulty(10d);
-        lm_3.setTime(50);
+        lm_3.setTypical_learning_time(50);
         
         LearningMaterial lm_4 = new LearningMaterial();
         lm_4.setId(4);
         lm_4.setDificulty(10d);
-        lm_4.setTime(25);
+        lm_4.setTypical_learning_time(25);
         
         LearningMaterial lm_5 = new LearningMaterial();
         lm_5.setId(5);
         lm_5.setDificulty(15d);
-        lm_5.setTime(90);
+        lm_5.setTypical_learning_time(90);
 
         LearningMaterial[] LMs = new LearningMaterial[5];
         LMs[0] = lm_1;

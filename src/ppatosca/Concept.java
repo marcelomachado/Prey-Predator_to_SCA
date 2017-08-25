@@ -7,12 +7,13 @@ import java.util.ArrayList;
  * @author gtbavi
  */
 public class Concept {
-    
+
     private int id;
-    private String name;    
-    private ArrayList<Concept> outcomes;
+    private String name;
+    private ArrayList<Concept> prerequisites;
     private ArrayList<LearningMaterial> LMs;
-    
+    private int level;
+
     public Concept() {
     }
 
@@ -21,7 +22,7 @@ public class Concept {
         this.name = name;
         this.LMs = LMs;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -38,12 +39,12 @@ public class Concept {
         this.name = name;
     }
 
-    public ArrayList<Concept> getOutcomes() {
-        return outcomes;
+    public ArrayList<Concept> getPrerequisites() {
+        return prerequisites;
     }
 
-    public void setOutcomes(ArrayList<Concept> outcomes) {
-        this.outcomes = outcomes;
+    public void setPrerequisites(ArrayList<Concept> prerequisites) {
+        this.prerequisites = prerequisites;
     }
 
     public ArrayList<LearningMaterial> getLMs() {
@@ -53,5 +54,13 @@ public class Concept {
     public void setLMs(ArrayList<LearningMaterial> LMs) {
         this.LMs = LMs;
     }
-       
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
 }

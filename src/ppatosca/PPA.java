@@ -1,7 +1,6 @@
 package ppatosca;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -62,35 +61,35 @@ public class PPA {
     public void setPopulation(Population population) {
         this.population = population;
     }
+
     /**
      * Update population values after movements
      */
-    public void updatePopulation(){
+    public void updatePopulation() {
 
-        Map<Integer,Double> population_survival_values = new HashMap<>();
-        for(Individual individual: population.getIndividuals()){
-            population_survival_values.put(individual.getId(),individual.getSurvival_value());
+        Map<Integer, Double> population_survival_values = new HashMap<>();
+        for (Individual individual : population.getIndividuals()) {
+            population_survival_values.put(individual.getId(), individual.getSurvival_value());
         }
         population_survival_values = Util.sortByValueAsc(population_survival_values);
-        
-        population.setBest_prey_id((int)population_survival_values.keySet().toArray()[0]);
-        population.setBest_prey_id((int)population_survival_values.keySet().toArray()[population.getSize_population()]);
-        
+
+        population.setBest_prey_id((int) population_survival_values.keySet().toArray()[0]);
+        population.setBest_prey_id((int) population_survival_values.keySet().toArray()[population.getSize_population()]);
+
     }
 
     public Individual movePrey(int prey_id, int predator_id, Double distance_factor, Double survival_value_factor) {
         Map<Integer, Double> follow_up_value = new HashMap<>();
         ArrayList<Individual> individuals = population.getIndividuals();
         Double follow_up;
-        
-        if(prey_id == population.getBest_prey_id()){
+
+        if (prey_id == population.getBest_prey_id()) {
             return localSearchAllDirections(prey_id);
         }
         // IDs always begin with 1, but arraylist begin from 0 then is necessary decrement 1
         Individual prey_following = individuals.get(prey_id - 1);
         for (Individual ind : individuals) {
-            
-            if (ind.getId() != prey_id && ind.getId() != predator_id) {
+            if (ind.getSurvival_value() < prey_following.getSurvival_value()) {
                 follow_up = (distance_factor * Util.similarity(prey_following, ind)) + (survival_value_factor * (1 / ind.getSurvival_value()));
                 follow_up_value.put(ind.getId(), follow_up);
 
@@ -103,7 +102,7 @@ public class PPA {
             System.out.print(roullet[i] + " ");
 
         }
-        System.out.println("\n");
+        System.out.println();
         return moveDirectionByRoulletResult(prey_following, roullet);
     }
 
@@ -150,18 +149,20 @@ public class PPA {
                 individual.setSurvival_value(new_survival_value);
             }
         }
-        if(individual.getSurvival_value()< population.getBest_prey_id()){            
-            population.setBest_prey_id(individual.getId());            
+        if (individual.getSurvival_value() < population.getBest_prey_id()) {
+            population.setBest_prey_id(individual.getId());
         }
         return individual;
     }
+
     /**
-     * Change 
+     * Change
+     *
      * @param prey_id
      * @param direction_length
-     * @return 
+     * @return
      */
-    private Individual localSearchAllDirections(int prey_id){
+    private Individual localSearchAllDirections(int prey_id) {
         ArrayList<Individual> individuals = population.getIndividuals();
         Individual individual = individuals.get(prey_id - 1);
         int size = individual.getSize();
@@ -169,36 +170,33 @@ public class PPA {
         int[] aux_prey;
         Double new_survival_value = individual.getSurvival_value();
         Double aux_survival_value;
-        
+
         System.out.print("Original: ");
         Util.printPrey(new_prey);
-                
+
         for (int i = 0; i < size; i++) {
-            //Alterar caso necessário método que gera direções             
             aux_prey = individual.getPrey().clone();
-            if(aux_prey[i] == 0){
+            if (aux_prey[i] == 0) {
                 aux_prey[i] = 1;
-            }
-            else{
+            } else {
                 aux_prey[i] = 0;
             }
             System.out.print("Nova presa: ");
             Util.printPrey(aux_prey);
-            
-            
-            
+
             aux_survival_value = generateSurvivalValue(aux_prey);
             System.out.print(aux_survival_value);
             System.out.println("");
             if (aux_survival_value < new_survival_value) {
                 new_survival_value = aux_survival_value;
-                new_prey = aux_prey;                
+                new_prey = aux_prey;
             }
         }
         individual.setPrey(new_prey);
         individual.setSurvival_value(new_survival_value);
-        if(individual.getSurvival_value()< population.getBest_prey_id()){            
-            population.setBest_prey_id(individual.getId());            
+        //Atualiza População
+        if (individual.getSurvival_value() < population.getBest_prey_id()) {
+            population.setBest_prey_id(individual.getId());
         }
         return individual;
     }
@@ -291,7 +289,7 @@ public class PPA {
         int time_total = 0;
 
         for (int i = 0; i < individual.length; i++) {
-            time_total += LMs[i].getTime() * individual[i];
+            time_total += LMs[i].getTypical_learning_time() * individual[i];
         }
         return Math.max(0d, (learner.getLower_time() - time_total)) + Math.max(0d, (time_total - learner.getUpper_time()));
     }
