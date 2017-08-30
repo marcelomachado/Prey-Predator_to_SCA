@@ -20,6 +20,14 @@ public class Learner {
     public Learner() {
     }
 
+    public Learner(int id, Double abilityLevel, int lower_time, int upper_time) {
+        this.id = id;
+        this.abilityLevel = abilityLevel;
+        this.lower_time = lower_time;
+        this.upper_time = upper_time;
+    }
+    
+
     public int getId() {
         return id;
     }

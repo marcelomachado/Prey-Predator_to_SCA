@@ -5,14 +5,21 @@ package ppatosca;
  * @author gtbavi
  */
 public class LearningMaterial {
-
-    private String type;
-    private Double dificulty;
-    private int typical_learning_time;
     private int id;
     private String name;
+    private String type;    
+    private int typical_learning_time;
+    private Double dificulty;       
 
     public LearningMaterial() {
+    }
+
+    public LearningMaterial(int id, String name, String type, int typical_learning_time, Double dificulty) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.typical_learning_time = typical_learning_time;
+        this.dificulty = dificulty;
     }
 
     public String getType() {

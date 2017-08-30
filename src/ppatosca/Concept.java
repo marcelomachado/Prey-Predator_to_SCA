@@ -16,6 +16,13 @@ public class Concept {
 
     public Concept() {
     }
+    
+
+    public Concept(int id, String name, int level) {
+        this.id = id;
+        this.name = name;
+        this.level = level;
+    }
 
     public Concept(int id, String name, ArrayList<LearningMaterial> LMs) {
         this.id = id;

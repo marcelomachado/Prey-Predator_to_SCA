@@ -12,29 +12,29 @@ import java.util.Random;
 public class PPA {
 
     private static final Double COURSE_COMPLETED = 999999999d;
-    private LearningMaterial[] LMs;
+    private ArrayList<LearningMaterial> LMs;
     private Learner learner;
-    private Concept[] concepts;
+    private ArrayList<Concept> concepts;
     private Population population;
 
-    public PPA(LearningMaterial[] LMs, Learner learner, Concept[] concepts) {
+    public PPA(ArrayList<LearningMaterial> LMs, Learner learner, ArrayList<Concept>  concepts) {
         this.LMs = LMs;
         this.learner = learner;
         this.concepts = concepts;
     }
 
-    public PPA(LearningMaterial[] LMs, Learner learner, Concept[] concepts, Population population) {
+    public PPA(ArrayList<LearningMaterial> LMs, Learner learner, ArrayList<Concept>  concepts, Population population) {
         this.LMs = LMs;
         this.learner = learner;
         this.concepts = concepts;
         this.population = population;
     }
 
-    public LearningMaterial[] getLMs() {
+    public ArrayList<LearningMaterial> getLMs() {
         return LMs;
     }
 
-    public void setLMs(LearningMaterial[] LMs) {
+    public void setLMs(ArrayList<LearningMaterial> LMs) {
         this.LMs = LMs;
     }
 
@@ -46,11 +46,11 @@ public class PPA {
         this.learner = learner;
     }
 
-    public Concept[] getConcepts() {
+    public ArrayList<Concept>  getConcepts() {
         return concepts;
     }
 
-    public void setConcepts(Concept[] concepts) {
+    public void setConcepts(ArrayList<Concept>  concepts) {
         this.concepts = concepts;
     }
 
@@ -260,7 +260,7 @@ public class PPA {
 
         for (int i = 0; i < individual.length; i++) {
             for (Concept concept : concepts) {
-                sum += individual[i] * Math.abs((concept.getLMs().contains(LMs[i]) ? 1 : 0) - ((learner.getLearningGoals().contains(concept)) ? 1 : 0));
+                sum += individual[i] * Math.abs((concept.getLMs().contains(LMs.get(i)) ? 1 : 0) - ((learner.getLearningGoals().contains(concept)) ? 1 : 0));
             }
         }
 
@@ -272,7 +272,7 @@ public class PPA {
         Double sum = 0d;
         int qntt_1 = 0;
         for (int i = 0; i < individual.length; i++) {
-            sum += individual[i] * Math.abs(LMs[i].getDificulty() - learner.getAbilityLevel());
+            sum += individual[i] * Math.abs(LMs.get(i).getDificulty() - learner.getAbilityLevel());
         }
 
         for (int i = 0; i < individual.length; i++) {
@@ -289,7 +289,7 @@ public class PPA {
         int time_total = 0;
 
         for (int i = 0; i < individual.length; i++) {
-            time_total += LMs[i].getTypical_learning_time() * individual[i];
+            time_total += LMs.get(i).getTypical_learning_time() * individual[i];
         }
         return Math.max(0d, (learner.getLower_time() - time_total)) + Math.max(0d, (time_total - learner.getUpper_time()));
     }
@@ -303,7 +303,7 @@ public class PPA {
         int relevantConcepts_k = 0;
         for (int k = 0; k < individual.length; k++) {
             for (Concept concept_k : concepts) {
-                relevantConcepts_k += individual[k] * (concept_k.getLMs().contains(LMs[k]) ? 1 : 0);
+                relevantConcepts_k += individual[k] * (concept_k.getLMs().contains(LMs.get(k)) ? 1 : 0);
             }
         }
 
@@ -323,7 +323,7 @@ public class PPA {
             }
 
             for (int i = 0; i < individual.length; i++) {
-                relevantConcepts += individual[i] * (concept.getLMs().contains(LMs[i]) ? 1 : 0);
+                relevantConcepts += individual[i] * (concept.getLMs().contains(LMs.get(i)) ? 1 : 0);
             }
 
             sum += learningGoal * Math.abs(relevantConcepts - div);

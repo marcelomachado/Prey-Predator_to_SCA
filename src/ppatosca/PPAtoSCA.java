@@ -1,5 +1,11 @@
 package ppatosca;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /**
@@ -10,98 +16,128 @@ public class PPAtoSCA {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.FileNotFoundException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, IOException {
+        // Read Concepts
 
-        LearningMaterial lm_1 = new LearningMaterial();
-        lm_1.setId(1);
-        lm_1.setDificulty(10d);
-        lm_1.setTypical_learning_time(50);
+        FileInputStream stream = new FileInputStream(new File(args[0]));
+        InputStreamReader reader = new InputStreamReader(stream);
+        BufferedReader br = new BufferedReader(reader);
+        String line = br.readLine();
 
-        LearningMaterial lm_2 = new LearningMaterial();
-        lm_2.setId(2);
-        lm_2.setDificulty(10d);
-        lm_2.setTypical_learning_time(50);
+        String[] ccp_info;
+        /**
+         * Concepts
+         */
+        ArrayList<Concept> concepts = new ArrayList<>();
+        while (line != null) {
+            ccp_info = line.split(";");
+            concepts.add(new Concept(Integer.parseInt(ccp_info[0]), ccp_info[1], Integer.parseInt(ccp_info[2])));
+            line = br.readLine();
+        }
+        stream = new FileInputStream(new File(args[1]));
+        reader = new InputStreamReader(stream);
+        br = new BufferedReader(reader);
 
-        LearningMaterial lm_3 = new LearningMaterial();
-        lm_3.setId(3);
-        lm_3.setDificulty(10d);
-        lm_3.setTypical_learning_time(50);
+        /**
+         * Prerequisites
+         */
+        line = br.readLine();
+        while (line != null) {
+            ccp_info = line.split(";");
+            if (ccp_info.length > 1) {
+                ArrayList<Concept> prerequisites = new ArrayList<>();
+                for (int i = 1; i < ccp_info.length; i++) {
+                    prerequisites.add(concepts.get(Integer.parseInt(ccp_info[i])));
+                }
+                concepts.get(Integer.parseInt(ccp_info[0])).setPrerequisites(prerequisites);
+            }
+
+            line = br.readLine();
+        }
+
+        /**
+         * Learning Materials
+         */
         
-        LearningMaterial lm_4 = new LearningMaterial();
-        lm_4.setId(4);
-        lm_4.setDificulty(10d);
-        lm_4.setTypical_learning_time(25);
+        stream = new FileInputStream(new File(args[2]));
+        reader = new InputStreamReader(stream);
+        br = new BufferedReader(reader);
+        line = br.readLine();
+        ArrayList<LearningMaterial> learningMaterials = new ArrayList<>();
+        while (line != null) {
+            ccp_info = line.split(";");
+            LearningMaterial learningMaterial = new LearningMaterial(Integer.parseInt(ccp_info[0]), ccp_info[1], ccp_info[2], Integer.parseInt(ccp_info[3]),Double.parseDouble(ccp_info[4]));
+            learningMaterials.add(learningMaterial);
+            Concept conceptMaterial = concepts.get(Integer.parseInt(ccp_info[5]));
+            if(conceptMaterial.getLMs() == null){
+                ArrayList<LearningMaterial> lMs = new ArrayList<>();
+                learningMaterials.add(learningMaterial);
+                conceptMaterial.setLMs(lMs);
+            }
+            else{
+                conceptMaterial.getLMs().add(learningMaterial);
+            }
+
+            line = br.readLine();
+        }        
+
+       /**
+        * Learner
+        */       
+        stream = new FileInputStream(new File(args[3]));
+        reader = new InputStreamReader(stream);
+        br = new BufferedReader(reader);
+        line = br.readLine();
+        ArrayList<Learner> learners= new ArrayList<>();
+        while (line != null) {
+            ccp_info = line.split(";");
+            Learner learner = new Learner(Integer.parseInt(ccp_info[0]),Double.parseDouble(ccp_info[1]),Integer.parseInt(ccp_info[2]) , Integer.parseInt(ccp_info[3]));
+            if(ccp_info.length >4){
+                for(int i = 4;i<ccp_info.length;i++){
+                    if(learner.getLearningGoals()==null){
+                        ArrayList<Concept> learningGoals = new ArrayList<>();
+                        learningGoals.add(concepts.get(i));                                                        
+                        learner.setLearningGoals(learningGoals);
+                    }
+                    else{
+                        learner.getLearningGoals().add(concepts.get(i));
+                    }
+                    
+                }
+            }
+            learners.add(learner);
+        }
         
-        LearningMaterial lm_5 = new LearningMaterial();
-        lm_5.setId(5);
-        lm_5.setDificulty(15d);
-        lm_5.setTypical_learning_time(90);
-
-        LearningMaterial[] LMs = new LearningMaterial[5];
-        LMs[0] = lm_1;
-        LMs[1] = lm_2;
-        LMs[2] = lm_3;
-        LMs[3] = lm_4;
-        LMs[4] = lm_5;
-
-        ArrayList<LearningMaterial> LMs_1 = new ArrayList<>();
-        LMs_1.add(lm_1);
-        LMs_1.add(lm_2);
+        br.close();
+        reader.close();
+        stream.close();
         
-        Concept conc_1 = new Concept(1, "Computer Science", LMs_1);
 
-        ArrayList<LearningMaterial> LMs_2 = new ArrayList<>();
-        LMs_2.add(lm_3);
-
-        Concept conc_2 = new Concept(2, "Multimedia System", LMs_2);
-        
-        ArrayList<LearningMaterial> LMs_3 = new ArrayList<>();
-        LMs_3.add(lm_4);
-        LMs_3.add(lm_5);
-        
-        Concept conc_3 = new Concept(3, "Computer Organization", LMs_3);
-
-        Learner learner = new Learner();
-        learner.setAbilityLevel(8d);
-        learner.setId(1);
-        learner.setLower_time(10);
-        learner.setUpper_time(100);
-
-        ArrayList<Concept> lg = new ArrayList<>();
-        lg.add(conc_2);
-
-        learner.setLearningGoals(lg);
-
-        Concept[] conc = new Concept[3];
-        conc[0] = conc_1;
-        conc[1] = conc_2;
-        conc[2] = conc_3;
-        
-        
-        int worst_survival_value_id=0;
-        int best_survival_value_id=0;
+        int worst_survival_value_id = 0;
+        int best_survival_value_id = 0;
         Double worst_survival_value = 0d;
         Double better_survival_value = 9999999999d;
-        
+
         ArrayList<Individual> individuals = new ArrayList<>();
-        PPA ppa = new PPA(LMs, learner, conc);
-        for (int i = 1; i <=5; i++) {
+        PPA ppa = new PPA(learningMaterials, learners.get(0), concepts);
+        for (int i = 1; i <= 5; i++) {
             Individual individual = new Individual(5, i);
             //individual.generateRandomIndividual();
             individual.generateIndividualTest(i);
-                        
+
             individual.setSurvival_value(ppa.generateSurvivalValue(individual.getPrey()));
-            
+
             individuals.add(individual);
-            
-            if(individual.getSurvival_value() > worst_survival_value){
+
+            if (individual.getSurvival_value() > worst_survival_value) {
                 worst_survival_value = individual.getSurvival_value();
-                worst_survival_value_id = i;                
+                worst_survival_value_id = i;
             }
-            if(individual.getSurvival_value() < better_survival_value){
+            if (individual.getSurvival_value() < better_survival_value) {
                 better_survival_value = individual.getSurvival_value();
-                best_survival_value_id = i;                
+                best_survival_value_id = i;
             }
         }
         Population population = new Population(individuals);
@@ -109,14 +145,13 @@ public class PPAtoSCA {
         population.setPredator_id(worst_survival_value_id);
         ppa.setPopulation(population);
         System.out.println(population.toString());
-        
-        Individual new_indiIndividual = ppa.movePrey(best_survival_value_id, worst_survival_value_id,1d,1d);
-        
+
+        Individual new_indiIndividual = ppa.movePrey(best_survival_value_id, worst_survival_value_id, 1d, 1d);
+
 //        individuals.get(best_survival_value_id -1).setId(new_indiIndividual.getId());
 //        individuals.get(best_survival_value_id -1).setPrey(new_indiIndividual.getPrey());
 //        individuals.get(best_survival_value_id -1).setSize(new_indiIndividual.getSize());
 //        individuals.get(best_survival_value_id -1).setSurvival_value(ppa.generateSurvivalValue(new_indiIndividual.getPrey()));
-        
         System.out.println(population.toString());
         // teste similaridade
 //        Individual individual_0 = new Individual(3, 0);
