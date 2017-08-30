@@ -1,9 +1,6 @@
 package ppatosca;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 
 /**
  *
@@ -11,15 +8,47 @@ import java.util.Random;
  */
 public class Population {
 
-    private int size_population;
-    private int best_prey_id;
-    private int predator_id; // Worst prey
-    private int[] ordinary_preys_ids;
+    private int sizePopulation;
+    private int bestPreyId;
+    private int predatorId; // Worst prey
+    private int[] ordinaryPreysIds;
     private ArrayList<Individual> individuals;
     
 
     public Population(ArrayList<Individual> individuals) {
         this.individuals = individuals;
+    }
+
+    public int getSizePopulation() {
+        return sizePopulation;
+    }
+
+    public void setSizePopulation(int sizePopulation) {
+        this.sizePopulation = sizePopulation;
+    }
+
+    public int getBestPreyId() {
+        return bestPreyId;
+    }
+
+    public void setBestPreyId(int bestPreyId) {
+        this.bestPreyId = bestPreyId;
+    }
+
+    public int getPredatorId() {
+        return predatorId;
+    }
+
+    public void setPredatorId(int predatorId) {
+        this.predatorId = predatorId;
+    }
+
+    public int[] getOrdinaryPreysIds() {
+        return ordinaryPreysIds;
+    }
+
+    public void setOrdinaryPreysIds(int[] ordinaryPreysIds) {
+        this.ordinaryPreysIds = ordinaryPreysIds;
     }
 
     public ArrayList<Individual> getIndividuals() {
@@ -30,37 +59,7 @@ public class Population {
         this.individuals = individuals;
     }
 
-    public int getSize_population() {
-        return size_population;
-    }
-
-    public void setSize_population(int size_population) {
-        this.size_population = size_population;
-    }    
-
-    public int getBest_prey_id() {
-        return best_prey_id;
-    }
-
-    public void setBest_prey_id(int best_prey_id) {
-        this.best_prey_id = best_prey_id;
-    }
-
-    public int getPredator_id() {
-        return predator_id;
-    }
-
-    public void setPredator_id(int predator_id) {
-        this.predator_id = predator_id;
-    }
-
-    public int[] getOrdinary_preys_ids() {
-        return ordinary_preys_ids;
-    }
-
-    public void setOrdinary_preys_ids(int[] ordinary_preys_ids) {
-        this.ordinary_preys_ids = ordinary_preys_ids;
-    }
+    
         
 
     @Override
@@ -74,8 +73,8 @@ public class Population {
             returned += "\n";
             returned += "Survival value = " + individual.getSurvival_value() + "\n";
         }
-        returned += "\nBest prey = " + best_prey_id + "\n";
-        returned += "Predator = " + predator_id;
+        returned += "\nBest prey = " + bestPreyId + "\n";
+        returned += "Predator = " + predatorId;
 
         return returned;
     }

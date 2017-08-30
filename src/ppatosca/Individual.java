@@ -13,7 +13,7 @@ public class Individual {
     private int[] prey;
     private Double survival_value;
 
-    public Individual(int size, int id) {
+    public Individual(int id,int size) {
         this.size = size;
         this.id = id;
         this.prey = new int[size];
@@ -51,13 +51,12 @@ public class Individual {
         this.survival_value = survival_value;
     }
 
-    public static int[] generateRandomPrey(int size) {
-        int[] prey = new int[size];
+    public void generateRandomPrey() {
+        prey = new int[size];
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             prey[i] = random.nextInt(2);
         }
-        return prey;
     }
 
     public void generateIndividualTest(int i) {
@@ -78,7 +77,7 @@ public class Individual {
                 this.prey = new int[]{0, 1, 0, 0, 0};
                 break;
             default:
-                this.prey = generateRandomPrey(size);
+                generateRandomPrey();
                 
         }
     }
