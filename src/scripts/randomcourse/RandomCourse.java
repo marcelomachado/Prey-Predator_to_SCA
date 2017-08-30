@@ -3,6 +3,8 @@ package scripts.randomcourse;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -120,7 +122,7 @@ public class RandomCourse {
                     learningMaterialName += " " + connect[random.nextInt(connect.length)];
                 }
                 learningMaterialName += " " + learningMaterials[random.nextInt(learningMaterials.length)];
-                Double dificulty = ((double) (random.nextInt(11))) / 10;
+                Double dificulty = random.nextDouble();
                 int concept;
                 if (i < Integer.parseInt(args[0])) {
                     concept = i;
@@ -129,7 +131,7 @@ public class RandomCourse {
                 }
                 typicalLearningType = random.nextInt(11);
 
-                txtFile.append(i + ";" + learningMaterialName + ";" + learningMaterialType[random.nextInt(learningMaterialType.length)] + ";" + typicalLearningType + ";" + dificulty + ";" + concept + "\n");
+                txtFile.append(i + ";" + learningMaterialName + ";" + learningMaterialType[random.nextInt(learningMaterialType.length)] + ";" + typicalLearningType + ";" + round(dificulty,2) + ";" + concept + "\n");
 
             }
             txtFile.close();
@@ -138,15 +140,9 @@ public class RandomCourse {
         /**
          * Generate Learners
          */
-//         private int id;
-//    private HashMap<Concept, Double> score;
-//    private Double abilityLevel;
-//    private int lower_time;
-//    private int upper_time;
-//    private ArrayList<Concept> learningGoals;
         try (BufferedWriter txtFile = new BufferedWriter(new FileWriter(args[6]))) {
             for (int i = 0; i < Integer.parseInt(args[5]); i++) {
-                Double abilityLevel = ((double) (random.nextInt(11))) / 10;
+                Double abilityLevel = random.nextDouble();
                 int lower_time = random.nextInt(11);
                 int upper_time = random.nextInt(11) * 2;
                 String learningGoals = "";
@@ -156,15 +152,29 @@ public class RandomCourse {
                     int randomLearningGoal = random.nextInt(Integer.parseInt(args[0]));
                     if (!learningGoalsUsed.contains(randomLearningGoal)) {
                         learningGoalsUsed.add(randomLearningGoal);
-                        learningGoals += ";" +randomLearningGoal;
+                        learningGoals += ";" + randomLearningGoal;
                     }
 
                 }
-                txtFile.append(i + ";" + abilityLevel + ";" + lower_time + ";" + upper_time + learningGoals + "\n");
+                txtFile.append(i + ";" + round(abilityLevel,2) + ";" + lower_time + ";" + upper_time + learningGoals + "\n");
+            }
+
+        }
+
+        /**
+         * Generate Learners Score
+         */
+        try (BufferedWriter txtFile = new BufferedWriter(new FileWriter(args[7]))) {
+            for (int i = 0; i < Integer.parseInt(args[5]); i++) {
+                txtFile.append(i + "\n");
+                for (Concept concept : concepts) {
+                    txtFile.append(concept.id + ";" + round(random.nextDouble() * 10,2) + "\n");
+                }
             }
             txtFile.close();
 
         }
+
     }
 
     public static void printContepts(ArrayList<Concept> concepts, String file) throws IOException {
@@ -182,6 +192,16 @@ public class RandomCourse {
             txtFile.close();
         }
 
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
 }
