@@ -11,10 +11,20 @@ public class Concept {
     public int id;
     public String name;
     ArrayList<Integer> prerequisites;
+    public int level;
 
     public Concept(int id, String name) {
         this.id = id;
         this.name = name;
+        this.level = -1;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public int getId() {
