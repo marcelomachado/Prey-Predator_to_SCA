@@ -19,9 +19,7 @@ public class PPAtoSCA {
      * @param args the command line arguments
      * @throws java.io.FileNotFoundException
      */
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-        // Read Concepts
-
+    public static void main(String[] args) throws FileNotFoundException, IOException, CloneNotSupportedException {
         FileInputStream stream = new FileInputStream(new File(args[0]));
         InputStreamReader reader = new InputStreamReader(stream);
         BufferedReader br = new BufferedReader(reader);
@@ -114,16 +112,15 @@ public class PPAtoSCA {
         br = new BufferedReader(reader);
         line = br.readLine();
         Learner learner;
-        HashMap<Concept,Double> score = null;
+        HashMap<Concept, Double> score = null;
         while (line != null) {
             ccp_info = line.split(";");
             if (ccp_info.length == 1) {// get id
                 learner = learners.get(Integer.parseInt(ccp_info[0]));
                 score = new HashMap<>();
                 learner.setScore(score);
-            }
-            else{
-                score.put(concepts.get(Integer.parseInt(ccp_info[0])), Double.parseDouble(ccp_info[1]));                                
+            } else {
+                score.put(concepts.get(Integer.parseInt(ccp_info[0])), Double.parseDouble(ccp_info[1]));
             }
             line = br.readLine();
         }
@@ -131,13 +128,37 @@ public class PPAtoSCA {
         br.close();
         reader.close();
         stream.close();
-       
-        ArrayList<Individual> individuals = new ArrayList<>();
+
+        /**
+         * Population
+         */
         PPA ppa = new PPA(learningMaterials, learners.get(0), concepts);
+        ArrayList<Individual> bestIndividuals = new ArrayList<>();
+
         ppa.generatePopulation(10, learningMaterials.size());
         System.out.println(ppa.getPopulation().toString());
 
-//        Individual new_indiIndividual = ppa.movePrey(best_survival_value_id, worst_survival_value_id, 1d, 1d);
+        for (int j = 0; j < 10; j++) {
+            for (Individual individual : ppa.getPopulation().getIndividuals()) {
+                System.out.println("Moving: " + individual.getId() + " prey");
+                ppa.moveIndividual(individual.getId(), 1d, 1d, 1);
+
+            }
+            ppa.updatePopulation();
+            System.out.println(ppa.getPopulation().toString());
+
+            Individual bestIndividual = ppa.getPopulation().getIndividuals().get(ppa.getPopulation().getBestPreyId()).clone();
+
+            bestIndividuals.add(bestIndividual);
+        }
+
+        System.out.println();
+        for (Individual ind : bestIndividuals) {
+            for (int i = 0; i < ind.getPrey().length; i++) {
+                System.out.print(ind.getPrey()[i] + " ");
+            }
+            System.out.println("Survival value: " + ind.getSurvival_value());
+        }
 
     }
 

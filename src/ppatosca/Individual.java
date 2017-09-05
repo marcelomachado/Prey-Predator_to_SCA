@@ -6,14 +6,14 @@ import java.util.Random;
  *
  * @author gtbavi
  */
-public class Individual {
+public class Individual implements Cloneable {
 
     private int size;
     private int id;
     private int[] prey;
     private Double survival_value;
 
-    public Individual(int id,int size) {
+    public Individual(int id, int size) {
         this.size = size;
         this.id = id;
         this.prey = new int[size];
@@ -78,10 +78,13 @@ public class Individual {
                 break;
             default:
                 generateRandomPrey();
-                
+
         }
     }
 
-
+    @Override
+    protected Individual clone() throws CloneNotSupportedException {
+        return (Individual) super.clone();
+    }
 
 }
