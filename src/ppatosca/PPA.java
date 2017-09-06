@@ -129,7 +129,7 @@ public class PPA {
         int followedPrey;
         for (int i = 0; i < individual.getPrey().length; i++) {
             followedPrey = roulletResult(roullet);
-            if (followedPrey != 0) {
+            if (followedPrey != -1) {
                 individual.getPrey()[i] = individuals.get(followedPrey).getPrey()[i];
             }
         }
@@ -249,6 +249,8 @@ public class PPA {
     }
 
     public int roulletResult(int[] roullet) {
+        if(roullet.length == 0 )
+            return -1;
         return roullet[new Random().nextInt(roullet.length)];
     }
 
