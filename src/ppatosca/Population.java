@@ -13,7 +13,6 @@ public class Population {
     private int predatorId; // Worst prey
     private int[] ordinaryPreysIds;
     private ArrayList<Individual> individuals;
-    
 
     public Population(ArrayList<Individual> individuals) {
         this.individuals = individuals;
@@ -58,9 +57,6 @@ public class Population {
     public void setIndividuals(ArrayList<Individual> individuals) {
         this.individuals = individuals;
     }
-
-    
-        
 
     @Override
     public String toString() {

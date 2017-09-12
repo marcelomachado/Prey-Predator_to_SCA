@@ -15,10 +15,6 @@ import java.util.HashMap;
  */
 public class PPAtoSCA {
 
-    /**
-     * @param args the command line arguments
-     * @throws java.io.FileNotFoundException
-     */
     public static void main(String[] args) throws FileNotFoundException, IOException, CloneNotSupportedException {
         FileInputStream stream = new FileInputStream(new File(args[0]));
         InputStreamReader reader = new InputStreamReader(stream);
@@ -132,7 +128,7 @@ public class PPAtoSCA {
         /**
          * Population
          */
-        PPA ppa = new PPA(learningMaterials, learners.get(0), concepts);
+        PPA ppa = new PPA(learningMaterials, learners.get(1), concepts);
         ArrayList<Individual> bestIndividuals = new ArrayList<>();
 
         ppa.generatePopulation(10, learningMaterials.size());
@@ -159,7 +155,6 @@ public class PPAtoSCA {
             }
             System.out.println("Survival value: " + ind.getSurvival_value());
         }
-
     }
 
 }
