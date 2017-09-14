@@ -127,11 +127,13 @@ public class PPA {
     }
 
     public void movePredator(Individual predator, int minimalStepLength, int maximumStepLength) {
+        // Position of the second worst prey
         int followedPreyPosition = population.getOrdinaryPreysIds().length - 1;
+        // Second worst prey
         Individual individual = population.getIndividuals().get(population.getOrdinaryPreysIds()[followedPreyPosition]);
 
         int[] randomDirection = generateRandomPrey(individual.getSize());
-        Double uniformProbabilityDistribution = new Random().nextDouble();
+        Double uniformProbabilityDistribution = Util.round(new Random().nextDouble(),1);
         
         // lambda_max x [0..1]
         int stepLength = (int) Math.round(maximumStepLength * uniformProbabilityDistribution);
@@ -142,9 +144,10 @@ public class PPA {
         }
 
         Double similarity = Util.similarity(predator, individual);
-        uniformProbabilityDistribution = new Random().nextDouble();
+        uniformProbabilityDistribution = Util.round(new Random().nextDouble(),1);
         // |sim -1| x lambda_min x [0..1]
         stepLength = (int) Math.round(Math.abs(similarity - 1) * minimalStepLength * uniformProbabilityDistribution);
+        //stepLength = (int) Math.round(minimalStepLength * uniformProbabilityDistribution);
         steps = shuffleSteps(stepLength, individual.getPrey().length);
         
         //Following the second worst prey
@@ -165,7 +168,7 @@ public class PPA {
      */
     public int stepLength(Individual prey, Individual predator, int maximumStepLength, Double survivalValueFactor) {
         Double div = Math.pow(Math.E, survivalValueFactor * (1 - Util.similarity(prey, predator)));
-        Double uniformProbabilityDistribution = new Random().nextDouble();
+        Double uniformProbabilityDistribution = Util.round(new Random().nextDouble(),1);
         Double sup = maximumStepLength * uniformProbabilityDistribution;
         return (int) Math.round(sup / div);
     }
