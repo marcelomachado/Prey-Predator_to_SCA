@@ -132,12 +132,13 @@ public class PPAtoSCA {
         ArrayList<Individual> bestIndividuals = new ArrayList<>();
 
         ppa.generatePopulation(10, learningMaterials.size());
+        ppa.updatePopulation();
         System.out.println(ppa.getPopulation().toString());
 
-        for (int j = 0; j < 200; j++) {
+        for (int j = 0; j < 25; j++) {
             for (Individual individual : ppa.getPopulation().getIndividuals()) {
                 System.out.println("Moving: " + individual.getId() + " prey");
-                ppa.moveIndividual(individual.getId(), 1d, 1d, 1);
+                ppa.moveIndividual(individual.getId(), 1d, 1d, 40, individual.getSize(), 1);
 
             }
             ppa.updatePopulation();

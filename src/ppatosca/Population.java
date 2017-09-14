@@ -70,7 +70,12 @@ public class Population {
             returned += "Survival value = " + individual.getSurvival_value() + "\n";
         }
         returned += "\nBest prey = " + bestPreyId + "\n";
-        returned += "Predator = " + predatorId;
+        returned += "Predator = " + predatorId+"\n";
+        returned+="Ordinary Preys:";
+        for(int i =0;i<ordinaryPreysIds.length;i++){
+            returned+=" "+ordinaryPreysIds[i];
+        }
+        returned+="\n";
 
         return returned;
     }
