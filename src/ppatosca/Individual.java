@@ -11,7 +11,7 @@ public class Individual implements Cloneable {
     private int size;
     private int id;
     private int[] prey;
-    private Double survival_value;
+    private Double survivalValue;
 
     public Individual(int id, int size) {
         this.size = size;
@@ -43,12 +43,12 @@ public class Individual implements Cloneable {
         this.prey = prey;
     }
 
-    public Double getSurvival_value() {
-        return survival_value;
+    public Double getSurvivalValue() {
+        return survivalValue;
     }
 
-    public void setSurvival_value(Double survival_value) {
-        this.survival_value = survival_value;
+    public void setSurvivalValue(Double survival_value) {
+        this.survivalValue = survival_value;
     }
 
     public void generateRandomPrey() {
@@ -85,6 +85,15 @@ public class Individual implements Cloneable {
     @Override
     protected Individual clone() throws CloneNotSupportedException {
         return (Individual) super.clone();
+    }
+    
+    @Override
+    public String toString(){
+        String returned="";
+        for(int i =0; i< size;i++){
+            returned+=prey[i]+" ";
+        }
+        return returned+="\n Survival value: "+survivalValue;
     }
 
 }

@@ -102,7 +102,9 @@ public class PPAtoSCA {
             learners.add(learner);
             line = br.readLine();
         }
-
+        /**
+         * Learner Score
+         */
         stream = new FileInputStream(new File(args[4]));
         reader = new InputStreamReader(stream);
         br = new BufferedReader(reader);
@@ -135,7 +137,7 @@ public class PPAtoSCA {
         ppa.updatePopulation();
         System.out.println(ppa.getPopulation().toString());
 
-        for (int j = 0; j < 25; j++) {
+        for (int j = 0; j < 5000; j++) {
             for (Individual individual : ppa.getPopulation().getIndividuals()) {
                 System.out.println("Moving: " + individual.getId() + " prey");
                 ppa.moveIndividual(individual.getId(), 1d, 1d, 40, individual.getSize(), 1);
@@ -154,7 +156,7 @@ public class PPAtoSCA {
             for (int i = 0; i < ind.getPrey().length; i++) {
                 System.out.print(ind.getPrey()[i] + " ");
             }
-            System.out.println("Survival value: " + ind.getSurvival_value());
+            System.out.println("Survival value: " + ind.getSurvivalValue());
         }
     }
 

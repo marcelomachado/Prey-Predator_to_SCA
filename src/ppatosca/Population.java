@@ -67,7 +67,7 @@ public class Population {
                 returned += position + " ";
             }
             returned += "\n";
-            returned += "Survival value = " + individual.getSurvival_value() + "\n";
+            returned += "Survival value = " + individual.getSurvivalValue() + "\n";
         }
         returned += "\nBest prey = " + bestPreyId + "\n";
         returned += "Predator = " + predatorId+"\n";

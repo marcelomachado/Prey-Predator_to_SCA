@@ -70,7 +70,7 @@ public class PPA {
     public void updatePopulation() {
         Map<Integer, Double> populationSurvivalValues = new HashMap<>();
         for (Individual individual : population.getIndividuals()) {
-            populationSurvivalValues.put(individual.getId(), individual.getSurvival_value());
+            populationSurvivalValues.put(individual.getId(), individual.getSurvivalValue());
         }
         populationSurvivalValues = Util.sortByValueAsc(populationSurvivalValues);
 
@@ -86,75 +86,124 @@ public class PPA {
 
     }
 
-    public Individual moveIndividual(int prey_id, Double distanceFactor, Double survivalValueFactor, int minimalStepLength, int maximumStepLength, int returnSelector) {
+    public Individual moveIndividual(int prey_id, Double distanceFactor, Double survivalValueFactor, int minimalStepLength, int maximumStepLength, int returnSelector) throws CloneNotSupportedException {
         Individual individual = population.getIndividuals().get(prey_id);
         if (prey_id == population.getBestPreyId()) {
-            localSearch(individual);
+            //localSearch(individual);
+            moveBestPrey(individual, minimalStepLength);
         } else if (prey_id == population.getPredatorId()) {
             movePredator(individual, minimalStepLength, maximumStepLength);
+            //movePrey(individual, distanceFactor, survivalValueFactor, minimalStepLength, maximumStepLength, 10, returnSelector);
         } else {
-            movePrey(individual, distanceFactor, survivalValueFactor, maximumStepLength, returnSelector);
-            localSearch(individual);
+            movePrey(individual, distanceFactor, survivalValueFactor, minimalStepLength, maximumStepLength, 10, 0.5d, returnSelector);
+            //localSearch(individual);
         }
 
         return individual;
     }
 
-    public void movePrey(Individual individual, Double distance_factor, Double survival_value_factor, int maximumStepLength, int returnSelector) {
-        Map<Integer, Double> followUpValue = new HashMap<>();
-        ArrayList<Individual> individuals = population.getIndividuals();
-        Double followUp;
-        for (Individual ind : individuals) {
-            if (ind.getSurvival_value() < individual.getSurvival_value()) {
-                followUp = Util.round((distance_factor * Util.similarity(individual, ind)) + (survival_value_factor * (1 / ind.getSurvival_value())),2);
-                followUpValue.put(ind.getId(), followUp);
-                System.out.println("seguida: " + ind.getId() + " follow up: " + followUp);
+    public void moveBestPrey(Individual individual, int minimalStepLength) throws CloneNotSupportedException {
+        System.out.println(individual.toString());
+        individual.setPrey(generateBestRandomDirection(individual.getPrey(), 10, minimalStepLength));
+        individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
+        System.out.println(individual.toString());
+    }
+
+    public void movePrey(Individual individual, Double distance_factor, Double survival_value_factor, int minimalStepLength, int maximumStepLength, int randomBestPreyQuantity, Double followUp, int returnSelector) throws CloneNotSupportedException {
+        Double rand = new Random().nextDouble();
+        Double uniformProbabilityDistribution;
+        int stepLength;
+        List<Integer> steps;
+        if (rand <= followUp) {
+            System.out.println("Following preys");
+            int[] bestRandomPrey = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, minimalStepLength);
+
+            Map<Integer, Double> followUpValue = new HashMap<>();
+            ArrayList<Individual> individuals = population.getIndividuals();
+            Double followValue;
+            for (Individual ind : individuals) {
+                if (ind.getSurvivalValue() < individual.getSurvivalValue()) {
+                    followValue = Util.round((distance_factor * Util.similarity(individual, ind)) + (survival_value_factor * (1 / ind.getSurvivalValue())), 2);
+                    followUpValue.put(ind.getId(), followValue);
+                    System.out.println("seguida: " + ind.getId() + " follow up: " + followValue);
+                }
+            }
+
+            stepLength = stepLengthBySimilarity(individual, population.getIndividuals().get(population.getPredatorId()), maximumStepLength, 1d);
+            switch (returnSelector) {
+                case 1:
+                    moveDirectionByRoulletResult(individual, followUpValue, stepLength);
+                    break;
+                case 2:
+                    moveDirectionByMajority(individual, followUpValue, stepLength);
+                    break;
+                default:
+                    moveDirectionByMajority(individual, followUpValue, stepLength);
+            }
+            uniformProbabilityDistribution = Util.round(new Random().nextDouble(), 1);
+            stepLength = (int) Math.round(minimalStepLength * uniformProbabilityDistribution);
+            steps = shuffleSteps(stepLength, individual.getSize());
+            for (int i = 0; i < stepLength; i++) {
+                individual.getPrey()[steps.get(i)] = bestRandomPrey[steps.get(i)];
+            }
+        } else {
+            System.out.println("Moving away from predator");
+            int[] randomDirection1 = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, maximumStepLength);
+            int[] randomDirection2 = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, maximumStepLength);
+            int[] predator = population.getIndividuals().get(population.getPredatorId()).getPrey();
+            uniformProbabilityDistribution = Util.round(new Random().nextDouble(), 1);
+            stepLength = (int) Math.round(maximumStepLength * uniformProbabilityDistribution);
+            steps = shuffleSteps(stepLength, individual.getSize());
+            if (Util.similarity(randomDirection1, predator) <= Util.similarity(randomDirection2, predator)) {
+                for (int i = 0; i < stepLength; i++) {
+                    individual.getPrey()[steps.get(i)] = randomDirection1[steps.get(i)];
+                }
+            }
+            else{
+                 for (int i = 0; i < stepLength; i++) {
+                    individual.getPrey()[steps.get(i)] = randomDirection2[steps.get(i)];
+                }
             }
         }
 
-        int stepLength = stepLength(individual, population.getIndividuals().get(population.getPredatorId()), maximumStepLength, 1d);
-        switch (returnSelector) {
-            case 1:
-                moveDirectionByRoulletResult(individual, followUpValue, stepLength);
-                break;
-            case 2:
-                moveDirectionByMajority(individual, followUpValue, stepLength);
-                break;
-            default:
-                moveDirectionByMajority(individual, followUpValue, stepLength);
-        }
+        individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
 
     }
 
-    public void movePredator(Individual predator, int minimalStepLength, int maximumStepLength) {
+    public void movePredator(Individual predator, int minimalStepLength, int maximumStepLength) throws CloneNotSupportedException {
         // Position of the second worst prey
         int followedPreyPosition = population.getOrdinaryPreysIds().length - 1;
         // Second worst prey
-        Individual individual = population.getIndividuals().get(population.getOrdinaryPreysIds()[followedPreyPosition]);
+        Individual followedPrey = population.getIndividuals().get(population.getOrdinaryPreysIds()[followedPreyPosition]);
 
-        int[] randomDirection = generateRandomPrey(individual.getSize());
-        Double uniformProbabilityDistribution = Util.round(new Random().nextDouble(),1);
-        
-        // lambda_max x [0..1]
-        int stepLength = (int) Math.round(maximumStepLength * uniformProbabilityDistribution);
-        List<Integer> steps = shuffleSteps(stepLength, individual.getPrey().length);
+        int[] randomDirection = generateRandomPrey(followedPrey.getSize());
+        Double uniformProbabilityDistribution = Util.round(new Random().nextDouble(), 1);
+
+        int stepLength;
+        List<Integer> steps;
+        // lambda_max * [0..1]
+        stepLength = (int) Math.round(maximumStepLength * uniformProbabilityDistribution);
+        steps = shuffleSteps(stepLength, followedPrey.getSize());
         //Random Direction
         for (int i = 0; i < stepLength; i++) {
-            predator.getPrey()[steps.get(i)] = randomDirection[steps.get(i)];        
+            predator.getPrey()[steps.get(i)] = randomDirection[steps.get(i)];
         }
 
-        Double similarity = Util.similarity(predator, individual);
-        uniformProbabilityDistribution = Util.round(new Random().nextDouble(),1);
         // |sim -1| x lambda_min x [0..1]
-        stepLength = (int) Math.round(Math.abs(similarity - 1) * minimalStepLength * uniformProbabilityDistribution);
-        //stepLength = (int) Math.round(minimalStepLength * uniformProbabilityDistribution);
-        steps = shuffleSteps(stepLength, individual.getPrey().length);
-        
-        //Following the second worst prey
-        for (int i = 0; i < stepLength; i++) {
-            predator.getPrey()[steps.get(i)] = individual.getPrey()[steps.get(i)];
+        //int stepLength = (int) Math.round(Math.abs(similarity - 1) * minimalStepLength * uniformProbabilityDistribution);
+        Double similarity = Util.similarity(predator, followedPrey);
+        if (similarity != 1d) {
+            uniformProbabilityDistribution = Util.round(new Random().nextDouble(), 1);
+            stepLength = (int) Math.round(minimalStepLength * uniformProbabilityDistribution);
+            steps = shuffleSteps(stepLength, followedPrey.getSize());
+
+            //Following the second worst prey
+            for (int i = 0; i < stepLength; i++) {
+                predator.getPrey()[steps.get(i)] = followedPrey.getPrey()[steps.get(i)];
+            }
         }
-        predator.setSurvival_value(generateSurvivalValue(predator.getPrey()));
+
+        predator.setSurvivalValue(generateSurvivalValue(predator.getPrey()));
 
     }
 
@@ -166,9 +215,9 @@ public class PPA {
      * @param survivalValueFactor
      * @return
      */
-    public int stepLength(Individual prey, Individual predator, int maximumStepLength, Double survivalValueFactor) {
+    public int stepLengthBySimilarity(Individual prey, Individual predator, int maximumStepLength, Double survivalValueFactor) {
         Double div = Math.pow(Math.E, survivalValueFactor * (1 - Util.similarity(prey, predator)));
-        Double uniformProbabilityDistribution = Util.round(new Random().nextDouble(),1);
+        Double uniformProbabilityDistribution = Util.round(new Random().nextDouble(), 1);
         Double sup = maximumStepLength * uniformProbabilityDistribution;
         return (int) Math.round(sup / div);
     }
@@ -190,8 +239,6 @@ public class PPA {
                 individual.getPrey()[steps.get(i)] = individuals.get(followedPrey).getPrey()[steps.get(i)];
             }
         }
-        individual.setSurvival_value(generateSurvivalValue(individual.getPrey()));
-
     }
 
     /**
@@ -219,8 +266,6 @@ public class PPA {
             }
             //else keep the same value
         }
-
-        individual.setSurvival_value(generateSurvivalValue(individual.getPrey()));
     }
 
     //TODO do not initialize list in every prey movement (parameter)
@@ -237,27 +282,34 @@ public class PPA {
     /**
      *
      * @param prey_id
-     * @param direction_length
+     * @param randomIndividualsQuantity
      * @return
      */
-    private void localSearchRandomDirection(int prey_id, int direction_length) {
-        ArrayList<Individual> individuals = population.getIndividuals();
-        Individual individual = individuals.get(prey_id);
-        int size = individual.getSize();
+    private int[] generateBestRandomDirection(int[] prey, int randomIndividualsQuantity, int minimalStepLength) throws CloneNotSupportedException {
         int[] randomDirection;
-        Double new_survival_value;
-
-        for (int i = 0; i < direction_length; i++) {
-            //Alterar caso necessário método que gera direções             
-            randomDirection = generateRandomPrey(size);
-
-            new_survival_value = generateSurvivalValue(randomDirection);
-            if (new_survival_value < individual.getSurvival_value()) {
-                individual.setPrey(randomDirection);
-                individual.setSurvival_value(new_survival_value);
+        Double uniformProbabilityDistribution;
+        int stepLength;
+        List<Integer> steps;
+        int[] bestPrey = prey.clone();
+        Double partialSurvivalValue;
+        Double bestSurvivalValue = generateSurvivalValue(prey);
+        for (int i = 0; i < randomIndividualsQuantity; i++) {
+            int[] newPrey = prey.clone();
+            randomDirection = generateRandomPrey(prey.length);
+            uniformProbabilityDistribution = Util.round(new Random().nextDouble(), 1);
+            stepLength = (int) Math.round(uniformProbabilityDistribution * minimalStepLength);
+            steps = shuffleSteps(stepLength, prey.length);
+            for (int j = 0; j < stepLength; j++) {
+                newPrey[steps.get(j)] = randomDirection[steps.get(j)];
             }
-        }
+            partialSurvivalValue = generateSurvivalValue(newPrey);
+            if (partialSurvivalValue < bestSurvivalValue) {
+                bestSurvivalValue = partialSurvivalValue;
+                bestPrey = newPrey;
+            }
 
+        }
+        return bestPrey;
     }
 
     /**
@@ -271,7 +323,7 @@ public class PPA {
         int size = individual.getSize();
         int[] newPrey = individual.getPrey();
         int[] auxPrey;
-        Double newSurvivalValue = individual.getSurvival_value();
+        Double newSurvivalValue = individual.getSurvivalValue();
         Double auxSurvivalValue;
 
         for (int i = 0; i < size; i++) {
@@ -290,7 +342,7 @@ public class PPA {
             }
         }
         individual.setPrey(newPrey);
-        individual.setSurvival_value(newSurvivalValue);
+        individual.setSurvivalValue(newSurvivalValue);
     }
 
     public int[] createRoullet(Map<Integer, Double> followUpValue) {
@@ -329,7 +381,7 @@ public class PPA {
         return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey),
                 difficultyObjetiveFunction(prey),
                 timeObjetiveFunction(prey),
-                balanceObjetiveFunction(prey)),2);
+                balanceObjetiveFunction(prey)), 2);
     }
 
     public void generatePopulation(int individualsQuantity, int individualSize) {
@@ -342,15 +394,15 @@ public class PPA {
         for (int i = 0; i < individualsQuantity; i++) {
             Individual individual = new Individual(i, individualSize);
             individual.setPrey(generateRandomPrey(individualSize));
-            individual.setSurvival_value(generateSurvivalValue(individual.getPrey()));
+            individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
             individuals.add(individual);
 
-            if (individual.getSurvival_value() > worst_survival_value) {
-                worst_survival_value = individual.getSurvival_value();
+            if (individual.getSurvivalValue() > worst_survival_value) {
+                worst_survival_value = individual.getSurvivalValue();
                 worst_survival_value_id = i;
             }
-            if (individual.getSurvival_value() < better_survival_value) {
-                better_survival_value = individual.getSurvival_value();
+            if (individual.getSurvivalValue() < better_survival_value) {
+                better_survival_value = individual.getSurvivalValue();
                 best_survival_value_id = i;
             }
 
