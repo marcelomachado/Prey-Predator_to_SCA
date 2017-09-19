@@ -2,6 +2,7 @@ package ppatosca;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -97,6 +98,14 @@ public class Util {
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+    
+    public static List<Integer> initializeShuffleList(int individualSize) {
+        List<Integer> individualSizeList = new ArrayList<>();
+        for (int i = 0; i < individualSize; i++) {
+            individualSizeList.add(i);
+        }
+        return individualSizeList;
     }
 
 }
