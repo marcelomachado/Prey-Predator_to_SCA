@@ -137,7 +137,7 @@ public class PPAtoSCA {
         ppa.updatePopulation();
         System.out.println(ppa.getPopulation().toString());
 
-        for (int j = 0; j < 5000; j++) {
+        for (int j = 0; j < 3000; j++) {
             for (Individual individual : ppa.getPopulation().getIndividuals()) {
                 System.out.println("Moving: " + individual.getId() + " prey");
                 ppa.moveIndividual(individual.getId(), 1d, 1d, 40, individual.getSize(), 1);
