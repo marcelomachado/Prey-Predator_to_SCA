@@ -107,5 +107,18 @@ public class Util {
         }
         return individualSizeList;
     }
+    
+    public static String diff(int[] vet1, int[] vet2){
+        String diff = "";
+        for(int i =0;i<vet1.length;i++){
+            if(vet1[i]!=vet2[i]){
+                diff+="x ";
+            }
+            else{
+                diff+="- ";
+            }
+        }
+        return diff;
+    }
 
 }

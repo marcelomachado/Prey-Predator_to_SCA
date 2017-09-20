@@ -14,6 +14,9 @@ public class Population {
     private int[] ordinaryPreysIds;
     private ArrayList<Individual> individuals;
 
+    public Population() {
+    }      
+
     public Population(ArrayList<Individual> individuals) {
         this.individuals = individuals;
     }
@@ -78,6 +81,20 @@ public class Population {
         returned+="\n";
 
         return returned;
+    }
+    
+    protected static Population clone(Population original) throws CloneNotSupportedException {
+        Population clone = new Population();
+        clone.individuals = new ArrayList<>();
+        clone.bestPreyId = original.bestPreyId;
+        for(Individual ind: original.individuals){
+            clone.getIndividuals().add(ind.clone());
+        }
+        
+        clone.predatorId = original.predatorId;
+        clone.sizePopulation = original.sizePopulation;
+        clone.ordinaryPreysIds = original.ordinaryPreysIds.clone();
+        return clone;
     }
 
 }

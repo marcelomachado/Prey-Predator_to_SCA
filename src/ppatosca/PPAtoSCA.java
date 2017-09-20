@@ -135,22 +135,22 @@ public class PPAtoSCA {
 
         ppa.generatePopulation(10, learningMaterials.size());
         ppa.updatePopulation();
+        System.out.println("População Original");
         System.out.println(ppa.getPopulation().toString());
 
-        for (int j = 0; j < 3000; j++) {
-            for (Individual individual : ppa.getPopulation().getIndividuals()) {
-                System.out.println("Moving: " + individual.getId() + " prey");
-                ppa.moveIndividual(individual.getId(), 1d, 1d, 40, individual.getSize(), 1);
+        for (int j = 0; j <2; j++) {
+            Population populationClone = Population.clone(ppa.getPopulation());
+            for (Individual individual : populationClone.getIndividuals()) {
+                ppa.moveIndividual(individual, 1d, 1d, 40, individual.getSize(), 1);
 
             }
+            ppa.setPopulation(populationClone);
+
             ppa.updatePopulation();
-            System.out.println(ppa.getPopulation().toString());
 
             Individual bestIndividual = ppa.getPopulation().getIndividuals().get(ppa.getPopulation().getBestPreyId()).clone();
-
             bestIndividuals.add(bestIndividual);
         }
-
         System.out.println();
         for (Individual ind : bestIndividuals) {
             for (int i = 0; i < ind.getPrey().length; i++) {
@@ -158,6 +158,7 @@ public class PPAtoSCA {
             }
             System.out.println("Survival value: " + ind.getSurvivalValue());
         }
+
     }
 
 }
