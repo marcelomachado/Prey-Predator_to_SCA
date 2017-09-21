@@ -104,15 +104,18 @@ public class PPA {
      */
     public Individual moveIndividual(Individual prey, Double distanceFactor, Double survivalValueFactor, int minimumStepLength, int maximumStepLength, int returnSelector) throws CloneNotSupportedException {
         if (prey.getId() == population.getBestPreyId()) {
-            System.out.println("A presa que irá movimentar neste momento é a melhor presa: "+prey.getId());
+            System.out.println("A presa que irá movimentar neste momento é a melhor presa: " + prey.getId());
             //localSearch(individual);
             moveBestPrey(prey, minimumStepLength);
+            System.out.println("");
         } else if (prey.getId() == population.getPredatorId()) {
-            System.out.println("Movendo o predador: "+prey.getId());
+            System.out.println("Movendo o predador: " + prey.getId());
             movePredator(prey, minimumStepLength, maximumStepLength);
+            System.out.println("");
         } else {
-            System.out.println("Presa comum se movimentando: "+prey.getId());
+            System.out.println("Presa comum se movimentando: " + prey.getId());
             movePrey(prey, distanceFactor, survivalValueFactor, minimumStepLength, maximumStepLength, 10, 0.5d, returnSelector);
+            System.out.println("");
             //localSearch(individual);
         }
 
@@ -157,8 +160,10 @@ public class PPA {
         int stepLength;
         List<Integer> steps;
         if (rand <= followUp) { // Follow best preys
+            System.out.println("Esta presa irá se movimentar seguindo as melhores presas");
+            System.out.println(individual.toString());
             // Generate random preys: yr
-            int[] bestRandomPrey = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, minimumStepLength);
+            int[] bestRandomPrey = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, minimumStepLength);            
             Double followValue;
             Map<Integer, Double> followUpValue = new HashMap<>();
             ArrayList<Individual> individuals = population.getIndividuals();
@@ -167,7 +172,7 @@ public class PPA {
                 if (ind.getSurvivalValue() < individual.getSurvivalValue()) {
                     followValue = Util.round((distanceFactor * Util.similarity(individual, ind)) + (survivalValueFactor * (1 / ind.getSurvivalValue())), 2);
                     followUpValue.put(ind.getId(), followValue);
-                    System.out.println("seguida: " + ind.getId() + " follow up: " + followValue);
+                    //System.out.println("seguida: " + ind.getId() + " follow up: " + followValue);
                 }
             }
 
@@ -185,10 +190,18 @@ public class PPA {
             uniformProbabilityDistribution = Util.round(new Random().nextDouble(), 1);
             stepLength = (int) Math.round(minimumStepLength * uniformProbabilityDistribution);
             steps = shuffleSteps(stepLength);
+            System.out.println("Melhor presa gerada (yr)");
+            Util.printPrey(bestRandomPrey);
+            System.out.println("Seguindo melhor presa randômica (yr) em "+stepLength+" passos.");
+            int[] vet1 = individual.getPrey().clone(); //Apenas para debbug
+            Util.printPrey(vet1);
             for (int i = 0; i < stepLength; i++) {
                 individual.getPrey()[steps.get(i)] = bestRandomPrey[steps.get(i)];
             }
-        } else { // Generate to best directions and compare witch is better, i.e. away from predator            
+            System.out.println(Util.diff(vet1, individual.getPrey()));
+            Util.printPrey(individual.getPrey());
+        } else { // Generate to best directions and compare witch is better, i.e. away from predator
+            System.out.println("Essa presa está fugindo do predador (yr e -yr)");
             int[] randomDirection1 = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, minimumStepLength);
             int[] randomDirection2 = generateComplementaryVector(randomDirection1);
             int[] predator = population.getIndividuals().get(population.getPredatorId()).getPrey();
@@ -197,16 +210,21 @@ public class PPA {
             // lambda_max * [0..1]
             //stepLength = (int) Math.round(maximumStepLength * uniformProbabilityDistribution);
             //steps = shuffleSteps(stepLength);
+            int[] vet1 = individual.getPrey().clone(); //Apenas para debbug
+            System.out.println(individual.toString());
             if (Util.similarity(randomDirection1, predator) <= Util.similarity(randomDirection2, predator)) {
                 individual.setPrey(randomDirection1);
             } else {
                 individual.setPrey(randomDirection2);
 
             }
+            Util.printPrey(individual.getPrey());
+            System.out.println(Util.diff(vet1, individual.getPrey()));
         }
 
         // Update SV
         individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
+        System.out.println("Novo valor de sobrevivência " + individual.getSurvivalValue());
 
     }
 
@@ -221,7 +239,6 @@ public class PPA {
         int followedPreyPosition = population.getOrdinaryPreysIds().length - 1;
         // Second worst prey
         Individual followedPrey = population.getIndividuals().get(population.getOrdinaryPreysIds()[followedPreyPosition]);
-        
 
         int[] randomDirection = generateRandomPrey(followedPrey.getSize());
         Double uniformProbabilityDistribution = Util.round(new Random().nextDouble(), 1);
@@ -231,8 +248,8 @@ public class PPA {
         // lambda_max * [0..1]
         stepLength = (int) Math.round(maximumStepLength * uniformProbabilityDistribution);
         steps = shuffleSteps(stepLength);
-        
-        System.out.println("Direção randômica seguida em "+stepLength+" passos");
+
+        System.out.println("Direção randômica seguida em " + stepLength + " passos");
         //Random Direction yr
         for (int i = 0; i < stepLength; i++) {
             predator.getPrey()[steps.get(i)] = randomDirection[steps.get(i)];
@@ -244,7 +261,7 @@ public class PPA {
         stepLength = (int) Math.round(Math.abs(similarity - 1) * minimumStepLength * uniformProbabilityDistribution);
         //stepLength = (int) Math.round(minimumStepLength * uniformProbabilityDistribution);
         steps = shuffleSteps(stepLength);
-        System.out.println("Seguindo segunda pior presa "+followedPrey.getId()+" em "+stepLength+" passos");
+        System.out.println("Seguindo segunda pior presa " + followedPrey.getId() + " em " + stepLength + " passos");
         //Following the second worst prey        
         for (int i = 0; i < stepLength; i++) {
             predator.getPrey()[steps.get(i)] = followedPrey.getPrey()[steps.get(i)];
@@ -358,7 +375,7 @@ public class PPA {
         int[] bestPrey = prey.clone();
         Double partialSurvivalValue;
         Double bestSurvivalValue = generateSurvivalValue(prey);
-        
+
         for (int i = 0; i < randomIndividualsQuantity; i++) {
             int[] newPrey = prey.clone();
             randomDirection = generateRandomPrey(prey.length);
