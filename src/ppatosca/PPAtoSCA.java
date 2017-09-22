@@ -130,7 +130,7 @@ public class PPAtoSCA {
         /**
          * Population
          */
-        PPA ppa = new PPA(learningMaterials, learners.get(1), concepts);
+        PPA ppa = new PPA(learningMaterials, learners.get(2), concepts);
         ArrayList<Individual> bestIndividuals = new ArrayList<>();
 
         ppa.generatePopulation(10, learningMaterials.size());
@@ -138,15 +138,17 @@ public class PPAtoSCA {
         System.out.println("População Original");
         System.out.println(ppa.getPopulation().toString());
 
-        for (int j = 0; j <2; j++) {
+        for (int j = 1; j <=2000; j++) {
+            System.out.println("MOVIMENTO "+j);
             Population populationClone = Population.clone(ppa.getPopulation());
             for (Individual individual : populationClone.getIndividuals()) {
                 ppa.moveIndividual(individual, 1d, 1d, 40, individual.getSize(), 1);
-
             }
             ppa.setPopulation(populationClone);
 
             ppa.updatePopulation();
+            System.out.println(ppa.getPopulation().toString());
+            System.out.println("");
 
             Individual bestIndividual = ppa.getPopulation().getIndividuals().get(ppa.getPopulation().getBestPreyId()).clone();
             bestIndividuals.add(bestIndividual);
