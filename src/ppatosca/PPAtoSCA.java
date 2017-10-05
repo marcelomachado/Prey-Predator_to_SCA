@@ -130,18 +130,19 @@ public class PPAtoSCA {
         /**
          * Population
          */
-        PPA ppa = new PPA(learningMaterials, learners.get(0), concepts);
+        PPA ppa = new PPA(learningMaterials, learners.get(1), concepts);
        // ArrayList<Individual> bestIndividuals = new ArrayList<>();
 
         ppa.generatePopulation(10, learningMaterials.size());
         ppa.updatePopulation();
+        System.out.println(ppa.getPopulation().toString());
         ////System.out.println("População Original");
         //System.out.println(ppa.getPopulation().toString());
-        long start = 0;
+        
         long tempoInicial = System.currentTimeMillis();
 
 
-        for (int j = 1; j <=40; j++) {
+        for (int j = 1; j <=500; j++) {
             System.out.println("MOVIMENTO "+j);
             Population populationClone = Population.clone(ppa.getPopulation());
             for (Individual individual : populationClone.getIndividuals()) {

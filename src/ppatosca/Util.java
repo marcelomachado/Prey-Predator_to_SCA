@@ -1,10 +1,5 @@
 package ppatosca;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -38,7 +33,7 @@ public class Util {
         }
         return result;
     }
-            
+
     public static <K, V extends Comparable<? super V>> Map<K, V>
             sortByValueAsc(Map<K, V> map) {
         List<Map.Entry<K, V>> list
@@ -56,7 +51,7 @@ public class Util {
         }
         return result;
     }
-            
+
     public static Double similarity(Individual x, Individual y) {
         int div = 0;
         for (int i = 0; i < x.getSize(); i++) {
@@ -64,6 +59,7 @@ public class Util {
         }
         return div / (norm(x) * norm(y));
     }
+
     public static Double similarity(int[] x, int[] y) {
         int div = 0;
         for (int i = 0; i < x.length; i++) {
@@ -79,7 +75,7 @@ public class Util {
         }
         return Math.sqrt(norm);
     }
-    
+
     public static Double norm(int[] x) {
         Double norm = 0d;
         for (int i = 0; i < x.length; i++) {
@@ -87,14 +83,22 @@ public class Util {
         }
         return Math.sqrt(norm);
     }
-    
-    public static void printPrey(int[] prey){
-        for(int i=0;i<prey.length;i++){
-            System.out.print(prey[i]+" ");
+
+    public static void printPrey(int[] prey) {
+        for (int i = 0; i < prey.length; i++) {
+            System.out.print(prey[i] + " ");
         }
         System.out.println("");
     }
-    
+
+    public static String preyToString(int[] prey) {
+        String returned = "";
+        for (int i = 0; i < prey.length; i++) {
+            returned += " " + prey[i];
+        }
+        return returned;
+    }
+
     public static double round(double value, int places) {
         if (places < 0) {
             throw new IllegalArgumentException();
@@ -104,7 +108,7 @@ public class Util {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
-    
+
     public static List<Integer> initializeShuffleList(int individualSize) {
         List<Integer> individualSizeList = new ArrayList<>();
         for (int i = 0; i < individualSize; i++) {
@@ -112,19 +116,17 @@ public class Util {
         }
         return individualSizeList;
     }
-    
-    public static String diff(int[] vet1, int[] vet2){
+
+    public static String diff(int[] vet1, int[] vet2) {
         String diff = "";
-        for(int i =0;i<vet1.length;i++){
-            if(vet1[i]!=vet2[i]){
-                diff+="x ";
-            }
-            else{
-                diff+="- ";
+        for (int i = 0; i < vet1.length; i++) {
+            if (vet1[i] != vet2[i]) {
+                diff += "x ";
+            } else {
+                diff += "- ";
             }
         }
         return diff;
     }
-    
 
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -14,12 +15,13 @@ import java.util.Random;
  */
 public class PPA {
 
-    private static final Double COURSE_COMPLETED = 999999999d;
+    private static final Double COURSE_COMPLETED = 999999d;
     private ArrayList<LearningMaterial> LearningMaterials;
     private Learner learner;
     private ArrayList<Concept> concepts;
     private Population population;
     private List<Integer> listToShuffle;
+    final static Logger logger = Logger.getLogger(PPA.class);
 
     public PPA(ArrayList<LearningMaterial> LearningMaterials, Learner learner, ArrayList<Concept> concepts) {
         this.LearningMaterials = LearningMaterials;
@@ -79,6 +81,11 @@ public class PPA {
         populationSurvivalValues = Util.sortByValueAsc(populationSurvivalValues);
 
         Object[] orderedPopulation = populationSurvivalValues.keySet().toArray();
+        if (populationSurvivalValues.get((int) orderedPopulation[0]) == 0d) {
+            logger.debug("Melhor sequência encontrada:" + Util.preyToString(population.getIndividuals().get((int) orderedPopulation[0]).getPrey()));
+            //Util.printPrey(population.getIndividuals().get((int) orderedPopulation[0]).getPrey());
+            System.exit(0);
+        }
         population.setBestPreyId((int) orderedPopulation[0]);
         population.setPredatorId((int) orderedPopulation[population.getIndividuals().size() - 1]);
 
@@ -87,7 +94,6 @@ public class PPA {
             ordinaryPreysIds[i - 1] = (int) orderedPopulation[i];
         }
         population.setOrdinaryPreysIds(ordinaryPreysIds);
-
     }
 
     /**
@@ -131,13 +137,13 @@ public class PPA {
      */
     public void moveBestPrey(Individual individual, int minimumStepLength) throws CloneNotSupportedException {
         //System.out.println(individual.toString());
-        //int[] vet1 = individual.getPrey().clone(); //Apenas para debbug
+        //int[] vet1 = individual.getPrey().clone(); //Apenas para debug
         //System.out.println("Gerando vetor randômico com melhor valor de sobrevivência:");
         individual.setPrey(generateBestRandomDirection(individual.getPrey(), 10, minimumStepLength));
         individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
-        //System.out.println(Util.diff(vet1, individual.getPrey()));// debbug
+        //System.out.println(Util.diff(vet1, individual.getPrey()));// debug
         //System.out.println(individual.toString());
-        
+
     }
 
     /**
@@ -162,7 +168,7 @@ public class PPA {
         if (rand <= followUp) { // Follow best preys
             //System.out.println("Esta presa irá se movimentar seguindo as melhores presas");
             //System.out.println(individual.toString());
-                      
+
             Double followValue;
             Map<Integer, Double> followUpValue = new HashMap<>();
             ArrayList<Individual> individuals = population.getIndividuals();
@@ -171,7 +177,7 @@ public class PPA {
                 if (ind.getSurvivalValue() < individual.getSurvivalValue()) {
                     followValue = Util.round((distanceFactor * Util.similarity(individual, ind)) + (survivalValueFactor * (1 / ind.getSurvivalValue())), 2);
                     followUpValue.put(ind.getId(), followValue);
-                    ////System.out.println("seguida: " + ind.getId() + " follow up: " + followValue);
+                    //System.out.println("seguida: " + ind.getId() + " follow up: " + followValue);
                 }
             }
 
@@ -194,18 +200,18 @@ public class PPA {
             stepLength = (int) Math.round(minimumStepLength * uniformProbabilityDistribution);
             steps = shuffleSteps(stepLength);
             // Generate random prey: yr
-            int[] bestRandomPrey = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, minimumStepLength);  
+            int[] bestRandomPrey = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, minimumStepLength);
             //System.out.println("Melhor presa gerada (yr)");
-            //Util.printPrey(bestRandomPrey); //debbug
+            //Util.printPrey(bestRandomPrey); //debug
             //System.out.println("Seguindo melhor presa randômica (yr) em "+stepLength+" passos.");
-            //int[] vet1 = individual.getPrey().clone(); //Apenas para debbug
-            //Util.printPrey(vet1); //debbug
+            //int[] vet1 = individual.getPrey().clone(); //Apenas para debug
+            //Util.printPrey(vet1); //debug
             for (int i = 0; i < stepLength; i++) {
                 individual.getPrey()[steps.get(i)] = bestRandomPrey[steps.get(i)];
             }
-            
+
             //System.out.println(Util.diff(vet1, individual.getPrey()));
-            //Util.printPrey(individual.getPrey()); //debbug
+            //Util.printPrey(individual.getPrey()); //debug
         } else { // Generate to best directions and compare witch is better, i.e. away from predator
             //System.out.println("Essa presa está fugindo do predador (yr e -yr)");
             int[] randomDirection1 = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, minimumStepLength);
@@ -216,7 +222,7 @@ public class PPA {
             // lambda_max * [0..1]
             //stepLength = (int) Math.round(maximumStepLength * uniformProbabilityDistribution);
             //steps = shuffleSteps(stepLength);
-            //int[] vet1 = individual.getPrey().clone(); //Apenas para debbug
+            //int[] vet1 = individual.getPrey().clone(); //Apenas para debug
             //System.out.println(individual.toString());
             if (Util.similarity(randomDirection1, predator) <= Util.similarity(randomDirection2, predator)) {
                 individual.setPrey(randomDirection1);
@@ -225,8 +231,8 @@ public class PPA {
 
             }
             //System.out.println(Util.diff(vet1, individual.getPrey()));
-           // Util.printPrey(individual.getPrey()); //debbug
-            
+            // Util.printPrey(individual.getPrey()); //debug
+
         }
 
         // Update SV
@@ -250,7 +256,7 @@ public class PPA {
 
         int[] randomDirection = generateRandomPrey(followedPrey.getSize());
         //System.out.println("Direção randômica yr gerada: ");
-       // Util.printPrey(randomDirection); //debbug
+        // Util.printPrey(randomDirection); //debug
         Double uniformProbabilityDistribution = Util.round(new Random().nextDouble(), 1);
 
         int stepLength;
@@ -273,7 +279,7 @@ public class PPA {
         //stepLength = (int) Math.round(minimumStepLength * uniformProbabilityDistribution);
         steps = shuffleSteps(stepLength);
         //System.out.println("Seguindo segunda pior presa " + followedPrey.getId() + " em " + stepLength + " passos");
-       // int[] vet1 = predator.getPrey().clone(); //Apenas para debbug
+        // int[] vet1 = predator.getPrey().clone(); //Apenas para debug
         //Following the second worst prey        
         for (int i = 0; i < stepLength; i++) {
             predator.getPrey()[steps.get(i)] = followedPrey.getPrey()[steps.get(i)];
@@ -483,7 +489,7 @@ public class PPA {
     public Double generateSurvivalValue(int[] prey) {
         //return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), difficultyObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey)), 2);
         //return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), difficultyObjetiveFunction(prey), timeObjetiveFunction(prey)), 2);
-       // return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
+        // return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
         return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey)), 2);
     }
 
@@ -496,7 +502,8 @@ public class PPA {
         ArrayList<Individual> individuals = new ArrayList<>();
         for (int i = 0; i < individualsQuantity; i++) {
             Individual individual = new Individual(i, individualSize);
-            individual.setPrey(generateRandomPrey(individualSize));
+            individual.setPrey(generateRandomPrey(individualSize)); //usefull
+            //individual.setPrey(generateIndividualTest()); // test
             individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
             individuals.add(individual);
 
@@ -525,6 +532,18 @@ public class PPA {
         return prey;
     }
 
+    // Just to test
+    public static int[] generateIndividualTest() {
+
+        //int[] prey = new int[]{1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1};
+        //int[] prey = new int[]{0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0};
+        int[] prey = new int[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
+        //int[] prey = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        //int[] prey = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+
+        return prey;
+    }
+
     public Double executeFitnessFunction(Double... objetiveFunctions) {
         Double fitnessValue = 0d;
         for (Double objtiveFunction : objetiveFunctions) {
@@ -539,12 +558,11 @@ public class PPA {
         Double sum = 0d;
 
         for (int i = 0; i < individual.length; i++) {
-            qntt += individual[i];
-        }
-
-        for (int i = 0; i < individual.length; i++) {
-            for (Concept concept : concepts) {
-                sum += individual[i] * Math.abs((concept.getLMs().contains(LearningMaterials.get(i)) ? 1 : 0) - ((learner.getLearningGoals().contains(concept)) ? 1 : 0));
+            if (individual[i] == 1) {
+                qntt++;
+                for (Concept concept : concepts) {
+                    sum += individual[i] * Math.abs((concept.getLMs().contains(LearningMaterials.get(i)) ? 1 : 0) - ((learner.getLearningGoals().contains(concept)) ? 1 : 0));
+                }
             }
         }
 
@@ -556,11 +574,10 @@ public class PPA {
         Double sum = 0d;
         int qntt = 0;
         for (int i = 0; i < individual.length; i++) {
-            sum += individual[i] * Math.abs(LearningMaterials.get(i).getDificulty() - learner.getAbilityLevel());
-        }
-
-        for (int i = 0; i < individual.length; i++) {
-            qntt += individual[i];
+            if (individual[i] == 1) {
+                sum += individual[i] * Math.abs(LearningMaterials.get(i).getDificulty() - learner.getAbilityLevel());
+                qntt++;
+            }
         }
 
         return (qntt != 0) ? (sum / qntt) : COURSE_COMPLETED;
@@ -569,31 +586,31 @@ public class PPA {
 
     // O3
     public Double timeObjetiveFunction(int[] individual) {
-
         int totalTime = 0;
 
         for (int i = 0; i < individual.length; i++) {
-            totalTime += LearningMaterials.get(i).getTypical_learning_time() * individual[i];
+            if (individual[i] == 1) {
+                totalTime += individual[i] * LearningMaterials.get(i).getTypical_learning_time();
+            }
         }
         return Math.max(0d, (learner.getLower_time() - totalTime)) + Math.max(0d, (totalTime - learner.getUpper_time()));
     }
 
     // O4
     public Double balanceObjetiveFunction(int[] individual) {
-
         Double sum = 0d;
         int learningGoal;
-
+        int i;
         int relevantConceptsK = 0;
-        for (int k = 0; k < individual.length; k++) {
+        for (i = 0; i < individual.length; i++) {
             for (Concept concept_k : concepts) {
-                relevantConceptsK += individual[k] * (concept_k.getLMs().contains(LearningMaterials.get(k)) ? 1 : 0);
+                relevantConceptsK += individual[i] * (concept_k.getLMs().contains(LearningMaterials.get(i)) ? 1 : 0);
             }
         }
 
         int learningGoalL = 0;
-        for (Concept concept_l : concepts) {
-            learningGoalL += ((learner.getLearningGoals().contains(concept_l)) ? 1 : 0);
+        for (Concept concept : concepts) {
+            learningGoalL += ((learner.getLearningGoals().contains(concept)) ? 1 : 0);
         }
 
         Double div = (double) relevantConceptsK / learningGoalL;
@@ -606,8 +623,10 @@ public class PPA {
                 continue;
             }
 
-            for (int i = 0; i < individual.length; i++) {
-                relevantConcepts += individual[i] * (concept.getLMs().contains(LearningMaterials.get(i)) ? 1 : 0);
+            for (i = 0; i < individual.length; i++) {
+                if (individual[i] == 1) {
+                    relevantConcepts += individual[i] * (concept.getLMs().contains(LearningMaterials.get(i)) ? 1 : 0);
+                }
             }
 
             sum += learningGoal * Math.abs(relevantConcepts - div);
