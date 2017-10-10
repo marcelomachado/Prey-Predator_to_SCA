@@ -64,13 +64,15 @@ public class PPAtoSCA {
             ccp_info = line.split(";");
             LearningMaterial learningMaterial = new LearningMaterial(Integer.parseInt(ccp_info[0]), ccp_info[1], ccp_info[2], Integer.parseInt(ccp_info[3]), Double.parseDouble(ccp_info[4]));
             learningMaterials.add(learningMaterial);
-            Concept conceptMaterial = concepts.get(Integer.parseInt(ccp_info[5]));
-            if (conceptMaterial.getLMs() == null) {
-                ArrayList<LearningMaterial> lMs = new ArrayList<>();
-                lMs.add(learningMaterial);
-                conceptMaterial.setLMs(lMs);
-            } else {
-                conceptMaterial.getLMs().add(learningMaterial);
+            for (int i = 5; i < ccp_info.length; i++) {
+                Concept conceptMaterial = concepts.get(Integer.parseInt(ccp_info[i]));
+                if (conceptMaterial.getLMs() == null) {
+                    ArrayList<LearningMaterial> lMs = new ArrayList<>();
+                    lMs.add(learningMaterial);
+                    conceptMaterial.setLMs(lMs);
+                } else {
+                    conceptMaterial.getLMs().add(learningMaterial);
+                }
             }
 
             line = br.readLine();
@@ -130,42 +132,41 @@ public class PPAtoSCA {
         /**
          * Population
          */
-        PPA ppa = new PPA(learningMaterials, learners.get(1), concepts);
-       // ArrayList<Individual> bestIndividuals = new ArrayList<>();
+        PPA ppa = new PPA(learningMaterials, learners.get(0), concepts);
+        // ArrayList<Individual> bestIndividuals = new ArrayList<>();
 
         ppa.generatePopulation(10, learningMaterials.size());
         ppa.updatePopulation();
         System.out.println(ppa.getPopulation().toString());
         ////System.out.println("População Original");
         //System.out.println(ppa.getPopulation().toString());
-        
+
         long tempoInicial = System.currentTimeMillis();
 
-
-        for (int j = 1; j <=500; j++) {
-            System.out.println("MOVIMENTO "+j);
+        for (int j = 1; j <= 500; j++) {
+            System.out.println("MOVIMENTO " + j);
             Population populationClone = Population.clone(ppa.getPopulation());
             for (Individual individual : populationClone.getIndividuals()) {
-                ppa.moveIndividual(individual, 1d, 1d, 2, individual.getSize()-3, 1);
+                ppa.moveIndividual(individual, 1d, 1d, 2, individual.getSize() - 3, 1);
             }
             ppa.setPopulation(populationClone);
- 
+
             ppa.updatePopulation();
             System.out.println("o metodo executou em " + (System.currentTimeMillis() - tempoInicial));
-            System.out.println("best "+ppa.getPopulation().getIndividuals().get(ppa.getPopulation().getBestPreyId()));
+            System.out.println("best " + ppa.getPopulation().getIndividuals().get(ppa.getPopulation().getBestPreyId()));
             //System.out.println(ppa.getPopulation().toString());
             //System.out.println("");
 
             //Individual bestIndividual = ppa.getPopulation().getIndividuals().get(ppa.getPopulation().getBestPreyId()).clone();
-          //  bestIndividuals.add(bestIndividual);
+            //  bestIndividuals.add(bestIndividual);
         }
         //System.out.println();
         //for (Individual ind : bestIndividuals) {
-           // for (int i = 0; i < ind.getPrey().length; i++) {
-                //System.out.print(ind.getPrey()[i] + " ");
-         //   }
-            //System.out.println("Survival value: " + ind.getSurvivalValue());
-       // }
+        // for (int i = 0; i < ind.getPrey().length; i++) {
+        //System.out.print(ind.getPrey()[i] + " ");
+        //   }
+        //System.out.println("Survival value: " + ind.getSurvivalValue());
+        // }
 
     }
 

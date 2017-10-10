@@ -57,7 +57,8 @@ public class Util {
         for (int i = 0; i < x.getSize(); i++) {
             div += x.getPrey()[i] * y.getPrey()[i];
         }
-        return div / (norm(x) * norm(y));
+        double norm = (norm(x) * norm(y));
+        return norm == 0 ? div/Double.MAX_VALUE :  div / norm;
     }
 
     public static Double similarity(int[] x, int[] y) {
@@ -65,7 +66,8 @@ public class Util {
         for (int i = 0; i < x.length; i++) {
             div += x[i] * y[i];
         }
-        return div / (norm(x) * norm(y));
+        double norm = (norm(x) * norm(y));
+        return norm == 0 ? div/Double.MAX_VALUE :  div / norm;
     }
 
     public static Double norm(Individual x) {

@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
  */
 public class PPA {
 
-    private static final Double COURSE_COMPLETED = 999999d;
+    private static final Double COURSE_COMPLETED = Double.MAX_VALUE;
     private ArrayList<LearningMaterial> LearningMaterials;
     private Learner learner;
     private ArrayList<Concept> concepts;
@@ -143,7 +143,6 @@ public class PPA {
         individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
         //System.out.println(Util.diff(vet1, individual.getPrey()));// debug
         //System.out.println(individual.toString());
-
     }
 
     /**
@@ -217,11 +216,6 @@ public class PPA {
             int[] randomDirection1 = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, minimumStepLength);
             int[] randomDirection2 = generateComplementaryVector(randomDirection1);
             int[] predator = population.getIndividuals().get(population.getPredatorId()).getPrey();
-            // [0..1]
-            //uniformProbabilityDistribution = Util.round(new Random().nextDouble(), 1);
-            // lambda_max * [0..1]
-            //stepLength = (int) Math.round(maximumStepLength * uniformProbabilityDistribution);
-            //steps = shuffleSteps(stepLength);
             //int[] vet1 = individual.getPrey().clone(); //Apenas para debug
             //System.out.println(individual.toString());
             if (Util.similarity(randomDirection1, predator) <= Util.similarity(randomDirection2, predator)) {
@@ -486,13 +480,6 @@ public class PPA {
         return complementaryVector;
     }
 
-    public Double generateSurvivalValue(int[] prey) {
-        //return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), difficultyObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey)), 2);
-        //return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), difficultyObjetiveFunction(prey), timeObjetiveFunction(prey)), 2);
-        // return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
-        return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey)), 2);
-    }
-
     public void generatePopulation(int individualsQuantity, int individualSize) {
         int worst_survival_value_id = 0;
         int best_survival_value_id = 0;
@@ -502,8 +489,8 @@ public class PPA {
         ArrayList<Individual> individuals = new ArrayList<>();
         for (int i = 0; i < individualsQuantity; i++) {
             Individual individual = new Individual(i, individualSize);
-            individual.setPrey(generateRandomPrey(individualSize)); //usefull
-            //individual.setPrey(generateIndividualTest()); // test
+            //individual.setPrey(generateRandomPrey(individualSize)); //usefull
+            individual.setPrey(generateIndividualTest()); // test
             individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
             individuals.add(individual);
 
@@ -537,11 +524,24 @@ public class PPA {
 
         //int[] prey = new int[]{1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1};
         //int[] prey = new int[]{0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0};
-        int[] prey = new int[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
-        //int[] prey = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        //int[] prey = new int[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
+        //int[] prey = new int[]{0, 0, 1, 0, 0};
+        //int[] prey = new int[]{1, 1, 1, 1, 1};
+        int[] prey = new int[]{0, 0, 0, 0, 0};
+        //int[] prey = new int[]{1, 0, 0, 0, 0};
+        //int[] prey = new int[]{0, 1, 1, 0, 0};
         //int[] prey = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
         return prey;
+    }
+
+    public Double generateSurvivalValue(int[] prey) {
+        //return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), difficultyObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey)), 2);
+        //return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), difficultyObjetiveFunction(prey), timeObjetiveFunction(prey)), 2);
+        // return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
+       // return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey)), 2);
+        return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), balanceObjetiveFunction(prey)), 2);
+        //return Util.round(executeFitnessFunction(balanceObjetiveFunction(prey)), 2);
     }
 
     public Double executeFitnessFunction(Double... objetiveFunctions) {
@@ -602,16 +602,20 @@ public class PPA {
         int learningGoal;
         int i;
         int relevantConceptsK = 0;
+
         for (i = 0; i < individual.length; i++) {
             for (Concept concept_k : concepts) {
-                relevantConceptsK += individual[i] * (concept_k.getLMs().contains(LearningMaterials.get(i)) ? 1 : 0);
+                if (individual[i] == 1) {
+                    relevantConceptsK += individual[i] * (concept_k.getLMs().contains(LearningMaterials.get(i)) ? 1 : 0);
+                }
             }
         }
 
-        int learningGoalL = 0;
-        for (Concept concept : concepts) {
-            learningGoalL += ((learner.getLearningGoals().contains(concept)) ? 1 : 0);
-        }
+//        int learningGoalL = 0;
+//        for (Concept concept : concepts) {
+//            learningGoalL += ((learner.getLearningGoals().contains(concept)) ? 1 : 0);
+//        }
+        int learningGoalL = learner.getLearningGoals().size();
 
         Double div = (double) relevantConceptsK / learningGoalL;
 
