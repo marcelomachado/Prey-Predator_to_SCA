@@ -105,6 +105,8 @@ public class Util {
         if (places < 0) {
             throw new IllegalArgumentException();
         }
+        if(value == Double.POSITIVE_INFINITY)
+            return Double.MAX_VALUE;
 
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);

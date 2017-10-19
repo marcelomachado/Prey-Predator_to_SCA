@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Properties;
 
 /**
  *
@@ -16,7 +17,34 @@ import java.util.HashMap;
 public class PPAtoSCA {
 
     public static void main(String[] args) throws FileNotFoundException, IOException, CloneNotSupportedException {
-        FileInputStream stream = new FileInputStream(new File(args[0]));
+        
+        // Configuration file
+        Properties config = new Properties();
+        config.load(new FileInputStream(new File(args[0])));
+        
+        // files
+        String conceptsFile = config.getProperty("ppatosca.file.concepts");
+        String prerequisitesFile = config.getProperty("ppatosca.file.prerequisites");
+        String learningMaterialsFile = config.getProperty("ppatosca.file.learningMaterials");
+        String learnersFile = config.getProperty("ppatosca.file.learners");
+        String learnersScoreFile = config.getProperty("ppatosca.file.learnersScoreFile");
+        
+        // args
+        int movementQuantity  = Integer.parseInt(config.getProperty("ppatosca.arg.movementQuantity","100"));
+        int populationSize  = Integer.parseInt(config.getProperty("ppatosca.arg.populationSize","10"));
+        Double distanceFactor = Double.parseDouble(config.getProperty("ppatosca.arg.distanceFactor"));
+        Double survivalValueFactor = Double.parseDouble(config.getProperty("ppatosca.arg.survivalValueFactor"));
+        int minimumStepLength = Integer.parseInt(config.getProperty("ppatosca.arg.minimumStepLength"));
+        int maximumStepLength = Integer.parseInt(config.getProperty("ppatosca.arg.maximumStepLength"));
+        
+        // Fitness
+        boolean conceptFitness = Boolean.parseBoolean(config.getProperty("ppatosca.fitness.concept"));
+        boolean dificultyFitness = Boolean.parseBoolean(config.getProperty("ppatosca.fitness.dificulty"));
+        boolean balanceFitness = Boolean.parseBoolean(config.getProperty("ppatosca.fitness.balance"));
+        boolean timeFitness = Boolean.parseBoolean(config.getProperty("ppatosca.fitness.time"));
+        
+        
+        FileInputStream stream = new FileInputStream(new File(conceptsFile));
         InputStreamReader reader = new InputStreamReader(stream);
         BufferedReader br = new BufferedReader(reader);
         String line = br.readLine();
@@ -31,7 +59,7 @@ public class PPAtoSCA {
             concepts.add(new Concept(Integer.parseInt(ccp_info[0]), ccp_info[1], Integer.parseInt(ccp_info[2])));
             line = br.readLine();
         }
-        stream = new FileInputStream(new File(args[1]));
+        stream = new FileInputStream(new File(prerequisitesFile));
         reader = new InputStreamReader(stream);
         br = new BufferedReader(reader);
 
@@ -55,7 +83,7 @@ public class PPAtoSCA {
         /**
          * Learning Materials
          */
-        stream = new FileInputStream(new File(args[2]));
+        stream = new FileInputStream(new File(learningMaterialsFile));
         reader = new InputStreamReader(stream);
         br = new BufferedReader(reader);
         line = br.readLine();
@@ -81,7 +109,7 @@ public class PPAtoSCA {
         /**
          * Learner
          */
-        stream = new FileInputStream(new File(args[3]));
+        stream = new FileInputStream(new File(learnersFile));
         reader = new InputStreamReader(stream);
         br = new BufferedReader(reader);
         line = br.readLine();
@@ -107,7 +135,7 @@ public class PPAtoSCA {
         /**
          * Learner Score
          */
-        stream = new FileInputStream(new File(args[4]));
+        stream = new FileInputStream(new File(learnersScoreFile));
         reader = new InputStreamReader(stream);
         br = new BufferedReader(reader);
         line = br.readLine();
@@ -135,7 +163,7 @@ public class PPAtoSCA {
         PPA ppa = new PPA(learningMaterials, learners.get(0), concepts);
         // ArrayList<Individual> bestIndividuals = new ArrayList<>();
 
-        ppa.generatePopulation(10, learningMaterials.size());
+        ppa.generatePopulation(populationSize, learningMaterials.size());
         ppa.updatePopulation();
         System.out.println(ppa.getPopulation().toString());
         ////System.out.println("População Original");
@@ -143,11 +171,11 @@ public class PPAtoSCA {
 
         long tempoInicial = System.currentTimeMillis();
 
-        for (int j = 1; j <= 500; j++) {
+        for (int j = 1; j <= movementQuantity; j++) {
             System.out.println("MOVIMENTO " + j);
             Population populationClone = Population.clone(ppa.getPopulation());
             for (Individual individual : populationClone.getIndividuals()) {
-                ppa.moveIndividual(individual, 1d, 1d, 2, individual.getSize() - 3, 1);
+                ppa.moveIndividual(individual, distanceFactor, survivalValueFactor, minimumStepLength, maximumStepLength, 1);
             }
             ppa.setPopulation(populationClone);
 
