@@ -22,12 +22,15 @@ public class PPAtoSCA {
         Properties config = new Properties();
         config.load(new FileInputStream(new File(args[0])));
         
+        // path
+        String path = config.getProperty("ppatosca.path");
+        
         // files
-        String conceptsFile = config.getProperty("ppatosca.file.concepts");
-        String prerequisitesFile = config.getProperty("ppatosca.file.prerequisites");
-        String learningMaterialsFile = config.getProperty("ppatosca.file.learningMaterials");
-        String learnersFile = config.getProperty("ppatosca.file.learners");
-        String learnersScoreFile = config.getProperty("ppatosca.file.learnersScoreFile");
+        String conceptsFile = path+config.getProperty("ppatosca.file.concepts");
+        String prerequisitesFile = path+config.getProperty("ppatosca.file.prerequisites");
+        String learningMaterialsFile = path+config.getProperty("ppatosca.file.learningMaterials");
+        String learnersFile = path+config.getProperty("ppatosca.file.learners");
+        String learnersScoreFile = path+config.getProperty("ppatosca.file.learnersScore");
         
         // args
         int movementQuantity  = Integer.parseInt(config.getProperty("ppatosca.arg.movementQuantity","100"));
@@ -165,9 +168,8 @@ public class PPAtoSCA {
 
         ppa.generatePopulation(populationSize, learningMaterials.size());
         ppa.updatePopulation();
+        System.out.println("População Original");
         System.out.println(ppa.getPopulation().toString());
-        ////System.out.println("População Original");
-        //System.out.println(ppa.getPopulation().toString());
 
         long tempoInicial = System.currentTimeMillis();
 
@@ -180,9 +182,8 @@ public class PPAtoSCA {
             ppa.setPopulation(populationClone);
 
             ppa.updatePopulation();
-            System.out.println("o metodo executou em " + (System.currentTimeMillis() - tempoInicial));
-            System.out.println("best " + ppa.getPopulation().getIndividuals().get(ppa.getPopulation().getBestPreyId()));
-            //System.out.println(ppa.getPopulation().toString());
+            //System.out.println("o metodo executou em " + (System.currentTimeMillis() - tempoInicial));
+            System.out.println(ppa.getPopulation().toString());
             //System.out.println("");
 
             //Individual bestIndividual = ppa.getPopulation().getIndividuals().get(ppa.getPopulation().getBestPreyId()).clone();
