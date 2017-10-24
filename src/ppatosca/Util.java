@@ -153,5 +153,17 @@ public class Util {
         }
         return diff;
     }
+    
+    public static int[] generateComplementaryVector(int[] vector) {
+        int[] complementaryVector = new int[vector.length];
+        for (int i = 0; i < vector.length; i++) {
+            if (vector[i] == 0) {
+                complementaryVector[i] = 1;
+            } else {
+                complementaryVector[i] = 0;
+            }
+        }
+        return complementaryVector;
+    }
 
 }

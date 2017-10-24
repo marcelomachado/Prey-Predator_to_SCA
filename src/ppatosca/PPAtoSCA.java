@@ -17,36 +17,40 @@ import java.util.Properties;
 public class PPAtoSCA {
 
     public static void main(String[] args) throws FileNotFoundException, IOException, CloneNotSupportedException {
-        
+
         // Configuration file
         Properties config = new Properties();
         config.load(new FileInputStream(new File(args[0])));
-        
+
         // path
         String path = config.getProperty("ppatosca.path");
-        
+
         // files
-        String conceptsFile = path+config.getProperty("ppatosca.file.concepts");
-        String prerequisitesFile = path+config.getProperty("ppatosca.file.prerequisites");
-        String learningMaterialsFile = path+config.getProperty("ppatosca.file.learningMaterials");
-        String learnersFile = path+config.getProperty("ppatosca.file.learners");
-        String learnersScoreFile = path+config.getProperty("ppatosca.file.learnersScore");
-        
+        String conceptsFile = path + config.getProperty("ppatosca.file.concepts");
+        String prerequisitesFile = path + config.getProperty("ppatosca.file.prerequisites");
+        String learningMaterialsFile = path + config.getProperty("ppatosca.file.learningMaterials");
+        String learnersFile = path + config.getProperty("ppatosca.file.learners");
+        String learnersScoreFile = path + config.getProperty("ppatosca.file.learnersScore");
+
         // args
-        int movementQuantity  = Integer.parseInt(config.getProperty("ppatosca.arg.movementQuantity","100"));
-        int populationSize  = Integer.parseInt(config.getProperty("ppatosca.arg.populationSize","10"));
+        int movementQuantity = Integer.parseInt(config.getProperty("ppatosca.arg.movementQuantity", "100"));
+        int populationSize = Integer.parseInt(config.getProperty("ppatosca.arg.populationSize", "10"));
         Double distanceFactor = Double.parseDouble(config.getProperty("ppatosca.arg.distanceFactor"));
         Double survivalValueFactor = Double.parseDouble(config.getProperty("ppatosca.arg.survivalValueFactor"));
         int minimumStepLength = Integer.parseInt(config.getProperty("ppatosca.arg.minimumStepLength"));
         int maximumStepLength = Integer.parseInt(config.getProperty("ppatosca.arg.maximumStepLength"));
-        
+        int followedPreysQuantity = Integer.parseInt(config.getProperty("ppatosca.arg.followedPreysQuantity"));
+        Double followUp = Double.parseDouble(config.getProperty("ppatosca.arg.followUp"));
+        int quantityBestRandomPreys = Integer.parseInt(config.getProperty("ppatosca.arg.quantityBestRandomPreys"));
+
         // Fitness
-        boolean conceptFitness = Boolean.parseBoolean(config.getProperty("ppatosca.fitness.concept"));
-        boolean dificultyFitness = Boolean.parseBoolean(config.getProperty("ppatosca.fitness.dificulty"));
-        boolean balanceFitness = Boolean.parseBoolean(config.getProperty("ppatosca.fitness.balance"));
-        boolean timeFitness = Boolean.parseBoolean(config.getProperty("ppatosca.fitness.time"));
-        
-        
+        String fitnessFunction = config.getProperty("ppatosca.fitness.value");
+        String [] fitnessFunctionSelectors = fitnessFunction.split(";");
+        Boolean [] fitnessFunctionsSelectosValues = new Boolean[fitnessFunctionSelectors.length];
+        for(int i =0; i < fitnessFunctionSelectors.length;i++){
+            fitnessFunctionsSelectosValues[i] = Boolean.parseBoolean(fitnessFunctionSelectors[i]);            
+        }
+
         FileInputStream stream = new FileInputStream(new File(conceptsFile));
         InputStreamReader reader = new InputStreamReader(stream);
         BufferedReader br = new BufferedReader(reader);
@@ -164,8 +168,8 @@ public class PPAtoSCA {
          * Population
          */
         PPA ppa = new PPA(learningMaterials, learners.get(0), concepts);
+        ppa.setFitnessFunctions(fitnessFunctionsSelectosValues);
         // ArrayList<Individual> bestIndividuals = new ArrayList<>();
-
         ppa.generatePopulation(populationSize, learningMaterials.size());
         ppa.updatePopulation();
         System.out.println("População Original");
@@ -177,7 +181,7 @@ public class PPAtoSCA {
             System.out.println("MOVIMENTO " + j);
             Population populationClone = Population.clone(ppa.getPopulation());
             for (Individual individual : populationClone.getIndividuals()) {
-                ppa.moveIndividual(individual, distanceFactor, survivalValueFactor, minimumStepLength, maximumStepLength, 1);
+                ppa.moveIndividual(individual, distanceFactor, survivalValueFactor, minimumStepLength, maximumStepLength, 1, followedPreysQuantity, followUp, quantityBestRandomPreys);
             }
             ppa.setPopulation(populationClone);
 
