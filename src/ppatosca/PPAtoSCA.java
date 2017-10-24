@@ -44,12 +44,7 @@ public class PPAtoSCA {
         int quantityBestRandomPreys = Integer.parseInt(config.getProperty("ppatosca.arg.quantityBestRandomPreys"));
 
         // Fitness
-        String fitnessFunction = config.getProperty("ppatosca.fitness.value");
-        String [] fitnessFunctionSelectors = fitnessFunction.split(";");
-        Boolean [] fitnessFunctionsSelectosValues = new Boolean[fitnessFunctionSelectors.length];
-        for(int i =0; i < fitnessFunctionSelectors.length;i++){
-            fitnessFunctionsSelectosValues[i] = Boolean.parseBoolean(fitnessFunctionSelectors[i]);            
-        }
+        int fitnessFunction = Integer.parseInt(config.getProperty("ppatosca.fitness.number"));       
 
         FileInputStream stream = new FileInputStream(new File(conceptsFile));
         InputStreamReader reader = new InputStreamReader(stream);
@@ -168,7 +163,7 @@ public class PPAtoSCA {
          * Population
          */
         PPA ppa = new PPA(learningMaterials, learners.get(0), concepts);
-        ppa.setFitnessFunctions(fitnessFunctionsSelectosValues);
+        ppa.setFitnessFunctions(fitnessFunction);
         // ArrayList<Individual> bestIndividuals = new ArrayList<>();
         ppa.generatePopulation(populationSize, learningMaterials.size());
         ppa.updatePopulation();

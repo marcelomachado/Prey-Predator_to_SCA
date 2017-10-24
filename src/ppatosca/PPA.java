@@ -22,7 +22,7 @@ public class PPA {
     private ArrayList<Concept> concepts;
     private Population population;
     private List<Integer> listToShuffle;
-    private Boolean[] fitnessFunctions;
+    private int fitnessFunctionSelector;
     final static Logger logger = Logger.getLogger(PPA.class);
 
     public PPA(ArrayList<LearningMaterial> LearningMaterials, Learner learner, ArrayList<Concept> concepts) {
@@ -71,13 +71,13 @@ public class PPA {
         this.population = population;
     }
 
-    public Boolean[] getFitnessFunctions() {
-        return fitnessFunctions;
+    public int getFitnessFunctions() {
+        return fitnessFunctionSelector;
     }
 
-    public void setFitnessFunctions(Boolean[] fitnessFunctions) {
-        this.fitnessFunctions = fitnessFunctions;
-    }        
+    public void setFitnessFunctions(int fitnessFunctions) {
+        this.fitnessFunctionSelector = fitnessFunctions;
+    }
 
     /**
      * Update population values after movements, i.e. best prey, predator and
@@ -102,16 +102,17 @@ public class PPA {
             bestPreysIds.add((int) orderedPopulation[0]);
             population.setBestPreysId(bestPreysIds);
         } else {
-            Double bestSurvivalValue = populationSurvivalValues.get((int) orderedPopulation[0]);
             population.getBestPreysId().clear();
+            Double bestSurvivalValue = populationSurvivalValues.get((int) orderedPopulation[0]);
+            // set best prey
             population.getBestPreysId().add((int) orderedPopulation[0]);
-
+            
             for (int i = 1; i < orderedPopulation.length; i++) {
                 if (!Objects.equals(bestSurvivalValue, populationSurvivalValues.get(i))) {
                     break;
                 }
                 // Same SV but different structure
-                if (Util.hammingDistance(population.getIndividuals().get(i),population.getIndividuals().get((int) orderedPopulation[0])) != 0) {
+                if (Util.hammingDistance(population.getIndividuals().get(i), population.getIndividuals().get((int) orderedPopulation[0])) != 0) {
                     population.getBestPreysId().add((int) orderedPopulation[i]);
                 }
             }
@@ -119,7 +120,8 @@ public class PPA {
         }
 
         population.setPredatorId((int) orderedPopulation[population.getIndividuals().size() - 1]);
-
+        
+        // TODO: verificar no caso de mais de uma melhor presa este bloco de código precisa ser verificado
         ArrayList<Integer> ordinaryPreysIds = new ArrayList<>();
         for (int i = 1; i <= orderedPopulation.length - 2; i++) {
             ordinaryPreysIds.add((int) orderedPopulation[i]);
@@ -377,9 +379,10 @@ public class PPA {
      * @param predator predator representation
      * @param minimumStepLength minimum quantity of changing bits
      * @param maximumStepLength maximum quantity of changing bits
-     * @param followedPreysQuantity the number of worst preys predator will follow
+     * @param followedPreysQuantity the number of worst preys predator will
+     * follow
      */
-    public void movePredator(Individual predator, int minimumStepLength, int maximumStepLength,int followedPreysQuantity) {
+    public void movePredator(Individual predator, int minimumStepLength, int maximumStepLength, int followedPreysQuantity) {
         System.out.println(predator.toString());
         // Position of the second worst prey
         int followedPreyPosition = population.getOrdinaryPreysIds().size() - 1;
@@ -625,7 +628,7 @@ public class PPA {
             return -1;
         }
         return roullet[new Random().nextInt(roullet.length)];
-    }    
+    }
 
     public void generatePopulation(int individualsQuantity, int individualSize) {
         int worst_survival_value_id = 0;
@@ -689,38 +692,37 @@ public class PPA {
     }
 
     public Double generateSurvivalValue(int[] prey) {
-//        Double[] activeFitnessFunctions = new Double[fitnessFunctions.length];
-//        if(fitnessFunctions[0]) 
-//            activeFitnessFunctions.add(executeFitnessFunction(conceptsObjetiveFunction(prey)));
-//        if(fitnessFunctions[1]) 
-//            activeFitnessFunctions.add(difficultyObjetiveFunction(prey));
-//        if(fitnessFunctions[2]) 
-//            activeFitnessFunctions.add(timeObjetiveFunction(prey));
-//        if(fitnessFunctions[3]) 
-//            activeFitnessFunctions.add(balanceObjetiveFunction(prey));
-//         return Util.round(executeFitnessFunction(activeFitnessFunctions), 2);
-        //return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), difficultyObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey)), 2);
 
-        //Concepts
-        //return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey)), 2);
-        // Difficulty
-        //return Util.round(executeFitnessFunction(difficultyObjetiveFunction(prey)),2);
-        // Concepts + Difficulty
-        //return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
-        // Balance
-        //return Util.round(executeFitnessFunction(balanceObjetiveFunction(prey)), 2);
-        // Concepts + Balance
-        //return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), balanceObjetiveFunction(prey)), 2);
-        // Concepts + Balance + Difficulty
-        //return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
-        // time
-        //return Util.round(executeFitnessFunction(timeObjetiveFunction(prey)), 2);
-        // Concepts + time
-        //return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey),timeObjetiveFunction(prey)), 2);
-        // Concepts + Balance + Time
-        // return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey),timeObjetiveFunction(prey),balanceObjetiveFunction(prey)), 2);
-        // Concepts + Balance + difficulty + Time
-        return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
+        switch (fitnessFunctionSelector) {
+            case 1:
+                //Concepts
+                return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey)), 2);
+            case 2:
+                // Difficulty
+                return Util.round(executeFitnessFunction(difficultyObjetiveFunction(prey)), 2);
+            case 3:
+                // Concepts + Difficulty
+                return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
+            case 4:
+                // Concepts + Balance
+                return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), balanceObjetiveFunction(prey)), 2);
+            case 5:
+                // Concepts + time
+                return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), timeObjetiveFunction(prey)), 2);
+            case 6:
+                // Concepts + Balance + Difficulty
+                return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
+            case 7:
+                // Concepts + Balance + Time
+                return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), balanceObjetiveFunction(prey), timeObjetiveFunction(prey)), 2);
+            case 8:
+                // Concepts + Balance + difficulty + Time
+                return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
+            default:
+                // Concepts + Balance + difficulty + Time
+                return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
+        }
+
     }
 
     public Double executeFitnessFunction(Double... objetiveFunctions) {
