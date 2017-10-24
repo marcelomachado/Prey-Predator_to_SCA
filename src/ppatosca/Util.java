@@ -52,22 +52,42 @@ public class Util {
         return result;
     }
 
-    public static Double similarity(Individual x, Individual y) {
+    public static Double cosineSimilarity(Individual x, Individual y) {
         int div = 0;
         for (int i = 0; i < x.getSize(); i++) {
             div += x.getPrey()[i] * y.getPrey()[i];
         }
         double norm = (norm(x) * norm(y));
-        return norm == 0 ? div/Double.MAX_VALUE :  div / norm;
+        return norm == 0 ? div / Double.MAX_VALUE : div / norm;
     }
 
-    public static Double similarity(int[] x, int[] y) {
+    public static Double cosineSimilarity(int[] x, int[] y) {
         int div = 0;
         for (int i = 0; i < x.length; i++) {
             div += x[i] * y[i];
         }
         double norm = (norm(x) * norm(y));
-        return norm == 0 ? div/Double.MAX_VALUE :  div / norm;
+        return norm == 0 ? div / Double.MAX_VALUE : div / norm;
+    }
+
+    public static int hammingDistance(int[] x, int[] y) {
+        int distance = 0;
+        for (int i = 0; i < x.length; i++) {
+            if (x[i] != y[i]) {
+                distance++;
+            }
+        }
+        return distance;
+    }
+
+    public static int hammingDistance(Individual x, Individual y) {
+        int distance = 0;
+        for (int i = 0; i < x.getSize(); i++) {
+            if (x.getPrey()[i] != y.getPrey()[i]) {
+                distance++;
+            }
+        }
+        return distance;
     }
 
     public static Double norm(Individual x) {
@@ -105,8 +125,9 @@ public class Util {
         if (places < 0) {
             throw new IllegalArgumentException();
         }
-        if(value == Double.POSITIVE_INFINITY)
+        if (value == Double.POSITIVE_INFINITY) {
             return Double.MAX_VALUE;
+        }
 
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
