@@ -14,53 +14,27 @@ import org.apache.log4j.Logger;
  * @author gtbavi Class with the main implementation of Prey-Pradator Algorithm
  * for Adaptive Course Generation
  */
-public class PPA {
-
-    private static final Double COURSE_COMPLETED = Double.MAX_VALUE;
-    private ArrayList<LearningMaterial> LearningMaterials;
-    private Learner learner;
-    private ArrayList<Concept> concepts;
+public class PPA extends FitnessFunction{   
     private Population population;
     private List<Integer> listToShuffle;
     private int fitnessFunctionSelector;
     final static Logger logger = Logger.getLogger(PPA.class);
 
-    public PPA(ArrayList<LearningMaterial> LearningMaterials, Learner learner, ArrayList<Concept> concepts) {
-        this.LearningMaterials = LearningMaterials;
+    public PPA() {
+    }        
+    
+    public PPA(ArrayList<LearningMaterial> learningMaterials, Learner learner, ArrayList<Concept> concepts) {
+        this.learningMaterials = learningMaterials;
         this.learner = learner;
         this.concepts = concepts;
-        this.listToShuffle = Util.initializeShuffleList(this.LearningMaterials.size());
+        this.listToShuffle = Util.initializeShuffleList(this.learningMaterials.size());
     }
 
     public PPA(ArrayList<LearningMaterial> LearningMaterials, Learner learner, ArrayList<Concept> concepts, Population population) {
-        this.LearningMaterials = LearningMaterials;
+        this.learningMaterials = LearningMaterials;
         this.learner = learner;
         this.concepts = concepts;
         this.population = population;
-    }
-
-    public ArrayList<LearningMaterial> getLearningMaterials() {
-        return LearningMaterials;
-    }
-
-    public void setLearningMaterials(ArrayList<LearningMaterial> LearningMaterials) {
-        this.LearningMaterials = LearningMaterials;
-    }
-
-    public Learner getLearner() {
-        return learner;
-    }
-
-    public void setLearner(Learner learner) {
-        this.learner = learner;
-    }
-
-    public ArrayList<Concept> getConcepts() {
-        return concepts;
-    }
-
-    public void setConcepts(ArrayList<Concept> concepts) {
-        this.concepts = concepts;
     }
 
     public Population getPopulation() {
@@ -723,98 +697,5 @@ public class PPA {
                 return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
         }
 
-    }
-
-    public Double executeFitnessFunction(Double... objetiveFunctions) {
-        Double fitnessValue = 0d;
-        for (Double objtiveFunction : objetiveFunctions) {
-            fitnessValue += objtiveFunction;
-        }
-        return fitnessValue;
-    }
-
-    // O1
-    public Double conceptsObjetiveFunction(int[] individual) {
-        int qntt = 0;
-        Double sum = 0d;
-
-        for (int i = 0; i < individual.length; i++) {
-            if (individual[i] == 1) {
-                qntt++;
-                for (Concept concept : concepts) {
-                    sum += Math.abs((concept.getLMs().contains(LearningMaterials.get(i)) ? 1 : 0) - ((learner.getLearningGoals().contains(concept)) ? 1 : 0));
-                }
-            }
-        }
-
-        return (qntt != 0) ? (sum / qntt) : COURSE_COMPLETED;
-    }
-
-    // O2
-    public Double difficultyObjetiveFunction(int[] individual) {
-        Double sum = 0d;
-        int qntt = 0;
-        for (int i = 0; i < individual.length; i++) {
-            if (individual[i] == 1) {
-                sum += Math.abs(LearningMaterials.get(i).getDificulty() - learner.getAbilityLevel());
-                qntt++;
-            }
-        }
-
-        return (qntt != 0) ? (sum / qntt) : COURSE_COMPLETED;
-
-    }
-
-    // O3
-    public Double timeObjetiveFunction(int[] individual) {
-        int totalTime = 0;
-
-        for (int i = 0; i < individual.length; i++) {
-            if (individual[i] == 1) {
-                totalTime += LearningMaterials.get(i).getTypical_learning_time();
-            }
-        }
-        return Math.max(0d, (learner.getLower_time() - totalTime)) + Math.max(0d, (totalTime - learner.getUpper_time()));
-    }
-
-    // O4
-    public Double balanceObjetiveFunction(int[] individual) {
-        Double sum = 0d;
-        int learningGoal;
-        int i;
-
-        // Dividend: the amount of concepts covered by learn material
-        int conceptsCoveredByLM = 0;
-        for (i = 0; i < individual.length; i++) {
-            for (Concept concept_k : concepts) {
-                if (individual[i] == 1) {
-                    conceptsCoveredByLM += (concept_k.getLMs().contains(LearningMaterials.get(i)) ? 1 : 0);
-                }
-            }
-        }
-        // Divisor: the amount of concepts the learner should learn
-        int conceptsLearnShouldLearn = learner.getLearningGoals().size();
-
-        Double div = (double) conceptsCoveredByLM / conceptsLearnShouldLearn;
-
-        for (Concept concept : concepts) {
-            int relevantConcepts = 0;
-            // Elj
-            learningGoal = ((learner.getLearningGoals().contains(concept)) ? 1 : 0);
-            if (learningGoal == 0) {
-                continue;
-            }
-
-            for (i = 0; i < individual.length; i++) {
-                if (individual[i] == 1) {
-                    relevantConcepts += (concept.getLMs().contains(LearningMaterials.get(i)) ? 1 : 0);
-                }
-            }
-
-            sum += Math.abs(relevantConcepts - div);
-
-        }
-
-        return sum;
     }
 }
