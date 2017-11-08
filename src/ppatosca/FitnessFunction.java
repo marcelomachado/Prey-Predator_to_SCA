@@ -7,13 +7,13 @@ import java.util.ArrayList;
  * @author gtbavi
  */
 public class FitnessFunction {
-    
+
     public static final Double COURSE_COMPLETED = Double.MAX_VALUE;
     public static ArrayList<LearningMaterial> learningMaterials;
     public static Learner learner;
     public static ArrayList<Concept> concepts;
 
-        public ArrayList<LearningMaterial> getLearningMaterials() {
+    public ArrayList<LearningMaterial> getLearningMaterials() {
         return learningMaterials;
     }
 

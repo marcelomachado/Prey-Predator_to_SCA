@@ -75,11 +75,7 @@ public class Population {
         }
         returned += "\nBest prey = " + bestPreysId + "\n";
         returned += "Predator = " + predatorId + "\n";
-        returned += "Ordinary Preys = "+ ordinaryPreysIds +"\n";
-        for (int ordinaryPrey: ordinaryPreysIds) {
-            returned += " " + ordinaryPrey;
-        }
-       // returned += "\n";
+        returned += "Ordinary Preys = "+ ordinaryPreysIds +"\n";        
 
         return returned;
     }

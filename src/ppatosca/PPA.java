@@ -14,15 +14,16 @@ import org.apache.log4j.Logger;
  * @author gtbavi Class with the main implementation of Prey-Pradator Algorithm
  * for Adaptive Course Generation
  */
-public class PPA extends FitnessFunction{   
+public class PPA extends FitnessFunction {
+
     private Population population;
     private List<Integer> listToShuffle;
     private int fitnessFunctionSelector;
     final static Logger logger = Logger.getLogger(PPA.class);
 
     public PPA() {
-    }        
-    
+    }
+
     public PPA(ArrayList<LearningMaterial> learningMaterials, Learner learner, ArrayList<Concept> concepts) {
         this.learningMaterials = learningMaterials;
         this.learner = learner;
@@ -56,8 +57,11 @@ public class PPA extends FitnessFunction{
     /**
      * Update population values after movements, i.e. best prey, predator and
      * order ordinary preys
+     *
+     * @param maxBestPreyQuantity
+     * @param maxPredatorQuantity
      */
-    public void updatePopulation() {
+    public void updatePopulation(int maxBestPreyQuantity, int maxPredatorQuantity) {
         Map<Integer, Double> populationSurvivalValues = new HashMap<>();
         for (Individual individual : population.getIndividuals()) {
             populationSurvivalValues.put(individual.getId(), individual.getSurvivalValue());
@@ -65,40 +69,46 @@ public class PPA extends FitnessFunction{
         populationSurvivalValues = Util.sortByValueAsc(populationSurvivalValues);
 
         Object[] orderedPopulation = populationSurvivalValues.keySet().toArray();
-        if (populationSurvivalValues.get((int) orderedPopulation[0]) == 0d) {
-            logger.debug("Melhor sequência encontrada:" + Util.preyToString(population.getIndividuals().get((int) orderedPopulation[0]).getPrey()));
+        int bestPreyId = (int) orderedPopulation[0];
+        if (populationSurvivalValues.get(bestPreyId) == 0d) {
+            logger.debug("Melhor sequência encontrada:" + Util.preyToString(population.getIndividuals().get(bestPreyId).getPrey()));
             //Util.printPrey(population.getIndividuals().get((int) orderedPopulation[0]).getPrey());
             System.exit(0);
         }
 
-        if (population.getBestPreysId() == null) {
-            ArrayList<Integer> bestPreysIds = new ArrayList<>();
-            bestPreysIds.add((int) orderedPopulation[0]);
-            population.setBestPreysId(bestPreysIds);
-        } else {
-            population.getBestPreysId().clear();
-            Double bestSurvivalValue = populationSurvivalValues.get((int) orderedPopulation[0]);
-            // set best prey
-            population.getBestPreysId().add((int) orderedPopulation[0]);
-            
-            for (int i = 1; i < orderedPopulation.length; i++) {
-                if (!Objects.equals(bestSurvivalValue, populationSurvivalValues.get(i))) {
+        ArrayList<Integer> bestPreysIds = new ArrayList<>();
+        Double bestSurvivalValue = populationSurvivalValues.get(bestPreyId);
+        // set best prey
+        bestPreysIds.add(bestPreyId);
+        int bestPreysSize = 1;
+        for (int i = 1; i < orderedPopulation.length; i++) {
+
+            if (!Objects.equals(bestSurvivalValue, populationSurvivalValues.get((int) orderedPopulation[i]))) {
+                break;
+            }
+            for (int j = 0; j < bestPreysSize; j++) {
+
+                if (Util.hammingDistance(population.getIndividuals().get((int) orderedPopulation[i]), population.getIndividuals().get(bestPreysIds.get(j))) == 0) {
                     break;
-                }
-                // Same SV but different structure
-                if (Util.hammingDistance(population.getIndividuals().get(i), population.getIndividuals().get((int) orderedPopulation[0])) != 0) {
-                    population.getBestPreysId().add((int) orderedPopulation[i]);
+                } else { // Same SV but different structure                               
+                    // if prey structure is different of all best preys then put it as a best prey too 
+                    if (j == bestPreysSize - 1) {
+                        if (bestPreysSize < maxBestPreyQuantity) {
+                            bestPreysIds.add((int) orderedPopulation[i]);
+                            bestPreysSize++;
+                        }
+                    }
                 }
             }
-
         }
-
+        population.setBestPreysId(bestPreysIds);
         population.setPredatorId((int) orderedPopulation[population.getIndividuals().size() - 1]);
-        
-        // TODO: verificar no caso de mais de uma melhor presa este bloco de código precisa ser verificado
         ArrayList<Integer> ordinaryPreysIds = new ArrayList<>();
-        for (int i = 1; i <= orderedPopulation.length - 2; i++) {
-            ordinaryPreysIds.add((int) orderedPopulation[i]);
+
+        for (int i = 1; i < orderedPopulation.length - 1; i++) {
+            if (!bestPreysIds.contains((int) orderedPopulation[i])) {
+                ordinaryPreysIds.add((int) orderedPopulation[i]);
+            }
         }
         population.setOrdinaryPreysIds(ordinaryPreysIds);
     }

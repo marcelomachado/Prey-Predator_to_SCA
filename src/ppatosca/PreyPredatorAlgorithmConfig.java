@@ -25,6 +25,8 @@ public class PreyPredatorAlgorithmConfig {
     private int followedPreysQuantity;
     private Double followUp;
     private int quantityBestRandomPreys;
+    private int maxBestPreyQuantity;
+    private int maxPredatorQuantity;
 
     public PreyPredatorAlgorithmConfig(String configFile) throws IOException {
         Properties config = new Properties();
@@ -38,6 +40,8 @@ public class PreyPredatorAlgorithmConfig {
         this.followedPreysQuantity = Integer.parseInt(config.getProperty("ppatosca.arg.followedPreysQuantity"));
         this.followUp = Double.parseDouble(config.getProperty("ppatosca.arg.followUp"));
         this.quantityBestRandomPreys = Integer.parseInt(config.getProperty("ppatosca.arg.quantityBestRandomPreys"));
+        this.maxBestPreyQuantity = Integer.parseInt(config.getProperty("ppatosca.arg.maxBestPreyQuantity","1"));
+        this.maxPredatorQuantity = Integer.parseInt(config.getProperty("ppatosca.arg.maxPredatorQuantity","1"));
 
     }
 
@@ -112,6 +116,23 @@ public class PreyPredatorAlgorithmConfig {
     public void setQuantityBestRandomPreys(int quantityBestRandomPreys) {
         this.quantityBestRandomPreys = quantityBestRandomPreys;
     }
+
+    public int getMaxBestPreyQuantity() {
+        return maxBestPreyQuantity;
+    }
+
+    public void setMaxBestPreyQuantity(int maxBestPreyQuantity) {
+        this.maxBestPreyQuantity = maxBestPreyQuantity;
+    }
+
+    public int getMaxPredatorQuantity() {
+        return maxPredatorQuantity;
+    }
+
+    public void setMaxPredatorQuantity(int maxPredatorQuantity) {
+        this.maxPredatorQuantity = maxPredatorQuantity;
+    }
+    
     
 
 }
