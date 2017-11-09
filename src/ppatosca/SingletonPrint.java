@@ -27,7 +27,7 @@ public final class SingletonPrint {
         out.append(text);
     }
     
-    public void print(){
+    public void out(){
         System.out.println(out);
     }
     

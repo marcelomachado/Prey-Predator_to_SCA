@@ -15,7 +15,8 @@ public class PPAtoSCA {
         PreyPredatorAlgorithmConfig ppac = new PreyPredatorAlgorithmConfig(args[1]);
         //Configuration:  fitness function args
         FitnessFunctionConfig ffc = new FitnessFunctionConfig(args[2]);
-
+        SingletonPrint printer = SingletonPrint.getInstance();
+        
         /**
          * Population
          */
@@ -24,43 +25,30 @@ public class PPAtoSCA {
         // ArrayList<Individual> bestIndividuals = new ArrayList<>();
         ppa.generatePopulation(ppac.getPopulationSize(), course.getLearningMaterials().size());
         ppa.updatePopulation(ppac.getMaxBestPreyQuantity(),ppac.getMaxPredatorQuantity());
-        System.out.println("População Original");
-        System.out.println(ppa.getPopulation().toString());
-        System.out.println("");
+        printer.addString("População Original\n");
+        printer.addString(ppa.getPopulation().toString());
+        
+        
+        //System.out.println("");
 
         //long tempoInicial = System.currentTimeMillis();
         for (int j = 1; j <= ppac.getMovementQuantity(); j++) {
             Population populationClone = Population.clone(ppa.getPopulation());
-            System.out.println("Clone:");
-            System.out.println(populationClone.toString());
-            System.out.println("");
-            System.out.println("MOVIMENTO " + j);
+            printer.addString("\n\n************** MOVIMENTO " + j+" **************\n");
             for (Individual individual : populationClone.getIndividuals()) {
                 ppa.moveIndividual(individual, ppac.getDistanceFactor(), ppac.getSurvivalValueFactor(), ppac.getMinimumStepLength(), ppac.getMaximumStepLength(), 1, ppac.getFollowedPreysQuantity(), ppac.getFollowUp(), ppac.getQuantityBestRandomPreys());
-                System.out.println("Após Movimento:");
-                System.out.println("População Original");
-                System.out.println(ppa.getPopulation().toString());
-                System.out.println("Clone:");
-                System.out.println(populationClone.toString());
-                System.out.println("");
-                System.out.println("");
-
             }
             ppa.setPopulation(populationClone);
 
             ppa.updatePopulation(ppac.getMaxBestPreyQuantity(),ppac.getMaxPredatorQuantity());
-            System.out.println("");
-            System.out.println("População atualizada:");
 
             //System.out.println("o metodo executou em " + (System.currentTimeMillis() - tempoInicial));
-            System.out.println("População Original DM");
-            System.out.println(ppa.getPopulation().toString());
-            System.out.println("Clone DM:");
-            System.out.println(populationClone.toString());
 
             //Individual bestIndividual = ppa.getPopulation().getIndividuals().get(ppa.getPopulation().getBestPreyId()).clone();
             //  bestIndividuals.add(bestIndividual);
         }
+        System.out.println("Fim");
+        printer.out();
         //System.out.println();
         //for (Individual ind : bestIndividuals) {
         // for (int i = 0; i < ind.getPrey().length; i++) {

@@ -15,7 +15,7 @@ import java.util.Map;
  * @author gtbavi
  */
 public class Util {
-
+    static SingletonPrint printer = SingletonPrint.getInstance();
     public static <K, V extends Comparable<? super V>> Map<K, V>
             sortByValueDesc(Map<K, V> map) {
         List<Map.Entry<K, V>> list
@@ -108,9 +108,9 @@ public class Util {
 
     public static void printPrey(int[] prey) {
         for (int i = 0; i < prey.length; i++) {
-            System.out.print(prey[i] + " ");
+            printer.addString(prey[i] + " ");
         }
-        System.out.println("");
+        printer.addString("\n");
     }
 
     public static String preyToString(int[] prey) {

@@ -59,29 +59,6 @@ public class Individual implements Cloneable {
         }
     }
 
-    public void generateIndividualTest(int i) {
-        switch (i) {
-            case 1:
-                this.prey = new int[]{1, 1, 1, 0, 0};
-                break;
-            case 2:
-                this.prey = new int[]{0, 1, 1, 1, 0};
-                break;
-            case 3:
-                this.prey = new int[]{0, 1, 1, 0, 1};
-                break;
-            case 4:
-                this.prey = new int[]{0, 1, 0, 1, 1};
-                break;
-            case 5:
-                this.prey = new int[]{0, 1, 0, 0, 0};
-                break;
-            default:
-                generateRandomPrey();
-
-        }
-    }
-
     @Override
     protected Individual clone() throws CloneNotSupportedException {
         return (Individual) super.clone();
@@ -93,7 +70,7 @@ public class Individual implements Cloneable {
         for(int i =0; i< size;i++){
             returned+=prey[i]+" ";
         }
-        return returned+="\n Survival value: "+survivalValue;
+        return returned+="\nSurvival value: "+survivalValue+"\n";
     }
 
 }
