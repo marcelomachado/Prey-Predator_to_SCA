@@ -1,5 +1,7 @@
 package ppatosca;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author gtbavi
@@ -10,7 +12,8 @@ public class LearningMaterial {
     private String type;    
     private int typical_learning_time;
     private Double dificulty;       
-
+    private ArrayList<Concept> coveredConcepts;
+    
     public LearningMaterial() {
     }
 
@@ -61,5 +64,20 @@ public class LearningMaterial {
     public void setName(String name) {
         this.name = name;
     }
+
+    public ArrayList<Concept> getCoveredConcepts() {
+        return coveredConcepts;
+    }
+
+    public void setCoveredConcepts(ArrayList<Concept> coveredConcepts) {
+        this.coveredConcepts = coveredConcepts;
+    }
+
+    @Override
+    public String toString() {
+        return "LearningMaterial{" + "id=" + id + ", name=" + name + ", type=" + type + ", typical_learning_time=" + typical_learning_time + ", dificulty=" + dificulty + ", couveredConcepts=" + coveredConcepts + '}';
+    }
+    
+    
 
 }

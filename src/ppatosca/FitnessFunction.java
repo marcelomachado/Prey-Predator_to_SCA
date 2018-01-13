@@ -65,10 +65,25 @@ public class FitnessFunction {
     // O2
     public static Double difficultyObjetiveFunction(int[] individual) {
         Double sum = 0d;
+        Double learnerConceptAbility;
+        ArrayList<Concept> coveredConcepts;
         int qntt = 0;
+        int numberOfConcepts;
         for (int i = 0; i < individual.length; i++) {
+            learnerConceptAbility = 0d;
+            numberOfConcepts = 0;
             if (individual[i] == 1) {
-                sum += Math.abs(learningMaterials.get(i).getDificulty() - learner.getAbilityLevel());
+                coveredConcepts = learningMaterials.get(i).getCoveredConcepts();
+                for (Concept concept : coveredConcepts) {
+                    if (learner.getLearningGoals().contains(concept)) {
+                        numberOfConcepts++;
+                        learnerConceptAbility += learner.getScore().get(concept);
+                    }
+                }
+                if(numberOfConcepts != 0){
+                    learnerConceptAbility /= numberOfConcepts;
+                }
+                sum += Math.abs(learningMaterials.get(i).getDificulty() - learnerConceptAbility);
                 qntt++;
             }
         }

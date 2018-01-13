@@ -11,10 +11,9 @@ public class Learner {
     
     private int id;
     private HashMap<Concept, Double> score;
-    private Double abilityLevel;
     private int lower_time;
     private int upper_time;
-    private ArrayList<Concept> learningGoals;
+    private ArrayList<Concept> learningGoals;    
     
 
     public Learner() {
@@ -22,10 +21,10 @@ public class Learner {
 
     public Learner(int id, Double abilityLevel, int lower_time, int upper_time) {
         this.id = id;
-        this.abilityLevel = abilityLevel;
         this.lower_time = lower_time;
         this.upper_time = upper_time;
     }
+    
     
 
     public int getId() {
@@ -43,14 +42,6 @@ public class Learner {
     public void setScore(HashMap<Concept, Double> score) {
         this.score = score;
     }        
-
-    public Double getAbilityLevel() {
-        return abilityLevel;
-    }
-
-    public void setAbilityLevel(Double abilityLevel) {
-        this.abilityLevel = abilityLevel;
-    }
 
     public int getLower_time() {
         return lower_time;
