@@ -45,20 +45,25 @@ public class LearningMaterial {
         }
 
         typicalLearningTime = typicalLearningTime.replace("PT", "");
-        if (typicalLearningTime.split("H").length == 2) {
+        if (typicalLearningTime.contains("H")) {
             hour = Integer.parseInt(typicalLearningTime.split("H")[0]);
-            typicalLearningTime = typicalLearningTime.split("H")[1];
+            if (typicalLearningTime.split("H").length == 2) {                
+                typicalLearningTime = typicalLearningTime.split("H")[1];
+            }
         }
-        if (typicalLearningTime.split("M").length == 2) {
+        if (typicalLearningTime.contains("M")) {
             minute = Integer.parseInt(typicalLearningTime.split("M")[0]);
-            typicalLearningTime = typicalLearningTime.split("M")[1];
+            if (typicalLearningTime.split("M").length == 2) {                
+                typicalLearningTime = typicalLearningTime.split("M")[1];
+            }            
         }
-        
-        second = Integer.parseInt(typicalLearningTime.replace("S",""));
-
+        if (typicalLearningTime.contains("S")) {
+            second = Integer.parseInt(typicalLearningTime.replace("S", ""));
+        }
         this.typicalLearningTime = (hour * 360) + (minute * 60) + second;
 
         this.interativityLevel = interativityLevel;
+
         this.interativityType = interativityType;
 
     }

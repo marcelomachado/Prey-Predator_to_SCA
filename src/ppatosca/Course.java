@@ -45,7 +45,7 @@ public class Course {
             concepts = new ArrayList<>();
             while (line != null) {
                 ccp_info = line.split(";");
-                concepts.add(new Concept(Integer.parseInt(ccp_info[0]), ccp_info[1], Integer.parseInt(ccp_info[2])));
+                concepts.add(new Concept(Integer.parseInt(ccp_info[0]), ccp_info[1], ccp_info[2], Integer.parseInt(ccp_info[3])));
                 line = br.readLine();
             }
             stream = new FileInputStream(new File(courseConfig.getPrerequisitesFile()));
@@ -80,28 +80,33 @@ public class Course {
             Element xmlElement;
             for (int i = 0; i < lomFIles.length; i++) {
                 xmlElement = Util.readXMLFile(lomFIles[i]);
-                int materialId = Integer.parseInt(xmlElement.getElementsByTagName("entry").item(0).getTextContent());
-                String materialName = xmlElement.getElementsByTagName("title").item(0).getChildNodes().item(0).getTextContent();
-                String type = xmlElement.getElementsByTagName("technical").item(0).getChildNodes().item(0).getTextContent();
-                Node typicalLearningTypeNode = xmlElement.getElementsByTagName("typicalLearningTime").item(0);
-                Element typicalLearningTypeElement = (Element) typicalLearningTypeNode;
-                String typicalLearningType = typicalLearningTypeElement.getElementsByTagName("duration").item(0).getTextContent();
+                try {
+                    
+                    int materialId = Integer.parseInt(xmlElement.getElementsByTagName("entry").item(0).getTextContent());
+                    String materialName = xmlElement.getElementsByTagName("title").item(0).getChildNodes().item(0).getTextContent();
+                    String type = xmlElement.getElementsByTagName("technical").item(0).getChildNodes().item(0).getTextContent();
+                    Node typicalLearningTypeNode = xmlElement.getElementsByTagName("typicalLearningTime").item(0);
+                    Element typicalLearningTypeElement = (Element) typicalLearningTypeNode;
+                    String typicalLearningType = typicalLearningTypeElement.getElementsByTagName("duration").item(0).getTextContent();
 
-                Node difficultyNode = xmlElement.getElementsByTagName("difficulty").item(0);
-                Element difficultyElement = (Element) difficultyNode;
-                String difficulty = difficultyElement.getElementsByTagName("value").item(0).getTextContent();
+                    Node difficultyNode = xmlElement.getElementsByTagName("difficulty").item(0);
+                    Element difficultyElement = (Element) difficultyNode;
+                    String difficulty = difficultyElement.getElementsByTagName("value").item(0).getTextContent();
 
-                Node interactivityLevelNode = xmlElement.getElementsByTagName("interactivityLevel").item(0);
-                Element interactivityLevelElement = (Element) interactivityLevelNode;
-                String interactivityLevel = interactivityLevelElement.getElementsByTagName("value").item(0).getTextContent();
+                    Node interactivityLevelNode = xmlElement.getElementsByTagName("interactivityLevel").item(0);
+                    Element interactivityLevelElement = (Element) interactivityLevelNode;
+                    String interactivityLevel = interactivityLevelElement.getElementsByTagName("value").item(0).getTextContent();
 
-                Node interactivityTypeNode = xmlElement.getElementsByTagName("interactivityType").item(0);
-                Element interactivityTypeElement = (Element) interactivityTypeNode;
-                String interactivityType = interactivityTypeElement.getElementsByTagName("value").item(0).getTextContent();
+                    Node interactivityTypeNode = xmlElement.getElementsByTagName("interactivityType").item(0);
+                    Element interactivityTypeElement = (Element) interactivityTypeNode;
+                    String interactivityType = interactivityTypeElement.getElementsByTagName("value").item(0).getTextContent();
+                    LearningMaterial learningMaterial = new LearningMaterial(materialId, materialName, type, typicalLearningType, difficulty, interactivityLevel, interactivityType);
 
-                LearningMaterial learningMaterial = new LearningMaterial(materialId, materialName, type, typicalLearningType, difficulty, interactivityLevel, interactivityType);
+                    learningMaterials.add(learningMaterial);
+                } catch (NullPointerException e) {
+                    System.out.println(e);
+                }
 
-                learningMaterials.add(learningMaterial);
             }
 
             stream = new FileInputStream(new File(courseConfig.getLearningMaterialsFile()));
@@ -145,21 +150,22 @@ public class Course {
             line = br.readLine();
             learners = new ArrayList<>();
             while (line != null) {
-                ccp_info = line.split(";");                
-                if (ccp_info.length > 7) {
+                ccp_info = line.split(";");
+                if (ccp_info.length > 8) {
                     ArrayList<Concept> learningGoals = new ArrayList<>();
-                    for (int i = 7;i<ccp_info.length; i++) {
+                    for (int i = 8; i < ccp_info.length; i++) {
                         learningGoals.add(concepts.get(Integer.parseInt(ccp_info[i])));
                     }
                     int learnerId = Integer.parseInt(ccp_info[0]);
-                    int learnerLowerTime = Integer.parseInt(ccp_info[1]);
-                    int learnerUpperTime = Integer.parseInt(ccp_info[2]);
-                    int atvref = Integer.parseInt(ccp_info[3]);
-                    int senint= Integer.parseInt(ccp_info[4]);
-                    int visver = Integer.parseInt(ccp_info[5]);
-                    int seqglo = Integer.parseInt(ccp_info[6]);
-                    
-                    Learner learner = new Learner(learnerId, learnerLowerTime, learnerUpperTime, atvref, senint, visver, seqglo, learningGoals);
+                    String registrationCode = ccp_info[1];
+                    int learnerLowerTime = Integer.parseInt(ccp_info[2]);
+                    int learnerUpperTime = Integer.parseInt(ccp_info[3]);
+                    int atvref = Integer.parseInt(ccp_info[4]);
+                    int senint = Integer.parseInt(ccp_info[5]);
+                    int visver = Integer.parseInt(ccp_info[6]);
+                    int seqglo = Integer.parseInt(ccp_info[7]);
+
+                    Learner learner = new Learner(learnerId, registrationCode, learnerLowerTime, learnerUpperTime, atvref, senint, visver, seqglo, learningGoals);
 
                     learners.add(learner);
                 }
@@ -173,17 +179,26 @@ public class Course {
             reader = new InputStreamReader(stream);
             br = new BufferedReader(reader);
             line = br.readLine();
-            Learner learner;
-            HashMap<Concept, Double> score = null;
+            HashMap<Concept, Double> score;
+            Concept concept;
             while (line != null) {
                 ccp_info = line.split(";");
-                if (ccp_info.length == 1) {// get id
-                    learner = learners.get(Integer.parseInt(ccp_info[0]));
-                    score = new HashMap<>();
-                    learner.setScore(score);
-                } else {
-                    score.put(concepts.get(Integer.parseInt(ccp_info[0])), Double.parseDouble(ccp_info[1]));
+                int learnerId = Integer.parseInt(ccp_info[0]);
+                int conceptId = Integer.parseInt(ccp_info[2]);
+                Double conceptScore = Double.parseDouble(ccp_info[3]);
+                for (Learner learner : learners) {
+                    if (learner.getId() == learnerId) {
+                        concept = concepts.get(conceptId);
+                        if (learner.getScore() == null) {
+                            score = new HashMap<>();
+                            score.put(concept, conceptScore);
+                            learner.setScore(score);
+                        } else {
+                            learner.getScore().put(concept, conceptScore);
+                        }
+                    }
                 }
+
                 line = br.readLine();
             }
             br.close();
@@ -218,5 +233,5 @@ public class Course {
     public void setLearners(ArrayList<Learner> learners) {
         this.learners = learners;
     }
-    
+
 }
