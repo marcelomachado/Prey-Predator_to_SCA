@@ -1,5 +1,6 @@
 package ppatosca;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -10,12 +11,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+import java.io.File;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
+
 /**
  *
  * @author gtbavi
  */
 public class Util {
+
     static SingletonPrint printer = SingletonPrint.getInstance();
+
     public static <K, V extends Comparable<? super V>> Map<K, V>
             sortByValueDesc(Map<K, V> map) {
         List<Map.Entry<K, V>> list
@@ -153,7 +166,7 @@ public class Util {
         }
         return diff;
     }
-    
+
     public static int[] generateComplementaryVector(int[] vector) {
         int[] complementaryVector = new int[vector.length];
         for (int i = 0; i < vector.length; i++) {
@@ -164,6 +177,14 @@ public class Util {
             }
         }
         return complementaryVector;
+    }
+
+    public static Element readXMLFile(File file) throws ParserConfigurationException, SAXException, IOException {
+	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	Document doc = dBuilder.parse(file);
+        doc.getDocumentElement().normalize();
+        return doc.getDocumentElement();
     }
 
 }

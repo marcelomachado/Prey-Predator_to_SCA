@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -19,7 +18,6 @@ public class PPA extends FitnessFunction {
     private Population population;
     private List<Integer> listToShuffle;
     private int fitnessFunctionSelector;
-    final static Logger logger = Logger.getLogger(PPA.class);
     SingletonPrint printer = SingletonPrint.getInstance();
 
     public PPA() {
@@ -72,7 +70,7 @@ public class PPA extends FitnessFunction {
         Object[] orderedPopulation = populationSurvivalValues.keySet().toArray();
         int bestPreyId = (int) orderedPopulation[0];
         if (populationSurvivalValues.get(bestPreyId) == 0d) {
-            logger.debug("Melhor sequência encontrada:" + Util.preyToString(population.getIndividuals().get(bestPreyId).getPrey()));
+            printer.addString("Melhor sequência encontrada:" + Util.preyToString(population.getIndividuals().get(bestPreyId).getPrey()));
             //Util.printPrey(population.getIndividuals().get((int) orderedPopulation[0]).getPrey());
             System.exit(0);
         }

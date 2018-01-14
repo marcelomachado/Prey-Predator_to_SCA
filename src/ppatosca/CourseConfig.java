@@ -20,6 +20,7 @@ public class CourseConfig {
     private String conceptsFile;
     private String prerequisitesFile;
     private String learningMaterialsFile;
+    private String learningMaterialsLOM;
     private String learnersFile;
     private String learnersScoreFile;
 
@@ -27,6 +28,8 @@ public class CourseConfig {
         Properties config = new Properties();
         config.load(new FileInputStream(new File(configFile)));
         path = config.getProperty("ppatosca.path");
+        learningMaterialsLOM = config.getProperty("ppatosca.path.learningMaterialsLOM");
+        
         conceptsFile = path + config.getProperty("ppatosca.file.concepts");
         prerequisitesFile = path + config.getProperty("ppatosca.file.prerequisites");
         learningMaterialsFile = path + config.getProperty("ppatosca.file.learningMaterials");
@@ -74,4 +77,14 @@ public class CourseConfig {
     public void setLearnersScoreFile(String learnersScoreFile) {
         this.learnersScoreFile = learnersScoreFile;
     }   
+
+    public String getLearningMaterialsLOM() {
+        return learningMaterialsLOM;
+    }
+
+    public void setLearningMaterialsLOM(String learningMaterialsLOM) {
+        this.learningMaterialsLOM = learningMaterialsLOM;
+    }
+    
+    
 }
