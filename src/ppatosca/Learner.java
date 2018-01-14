@@ -10,9 +10,10 @@ import java.util.HashMap;
 public class Learner {
     
     private int id;
+    private String registrationCode;
     private HashMap<Concept, Double> score;
-    private int lower_time;
-    private int upper_time;    
+    private int lowerTime;
+    private int upperTime;    
     private ArrayList<Concept> learningGoals;  
     // Learning Style
     private int atvref;
@@ -24,10 +25,11 @@ public class Learner {
     public Learner() {
     }
 
-    public Learner(HashMap<Concept, Double> score, int lower_time, int upper_time, ArrayList<Concept> learningGoals, int atvref, int senint, int visver, int seqglo) {
-        this.score = score;
-        this.lower_time = lower_time;
-        this.upper_time = upper_time;
+    public Learner(int id, String registrationCode, int lowerTime, int upperTime, int atvref, int senint, int visver, int seqglo, ArrayList<Concept> learningGoals) {
+        this.id = id;
+        this.registrationCode = registrationCode;
+        this.lowerTime = lowerTime;
+        this.upperTime = upperTime;
         this.learningGoals = learningGoals;
         this.atvref = atvref;
         this.senint = senint;
@@ -51,20 +53,20 @@ public class Learner {
         this.score = score;
     }        
 
-    public int getLower_time() {
-        return lower_time;
+    public int getLowerTime() {
+        return lowerTime;
     }
 
-    public void setLower_time(int lower_time) {
-        this.lower_time = lower_time;
+    public void setLowerTime(int lowerTime) {
+        this.lowerTime = lowerTime;
     }
 
-    public int getUpper_time() {
-        return upper_time;
+    public int getUpperTime() {
+        return upperTime;
     }
 
-    public void setUpper_time(int upper_time) {
-        this.upper_time = upper_time;
+    public void setUpperTime(int upperTime) {
+        this.upperTime = upperTime;
     }
 
     public int getAtvref() {
@@ -108,8 +110,13 @@ public class Learner {
     public void setLearningGoals(ArrayList<Concept> learningGoals) {
         this.learningGoals = learningGoals;
     }
-    
-    
-    
+
+    public String getRegistrationCode() {
+        return registrationCode;
+    }
+
+    public void setRegistrationCode(String registrationCode) {
+        this.registrationCode = registrationCode;
+    }            
     
 }

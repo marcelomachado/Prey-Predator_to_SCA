@@ -10,6 +10,7 @@ public class Concept {
 
     private int id;
     private String name;
+    private String abbreviation;
     private ArrayList<Concept> prerequisites;
     private ArrayList<LearningMaterial> LMs;
     private int level;
@@ -18,9 +19,10 @@ public class Concept {
     }
     
 
-    public Concept(int id, String name, int level) {
+    public Concept(int id, String name, String abbreviation, int level) {
         this.id = id;
         this.name = name;
+        this.abbreviation = abbreviation;
         this.level = level;
     }
 
@@ -69,5 +71,13 @@ public class Concept {
     public void setLevel(int level) {
         this.level = level;
     }
+
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
+    }        
 
 }

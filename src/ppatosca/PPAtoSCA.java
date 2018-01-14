@@ -26,10 +26,7 @@ public class PPAtoSCA {
         ppa.generatePopulation(ppac.getPopulationSize(), course.getLearningMaterials().size());
         ppa.updatePopulation(ppac.getMaxBestPreyQuantity(),ppac.getMaxPredatorQuantity());
         printer.addString("População Original\n");
-        printer.addString(ppa.getPopulation().toString());
-        
-        
-        //System.out.println("");
+        printer.addString(ppa.getPopulation().toString());       
 
         //long tempoInicial = System.currentTimeMillis();
         for (int j = 1; j <= ppac.getMovementQuantity(); j++) {

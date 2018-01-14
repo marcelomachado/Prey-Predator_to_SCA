@@ -1,5 +1,6 @@
 package ppatosca;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 /**
@@ -7,30 +8,59 @@ import java.util.ArrayList;
  * @author gtbavi
  */
 public class LearningMaterial {
+
     private int id;
     // LOM attributes
     private String name;
-    private String type;    
-    private int typical_learning_time;
-    private Double dificulty;
+    private String type;
+    private int typicalLearningTime;
+    private Double difficulty;
     private String learningResourceType;
     private String interativityLevel;
     private String interativityType;
     // noLOM
     private ArrayList<Concept> coveredConcepts;
-    
+
     public LearningMaterial() {
     }
 
-    public LearningMaterial(int id, String name, String type, int typical_learning_time, Double dificulty, String interativityLevel, String interativityType) {
+    public LearningMaterial(int id, String name, String type, String typicalLearningTime, String difficulty, String interativityLevel, String interativityType) {
+        int hour = 0;
+        int minute = 0;
+        int second = 0;
         this.id = id;
         this.name = name;
         this.type = type;
-        this.typical_learning_time = typical_learning_time;
-        this.dificulty = dificulty;
+
+        if (difficulty.equals("very difficult")) {
+            this.difficulty = 1d;
+        } else if (difficulty.equals("difficult")) {
+            this.difficulty = 0.75d;
+        } else if (difficulty.equals("easy")) {
+            this.difficulty = 0.25d;
+        } else if (difficulty.equals("very easy")) {
+            this.difficulty = 0d;
+        } else {
+            this.difficulty = 0.5d;
+        }
+
+        typicalLearningTime = typicalLearningTime.replace("PT", "");
+        if (typicalLearningTime.split("H").length == 2) {
+            hour = Integer.parseInt(typicalLearningTime.split("H")[0]);
+            typicalLearningTime = typicalLearningTime.split("H")[1];
+        }
+        if (typicalLearningTime.split("M").length == 2) {
+            minute = Integer.parseInt(typicalLearningTime.split("M")[0]);
+            typicalLearningTime = typicalLearningTime.split("M")[1];
+        }
+        
+        second = Integer.parseInt(typicalLearningTime.replace("S",""));
+
+        this.typicalLearningTime = (hour * 360) + (minute * 60) + second;
+
         this.interativityLevel = interativityLevel;
         this.interativityType = interativityType;
-        
+
     }
 
     public String getType() {
@@ -41,20 +71,20 @@ public class LearningMaterial {
         this.type = type;
     }
 
-    public Double getDificulty() {
-        return dificulty;
+    public Double getDifficulty() {
+        return difficulty;
     }
 
-    public void setDificulty(Double dificulty) {
-        this.dificulty = dificulty;
+    public void setDifficulty(Double difficulty) {
+        this.difficulty = difficulty;
     }
 
-    public int getTypical_learning_time() {
-        return typical_learning_time;
+    public int getTypicalLearningTime() {
+        return typicalLearningTime;
     }
 
-    public void setTypical_learning_time(int typical_learning_time) {
-        this.typical_learning_time = typical_learning_time;
+    public void setTypicalLearningTime(int typicalLearningTime) {
+        this.typicalLearningTime = typicalLearningTime;
     }
 
     public int getId() {
@@ -104,13 +134,10 @@ public class LearningMaterial {
     public void setInterativityType(String interativityType) {
         this.interativityType = interativityType;
     }
-    
-    
+
     @Override
     public String toString() {
-        return "LearningMaterial{" + "id=" + id + ", name=" + name + ", type=" + type + ", typical_learning_time=" + typical_learning_time + ", dificulty=" + dificulty + ", couveredConcepts=" + coveredConcepts + '}';
+        return "LearningMaterial{" + "id=" + id + ", name=" + name + ", type=" + type + ", typical_learning_time=" + typicalLearningTime + ", dificulty=" + difficulty + ", couveredConcepts=" + coveredConcepts + '}';
     }
-    
-    
 
 }

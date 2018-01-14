@@ -38,7 +38,7 @@ public class RandomCourse {
 
         String courseName;
         String learningMaterialName;
-        int typicalLearningType;
+        int typicalLearningTime;
 
         /**
          * Generate Concepts file
@@ -129,9 +129,9 @@ public class RandomCourse {
                 } else {
                     concept = random.nextInt(Integer.parseInt(args[0]));
                 }
-                typicalLearningType = random.nextInt(11);
+                typicalLearningTime = random.nextInt(11);
 
-                txtFile.append(i + ";" + learningMaterialName + ";" + learningMaterialType[random.nextInt(learningMaterialType.length)] + ";" + typicalLearningType + ";" + round(dificulty,2) + ";" + concept + "\n");
+                txtFile.append(i + ";" + learningMaterialName + ";" + learningMaterialType[random.nextInt(learningMaterialType.length)] + ";" + typicalLearningTime + ";" + round(dificulty,2) + ";" + concept + "\n");
 
             }
             txtFile.close();

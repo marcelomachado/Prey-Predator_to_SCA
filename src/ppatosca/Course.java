@@ -24,15 +24,17 @@ public class Course {
     private ArrayList<Concept> concepts;
     private ArrayList<LearningMaterial> learningMaterials;
     private ArrayList<Learner> learners;
+    FileInputStream stream;
+    InputStreamReader reader;
+    BufferedReader br;
 
     public Course(String configFile) {
         // Configuration: course args
         CourseConfig courseConfig;
         try {
             courseConfig = new CourseConfig(configFile);
-            FileInputStream stream;
             stream = new FileInputStream(new File(courseConfig.getConceptsFile()));
-            InputStreamReader reader = new InputStreamReader(stream);
+            reader = new InputStreamReader(stream);
             BufferedReader br = new BufferedReader(reader);
             String line = br.readLine();
 
@@ -70,7 +72,8 @@ public class Course {
             /**
              * Learning Materials
              */
-            ///TODO: fazer parser do LOM para capturar as informações
+            learningMaterials = new ArrayList<>();
+
             File lomFIles[];
             File path = new File(courseConfig.getLearningMaterialsLOM());
             lomFIles = path.listFiles();
@@ -80,90 +83,109 @@ public class Course {
                 int materialId = Integer.parseInt(xmlElement.getElementsByTagName("entry").item(0).getTextContent());
                 String materialName = xmlElement.getElementsByTagName("title").item(0).getChildNodes().item(0).getTextContent();
                 String type = xmlElement.getElementsByTagName("technical").item(0).getChildNodes().item(0).getTextContent();
-                String typicalLearningType = xmlElement.getElementsByTagName("typicalLearningTime").item(0).getChildNodes().item(0).getTextContent();
+                Node typicalLearningTypeNode = xmlElement.getElementsByTagName("typicalLearningTime").item(0);
+                Element typicalLearningTypeElement = (Element) typicalLearningTypeNode;
+                String typicalLearningType = typicalLearningTypeElement.getElementsByTagName("duration").item(0).getTextContent();
+
                 Node difficultyNode = xmlElement.getElementsByTagName("difficulty").item(0);
                 Element difficultyElement = (Element) difficultyNode;
-                difficultyElement.getElementsByTagName("value");
+                String difficulty = difficultyElement.getElementsByTagName("value").item(0).getTextContent();
 
-                
-                
+                Node interactivityLevelNode = xmlElement.getElementsByTagName("interactivityLevel").item(0);
+                Element interactivityLevelElement = (Element) interactivityLevelNode;
+                String interactivityLevel = interactivityLevelElement.getElementsByTagName("value").item(0).getTextContent();
 
-                
-                LearningMaterial learningMaterial = new LearningMaterial(materialId, materialName, type, Integer.parseInt(ccp_info[3]), Double.parseDouble(ccp_info[4]));
-                System.exit(i);
+                Node interactivityTypeNode = xmlElement.getElementsByTagName("interactivityType").item(0);
+                Element interactivityTypeElement = (Element) interactivityTypeNode;
+                String interactivityType = interactivityTypeElement.getElementsByTagName("value").item(0).getTextContent();
+
+                LearningMaterial learningMaterial = new LearningMaterial(materialId, materialName, type, typicalLearningType, difficulty, interactivityLevel, interactivityType);
+
+                learningMaterials.add(learningMaterial);
             }
 
-//        stream = new FileInputStream(new File(courseConfig.getLearningMaterialsFile()));
-//        reader = new InputStreamReader(stream);
-//        br = new BufferedReader(reader);
-//        line = br.readLine();
-//        learningMaterials = new ArrayList<>();
-//        while (line != null) {
-//            ccp_info = line.split(";");
-//            LearningMaterial learningMaterial = new LearningMaterial(Integer.parseInt(ccp_info[0]), ccp_info[1], ccp_info[2], Integer.parseInt(ccp_info[3]), Double.parseDouble(ccp_info[4]));
-//            learningMaterials.add(learningMaterial);
-//            ///TODO: Ler outro arquivo para capturar essas informações
-//            for (int i = 5; i < ccp_info.length; i++) {
-//                Concept conceptMaterial = concepts.get(Integer.parseInt(ccp_info[i]));
-//                if (conceptMaterial.getLMs() == null) {
-//                    ArrayList<LearningMaterial> lMs = new ArrayList<>();
-//                    lMs.add(learningMaterial);
-//                    conceptMaterial.setLMs(lMs);
-//                } else {
-//                    conceptMaterial.getLMs().add(learningMaterial);
-//                }
-//            }
-//
-//            line = br.readLine();
-//        }
-//
-//        /**
-//         * Learner
-//         */
-//        stream = new FileInputStream(new File(courseConfig.getLearnersFile()));
-//        reader = new InputStreamReader(stream);
-//        br = new BufferedReader(reader);
-//        line = br.readLine();
-//        learners = new ArrayList<>();
-//        while (line != null) {
-//            ccp_info = line.split(";");
-//            Learner learner = new Learner(Integer.parseInt(ccp_info[0]), Double.parseDouble(ccp_info[1]), Integer.parseInt(ccp_info[2]), Integer.parseInt(ccp_info[3]));
-//            if (ccp_info.length > 4) {
-//                for (int i = 4; i < ccp_info.length; i++) {
-//                    if (learner.getLearningGoals() == null) {
-//                        ArrayList<Concept> learningGoals = new ArrayList<>();
-//                        learningGoals.add(concepts.get(Integer.parseInt(ccp_info[i])));
-//                        learner.setLearningGoals(learningGoals);
-//                    } else {
-//                        learner.getLearningGoals().add(concepts.get(Integer.parseInt(ccp_info[i])));
-//                    }
-//
-//                }
-//            }
-//            learners.add(learner);
-//            line = br.readLine();
-//        }
-//
-//        /**
-//         * Learner Score
-//         */
-//        stream = new FileInputStream(new File(courseConfig.getLearnersScoreFile()));
-//        reader = new InputStreamReader(stream);
-//        br = new BufferedReader(reader);
-//        line = br.readLine();
-//        Learner learner;
-//        HashMap<Concept, Double> score = null;
-//        while (line != null) {
-//            ccp_info = line.split(";");
-//            if (ccp_info.length == 1) {// get id
-//                learner = learners.get(Integer.parseInt(ccp_info[0]));
-//                score = new HashMap<>();
-//                learner.setScore(score);
-//            } else {
-//                score.put(concepts.get(Integer.parseInt(ccp_info[0])), Double.parseDouble(ccp_info[1]));
-//            }
-//            line = br.readLine();
-//        }
+            stream = new FileInputStream(new File(courseConfig.getLearningMaterialsFile()));
+            reader = new InputStreamReader(stream);
+            br = new BufferedReader(reader);
+            line = br.readLine();
+            learningMaterials = new ArrayList<>();
+            while (line != null) {
+                ccp_info = line.split(";");
+                LearningMaterial learningMaterial = learningMaterials.get(Integer.parseInt(ccp_info[0]));
+                for (int i = 3; i < ccp_info.length; i++) {
+                    Concept conceptMaterial = concepts.get(Integer.parseInt(ccp_info[i]));
+                    // Insert concept in material list
+                    if (learningMaterial.getCoveredConcepts() == null) {
+                        ArrayList<Concept> concepts = new ArrayList<>();
+                        concepts.add(conceptMaterial);
+                        learningMaterial.setCoveredConcepts(concepts);
+                    } else {
+                        learningMaterial.getCoveredConcepts().add(conceptMaterial);
+                    }
+
+                    // Insert material in concept list
+                    if (conceptMaterial.getLMs() == null) {
+                        ArrayList<LearningMaterial> lMs = new ArrayList<>();
+                        lMs.add(learningMaterial);
+                        conceptMaterial.setLMs(lMs);
+                    } else {
+                        conceptMaterial.getLMs().add(learningMaterial);
+                    }
+                }
+
+                line = br.readLine();
+            }
+
+            /**
+             * Learner
+             */
+            stream = new FileInputStream(new File(courseConfig.getLearnersFile()));
+            reader = new InputStreamReader(stream);
+            br = new BufferedReader(reader);
+            line = br.readLine();
+            learners = new ArrayList<>();
+            while (line != null) {
+                ccp_info = line.split(";");                
+                if (ccp_info.length > 7) {
+                    ArrayList<Concept> learningGoals = new ArrayList<>();
+                    for (int i = 7;i<ccp_info.length; i++) {
+                        learningGoals.add(concepts.get(Integer.parseInt(ccp_info[i])));
+                    }
+                    int learnerId = Integer.parseInt(ccp_info[0]);
+                    int learnerLowerTime = Integer.parseInt(ccp_info[1]);
+                    int learnerUpperTime = Integer.parseInt(ccp_info[2]);
+                    int atvref = Integer.parseInt(ccp_info[3]);
+                    int senint= Integer.parseInt(ccp_info[4]);
+                    int visver = Integer.parseInt(ccp_info[5]);
+                    int seqglo = Integer.parseInt(ccp_info[6]);
+                    
+                    Learner learner = new Learner(learnerId, learnerLowerTime, learnerUpperTime, atvref, senint, visver, seqglo, learningGoals);
+
+                    learners.add(learner);
+                }
+                line = br.readLine();
+            }
+
+            /**
+             * Learner Score
+             */
+            stream = new FileInputStream(new File(courseConfig.getLearnersScoreFile()));
+            reader = new InputStreamReader(stream);
+            br = new BufferedReader(reader);
+            line = br.readLine();
+            Learner learner;
+            HashMap<Concept, Double> score = null;
+            while (line != null) {
+                ccp_info = line.split(";");
+                if (ccp_info.length == 1) {// get id
+                    learner = learners.get(Integer.parseInt(ccp_info[0]));
+                    score = new HashMap<>();
+                    learner.setScore(score);
+                } else {
+                    score.put(concepts.get(Integer.parseInt(ccp_info[0])), Double.parseDouble(ccp_info[1]));
+                }
+                line = br.readLine();
+            }
             br.close();
             reader.close();
             stream.close();
@@ -196,4 +218,5 @@ public class Course {
     public void setLearners(ArrayList<Learner> learners) {
         this.learners = learners;
     }
+    
 }

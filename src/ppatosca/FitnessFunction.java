@@ -69,6 +69,7 @@ public class FitnessFunction {
         ArrayList<Concept> coveredConcepts;
         int qntt = 0;
         int numberOfConcepts;
+        
         for (int i = 0; i < individual.length; i++) {
             learnerConceptAbility = 0d;
             numberOfConcepts = 0;
@@ -83,13 +84,12 @@ public class FitnessFunction {
                 if(numberOfConcepts != 0){
                     learnerConceptAbility /= numberOfConcepts;
                 }
-                sum += Math.abs(learningMaterials.get(i).getDificulty() - learnerConceptAbility);
+                sum += Math.abs(learningMaterials.get(i).getDifficulty() - learnerConceptAbility);
                 qntt++;
             }
         }
 
         return (qntt != 0) ? (sum / qntt) : COURSE_COMPLETED;
-
     }
 
     // O3
@@ -98,10 +98,10 @@ public class FitnessFunction {
 
         for (int i = 0; i < individual.length; i++) {
             if (individual[i] == 1) {
-                totalTime += learningMaterials.get(i).getTypical_learning_time();
+                totalTime += learningMaterials.get(i).getTypicalLearningTime();
             }
         }
-        return Math.max(0d, (learner.getLower_time() - totalTime)) + Math.max(0d, (totalTime - learner.getUpper_time()));
+        return Math.max(0d, (learner.getLowerTime() - totalTime)) + Math.max(0d, (totalTime - learner.getUpperTime()));
     }
 
     // O4
