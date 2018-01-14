@@ -73,20 +73,5 @@ public class CourseConfig {
 
     public void setLearnersScoreFile(String learnersScoreFile) {
         this.learnersScoreFile = learnersScoreFile;
-    }
-    
-    
-    
-//    int movementQuantity = Integer.parseInt(config.getProperty("ppatosca.arg.movementQuantity", "100"));
-//    int populationSize = Integer.parseInt(config.getProperty("ppatosca.arg.populationSize", "10"));
-//    Double distanceFactor = Double.parseDouble(config.getProperty("ppatosca.arg.distanceFactor"));
-//    Double survivalValueFactor = Double.parseDouble(config.getProperty("ppatosca.arg.survivalValueFactor"));
-//    int minimumStepLength = Integer.parseInt(config.getProperty("ppatosca.arg.minimumStepLength"));
-//    int maximumStepLength = Integer.parseInt(config.getProperty("ppatosca.arg.maximumStepLength"));
-//    int followedPreysQuantity = Integer.parseInt(config.getProperty("ppatosca.arg.followedPreysQuantity"));
-//    Double followUp = Double.parseDouble(config.getProperty("ppatosca.arg.followUp"));
-//    int quantityBestRandomPreys = Integer.parseInt(config.getProperty("ppatosca.arg.quantityBestRandomPreys"));
-    
-    
-
+    }   
 }

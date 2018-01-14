@@ -61,6 +61,7 @@ public class Course {
         /**
          * Learning Materials
          */
+        ///TODO: fazer parser do LOM para capturar as informações
         stream = new FileInputStream(new File(courseConfig.getLearningMaterialsFile()));
         reader = new InputStreamReader(stream);
         br = new BufferedReader(reader);
@@ -70,6 +71,7 @@ public class Course {
             ccp_info = line.split(";");
             LearningMaterial learningMaterial = new LearningMaterial(Integer.parseInt(ccp_info[0]), ccp_info[1], ccp_info[2], Integer.parseInt(ccp_info[3]), Double.parseDouble(ccp_info[4]));
             learningMaterials.add(learningMaterial);
+            ///TODO: Ler outro arquivo para capturar essas informações
             for (int i = 5; i < ccp_info.length; i++) {
                 Concept conceptMaterial = concepts.get(Integer.parseInt(ccp_info[i]));
                 if (conceptMaterial.getLMs() == null) {
@@ -110,6 +112,7 @@ public class Course {
             learners.add(learner);
             line = br.readLine();
         }
+        
         /**
          * Learner Score
          */
