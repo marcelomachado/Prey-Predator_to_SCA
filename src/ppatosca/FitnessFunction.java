@@ -144,5 +144,24 @@ public class FitnessFunction {
 
         return sum;
     }
+    
+    // O5
+    public static Double learningStyleObjetiveFunction(int[] individual) {
+        int qntt = 0;
+        Double sum = 0d;
+
+        for (int i = 0; i < individual.length; i++) {
+            if (individual[i] == 1) {
+                qntt++;
+                //TODO delete hardcoded numbers
+                sum += (-Math.abs(learningMaterials.get(i).getLearningStyleActiveValue() + learningMaterials.get(i).getLearningStyleReflexiveValue() -2*learner.getAtvref())+12)/12;
+//                for (Concept concept : concepts) {
+//                    sum += Math.abs((concept.getLMs().contains(learningMaterials.get(i)) ? 1 : 0) - ((learner.getLearningGoals().contains(concept)) ? 1 : 0));
+//                }
+            }
+        }
+
+        return (qntt != 0) ? (sum / qntt) : COURSE_COMPLETED;
+    }
 
 }

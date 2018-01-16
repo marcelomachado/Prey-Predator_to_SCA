@@ -31,6 +31,7 @@ public class Learner {
         this.lowerTime = lowerTime;
         this.upperTime = upperTime;
         this.learningGoals = learningGoals;
+        //TODO change range of learning style
         this.atvref = atvref;
         this.senint = senint;
         this.visver = visver;

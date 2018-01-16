@@ -20,6 +20,8 @@ public class LearningMaterial {
     private String interativityType;
     // noLOM
     private ArrayList<Concept> coveredConcepts;
+    private int learningStyleActiveValue;
+    private int learningStyleReflexiveValue;
 
     public LearningMaterial() {
     }
@@ -65,6 +67,12 @@ public class LearningMaterial {
         this.interativityLevel = interativityLevel;
 
         this.interativityType = interativityType;
+        
+        //TODO associate learning style values based on table from the paper
+        this.learningStyleActiveValue = 0;
+        this.learningStyleReflexiveValue = 0;
+        
+        
 
     }
 
@@ -139,6 +147,24 @@ public class LearningMaterial {
     public void setInterativityType(String interativityType) {
         this.interativityType = interativityType;
     }
+
+    public int getLearningStyleActiveValue() {
+        return learningStyleActiveValue;
+    }
+
+    public void setLearningStyleActiveValue(int learningStyleActiveValue) {
+        this.learningStyleActiveValue = learningStyleActiveValue;
+    }
+
+    public int getLearningStyleReflexiveValue() {
+        return learningStyleReflexiveValue;
+    }
+
+    public void setLearningStyleReflexiveValue(int learningStyleReflexiveValue) {
+        this.learningStyleReflexiveValue = learningStyleReflexiveValue;
+    }
+    
+    
 
     @Override
     public String toString() {
