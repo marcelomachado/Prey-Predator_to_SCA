@@ -16,10 +16,10 @@ public class Learner {
     private int upperTime;    
     private ArrayList<Concept> learningGoals;  
     // Learning Style
-    private int atvref;
-    private int senint;
-    private int visver;
-    private int seqglo;
+    private int atvRef;
+    private int senInt;
+    private int visVer;
+    private int seqGlo;
     
 
     public Learner() {
@@ -32,10 +32,10 @@ public class Learner {
         this.upperTime = upperTime;
         this.learningGoals = learningGoals;
         //TODO change range of learning style
-        this.atvref = atvref;
-        this.senint = senint;
-        this.visver = visver;
-        this.seqglo = seqglo;
+        this.atvRef = atvref;
+        this.senInt = senint;
+        this.visVer = visver;
+        this.seqGlo = seqglo;
     }
     
     public int getId() {
@@ -70,36 +70,36 @@ public class Learner {
         this.upperTime = upperTime;
     }
 
-    public int getAtvref() {
-        return atvref;
+    public int getAtvRef() {
+        return atvRef;
     }
 
-    public void setAtvref(int atvref) {
-        this.atvref = atvref;
+    public void setAtvRef(int atvRef) {
+        this.atvRef = atvRef;
     }
 
-    public int getSenint() {
-        return senint;
+    public int getSenInt() {
+        return senInt;
     }
 
-    public void setSenint(int senint) {
-        this.senint = senint;
+    public void setSenInt(int senInt) {
+        this.senInt = senInt;
     }
 
-    public int getVisver() {
-        return visver;
+    public int getVisVer() {
+        return visVer;
     }
 
-    public void setVisver(int visver) {
-        this.visver = visver;
+    public void setVisVer(int visVer) {
+        this.visVer = visVer;
     }
 
-    public int getSeqglo() {
-        return seqglo;
+    public int getSeqGlo() {
+        return seqGlo;
     }
 
-    public void setSeqglo(int seqglo) {
-        this.seqglo = seqglo;
+    public void setSeqGlo(int seqGlo) {
+        this.seqGlo = seqGlo;
     }
 
     

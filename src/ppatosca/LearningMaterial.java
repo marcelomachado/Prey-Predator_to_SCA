@@ -22,6 +22,12 @@ public class LearningMaterial {
     private ArrayList<Concept> coveredConcepts;
     private int learningStyleActiveValue;
     private int learningStyleReflexiveValue;
+    private int learningStyleSensorialValue;
+    private int learningStyleIntuitiveValue;
+    private int learningStyleVisualValue;
+    private int learningStyleVerbalValue;
+    private int learningStyleSequencialValue;
+    private int learningStyleGlobalValue;
 
     public LearningMaterial() {
     }
@@ -162,6 +168,54 @@ public class LearningMaterial {
 
     public void setLearningStyleReflexiveValue(int learningStyleReflexiveValue) {
         this.learningStyleReflexiveValue = learningStyleReflexiveValue;
+    }
+
+    public int getLearningStyleSensorialValue() {
+        return learningStyleSensorialValue;
+    }
+
+    public void setLearningStyleSensorialValue(int learningStyleSensorialValue) {
+        this.learningStyleSensorialValue = learningStyleSensorialValue;
+    }
+
+    public int getLearningStyleIntuitiveValue() {
+        return learningStyleIntuitiveValue;
+    }
+
+    public void setLearningStyleIntuitiveValue(int learningStyleIntuitiveValue) {
+        this.learningStyleIntuitiveValue = learningStyleIntuitiveValue;
+    }
+
+    public int getLearningStyleVisualValue() {
+        return learningStyleVisualValue;
+    }
+
+    public void setLearningStyleVisualValue(int learningStyleVisualValue) {
+        this.learningStyleVisualValue = learningStyleVisualValue;
+    }
+
+    public int getLearningStyleVerbalValue() {
+        return learningStyleVerbalValue;
+    }
+
+    public void setLearningStyleVerbalValue(int learningStyleVerbalValue) {
+        this.learningStyleVerbalValue = learningStyleVerbalValue;
+    }
+
+    public int getLearningStyleSequencialValue() {
+        return learningStyleSequencialValue;
+    }
+
+    public void setLearningStyleSequencialValue(int learningStyleSequencialValue) {
+        this.learningStyleSequencialValue = learningStyleSequencialValue;
+    }
+
+    public int getLearningStyleGlobalValue() {
+        return learningStyleGlobalValue;
+    }
+
+    public void setLearningStyleGlobalValue(int learningStyleGlobalValue) {
+        this.learningStyleGlobalValue = learningStyleGlobalValue;
     }
     
     

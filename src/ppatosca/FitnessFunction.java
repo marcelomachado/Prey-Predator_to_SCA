@@ -146,18 +146,35 @@ public class FitnessFunction {
     }
     
     // O5
+    //    sum(-| [(MaterialMaxAtv - Material_i_Atv) -AlunoAtvRef]- [(MaterialMaxRef - Material_i_Ref) + AlunoAtvRef)] + 
+    //    [(MaterialMaxSen - Material_i_Sen) -AlunoSenInt]- [(MaterialMaxInt - Material_i_Int) + AlunoSenInt)] +
+    //    [(MaterialMaxVis - Material_i_Vis) -AlunoVisVer]- [(MaterialMaxVer - Material_i_Ver) + AlunoVisVer)] +
+    //    [(MaterialMaxAtvSeq - Material_i_Seq) -AlunoSeqGlo]- [(MaterialMaxGlo - Material_i_Glo) + AlunoSeqGlo)] |)_i_0_N
+    //    _____________________________________________________________________________________________________________________
+    //                                               sum(individual[i])_i_0_N
     public static Double learningStyleObjetiveFunction(int[] individual) {
         int qntt = 0;
+        int atvRef;
+        int senInt;
+        int visVer;
+        int seqGlo;
+        
         Double sum = 0d;
 
         for (int i = 0; i < individual.length; i++) {
             if (individual[i] == 1) {
                 qntt++;
                 //TODO delete hardcoded numbers
-                sum += (-Math.abs(learningMaterials.get(i).getLearningStyleActiveValue() + learningMaterials.get(i).getLearningStyleReflexiveValue() -2*learner.getAtvref())+12)/12;
-//                for (Concept concept : concepts) {
-//                    sum += Math.abs((concept.getLMs().contains(learningMaterials.get(i)) ? 1 : 0) - ((learner.getLearningGoals().contains(concept)) ? 1 : 0));
-//                }
+                //        atvRef = -Math.abs(((learningMaterialMaxAtv - learningMaterialAtv) - learnerAtvRef) - ((learningMaterialMaxRef - learningMaterialRef) + learnerAtvRef));
+                atvRef = -Math.abs(((6 - learningMaterials.get(i).getLearningStyleActiveValue()) - learner.getAtvRef()) - ((6 - learningMaterials.get(i).getLearningStyleReflexiveValue()) + learner.getAtvRef()));
+                //        senInt = -Math.abs(((learningMaterialMaxSen - learningMaterialSen) - learnerSenInt) - ((learningMaterialMaxInt - learningMaterialInt) + learnerSenInt));
+                senInt = -Math.abs(((1 - learningMaterials.get(i).getLearningStyleSensorialValue()) - learner.getSenInt()) - ((1 - learningMaterials.get(i).getLearningStyleIntuitiveValue()) + learner.getSenInt()));
+                //        visVer = -Math.abs(((learningMaterialMaxVis - learningMaterialVis) - learnerVisVer) - ((learningMaterialMaxVer - learningMaterialVer) + learnerVisVer));
+                visVer = -Math.abs(((1 - learningMaterials.get(i).getLearningStyleVisualValue()) - learner.getVisVer()) - ((1 - learningMaterials.get(i).getLearningStyleVerbalValue()) + learner.getVisVer()));
+                //        seqGlo = -Math.abs(((learningMaterialMaxSeq - learningMaterialSeq) - learnerSeqGlo) - ((learningMaterialMaxGlo - learningMaterialGlo) + learnerSeqGlo));
+                seqGlo = -Math.abs(((1 - learningMaterials.get(i).getLearningStyleSequencialValue()) - learner.getSeqGlo()) - ((1 - learningMaterials.get(i).getLearningStyleGlobalValue()) + learner.getSeqGlo()));
+                //sum += (-Math.abs(learningMaterials.get(i).getLearningStyleActiveValue() + learningMaterials.get(i).getLearningStyleReflexiveValue() -2*learner.getAtvref())+12)/12;
+                sum+=(atvRef+senInt+visVer+seqGlo);
             }
         }
 
