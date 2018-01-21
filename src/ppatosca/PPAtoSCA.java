@@ -20,7 +20,7 @@ public class PPAtoSCA {
         /**
          * Population
          */
-        PPA ppa = new PPA(course.getLearningMaterials(), course.getLearners().get(0), course.getConcepts());
+        PPA ppa = new PPA(course.getLearningMaterials(), course.getLearners().get("201675018M"), course.getConcepts());
         ppa.setFitnessFunctions(ffc.getFitnessFunction());
         // ArrayList<Individual> bestIndividuals = new ArrayList<>();
         ppa.generatePopulation(ppac.getPopulationSize(), course.getLearningMaterials().size());

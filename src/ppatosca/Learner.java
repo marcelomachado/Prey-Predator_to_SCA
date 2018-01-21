@@ -8,36 +8,85 @@ import java.util.HashMap;
  * @author gtbavi
  */
 public class Learner {
-    
+
     private int id;
     private String registrationCode;
     private HashMap<Concept, Double> score;
     private int lowerTime;
-    private int upperTime;    
-    private ArrayList<Concept> learningGoals;  
+    private int upperTime;
+    private ArrayList<Concept> learningGoals;
     // Learning Style
-    private int atvRef;
-    private int senInt;
-    private int visVer;
-    private int seqGlo;
-    
+    private int atvref;
+    private int senint;
+    private int visver;
+    private int seqglo;
 
     public Learner() {
     }
 
-    public Learner(int id, String registrationCode, int lowerTime, int upperTime, int atvref, int senint, int visver, int seqglo, ArrayList<Concept> learningGoals) {
-        this.id = id;
+    public Learner(String registrationCode, int lowerTime, int upperTime, int atvref, int senint, int visver, int seqglo, ArrayList<Concept> learningGoals) {
         this.registrationCode = registrationCode;
         this.lowerTime = lowerTime;
         this.upperTime = upperTime;
         this.learningGoals = learningGoals;
-        //TODO change range of learning style
-        this.atvRef = atvref;
-        this.senInt = senint;
-        this.visVer = visver;
-        this.seqGlo = seqglo;
+        if (atvref == -11 || atvref == -9) {
+            this.atvref = -3;
+        } else if (atvref == -7 || atvref == -5) {
+            this.atvref = -2;
+        } else if (atvref == -3 || atvref == -1) {
+            this.atvref = -1;
+        }else if (atvref == 11 || atvref == 9) {
+            this.atvref = 3;
+        } else if (atvref == 7 || atvref == 5) {
+            this.atvref = 2;
+        } else if (atvref == 3 || atvref == 1) {
+            this.atvref = 1;
+        }
+        
+        if (senint == -11 || senint == -9) {
+            this.senint = -3;
+        } else if (senint == -7 || senint == -5) {
+            this.senint = -2;
+        } else if (senint == -3 || senint == -1) {
+            this.senint = -1;
+        }else if (senint == 11 || senint == 9) {
+            this.senint = 3;
+        } else if (senint == 7 || senint == 5) {
+            this.senint = 2;
+        } else if (senint == 3 || senint == 1) {
+            this.senint = 1;
+        }
+        
+        if (visver == -11 || visver == -9) {
+            this.visver = -3;
+        } else if (visver == -7 || visver == -5) {
+            this.visver = -2;
+        } else if (visver == -3 || visver == -1) {
+            this.visver = -1;
+        }else if (visver == 11 || visver == 9) {
+            this.visver = 3;
+        } else if (visver == 7 || visver == 5) {
+            this.visver = 2;
+        } else if (visver == 3 || visver == 1) {
+            this.visver = 1;
+        }
+        
+        if (seqglo == -11 || seqglo == -9) {
+            this.seqglo = -3;
+        } else if (seqglo == -7 || seqglo == -5) {
+            this.seqglo = -2;
+        } else if (seqglo == -3 || seqglo == -1) {
+            this.seqglo = -1;
+        }else if (seqglo == 11 || seqglo == 9) {
+            this.seqglo = 3;
+        } else if (seqglo == 7 || seqglo == 5) {
+            this.seqglo = 2;
+        } else if (seqglo == 3 || seqglo == 1) {
+            this.seqglo = 1;
+        }
+        
     }
-    
+
     public int getId() {
         return id;
     }
@@ -52,7 +101,7 @@ public class Learner {
 
     public void setScore(HashMap<Concept, Double> score) {
         this.score = score;
-    }        
+    }
 
     public int getLowerTime() {
         return lowerTime;
@@ -70,40 +119,38 @@ public class Learner {
         this.upperTime = upperTime;
     }
 
-    public int getAtvRef() {
-        return atvRef;
+    public int getAtvref() {
+        return atvref;
     }
 
-    public void setAtvRef(int atvRef) {
-        this.atvRef = atvRef;
+    public void setAtvref(int atvref) {
+        this.atvref = atvref;
     }
 
-    public int getSenInt() {
-        return senInt;
+    public int getSenint() {
+        return senint;
     }
 
-    public void setSenInt(int senInt) {
-        this.senInt = senInt;
+    public void setSenint(int senint) {
+        this.senint = senint;
     }
 
-    public int getVisVer() {
-        return visVer;
+    public int getVisver() {
+        return visver;
     }
 
-    public void setVisVer(int visVer) {
-        this.visVer = visVer;
+    public void setVisver(int visver) {
+        this.visver = visver;
     }
 
-    public int getSeqGlo() {
-        return seqGlo;
+    public int getSeqglo() {
+        return seqglo;
     }
 
-    public void setSeqGlo(int seqGlo) {
-        this.seqGlo = seqGlo;
+    public void setSeqglo(int seqglo) {
+        this.seqglo = seqglo;
     }
 
-    
-    
     public ArrayList<Concept> getLearningGoals() {
         return learningGoals;
     }
@@ -118,6 +165,6 @@ public class Learner {
 
     public void setRegistrationCode(String registrationCode) {
         this.registrationCode = registrationCode;
-    }            
-    
+    }
+
 }

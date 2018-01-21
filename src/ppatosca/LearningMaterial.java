@@ -15,24 +15,18 @@ public class LearningMaterial {
     private String type;
     private int typicalLearningTime;
     private Double difficulty;
-    private String learningResourceType;
+    private String[] learningResourceType;
     private String interativityLevel;
     private String interativityType;
     // noLOM
     private ArrayList<Concept> coveredConcepts;
     private int learningStyleActiveValue;
     private int learningStyleReflexiveValue;
-    private int learningStyleSensorialValue;
-    private int learningStyleIntuitiveValue;
-    private int learningStyleVisualValue;
-    private int learningStyleVerbalValue;
-    private int learningStyleSequencialValue;
-    private int learningStyleGlobalValue;
 
     public LearningMaterial() {
     }
 
-    public LearningMaterial(int id, String name, String type, String typicalLearningTime, String difficulty, String interativityLevel, String interativityType) {
+    public LearningMaterial(int id, String name, String type, String typicalLearningTime, String difficulty, String[] learningResourceType, String interativityLevel, String interativityType) {
         int hour = 0;
         int minute = 0;
         int second = 0;
@@ -40,9 +34,9 @@ public class LearningMaterial {
         this.name = name;
         this.type = type;
 
-        if (difficulty.equals("very difficult")) {
+        if (difficulty.equals("very difficult") || difficulty.equals("very difficulty")) {
             this.difficulty = 1d;
-        } else if (difficulty.equals("difficult")) {
+        } else if (difficulty.equals("difficult") || difficulty.equals("difficulty"))  {
             this.difficulty = 0.75d;
         } else if (difficulty.equals("easy")) {
             this.difficulty = 0.25d;
@@ -51,6 +45,7 @@ public class LearningMaterial {
         } else {
             this.difficulty = 0.5d;
         }
+        this.learningResourceType = learningResourceType;
 
         typicalLearningTime = typicalLearningTime.replace("PT", "");
         if (typicalLearningTime.contains("H")) {
@@ -77,9 +72,6 @@ public class LearningMaterial {
         //TODO associate learning style values based on table from the paper
         this.learningStyleActiveValue = 0;
         this.learningStyleReflexiveValue = 0;
-        
-        
-
     }
 
     public String getType() {
@@ -130,13 +122,14 @@ public class LearningMaterial {
         this.coveredConcepts = coveredConcepts;
     }
 
-    public String getLearningResourceType() {
+    public String[] getLearningResourceType() {
         return learningResourceType;
     }
 
-    public void setLearningResourceType(String learningResourceType) {
+    public void setLearningResourceType(String[] learningResourceType) {
         this.learningResourceType = learningResourceType;
     }
+
 
     public String getInterativityLevel() {
         return interativityLevel;
@@ -168,54 +161,6 @@ public class LearningMaterial {
 
     public void setLearningStyleReflexiveValue(int learningStyleReflexiveValue) {
         this.learningStyleReflexiveValue = learningStyleReflexiveValue;
-    }
-
-    public int getLearningStyleSensorialValue() {
-        return learningStyleSensorialValue;
-    }
-
-    public void setLearningStyleSensorialValue(int learningStyleSensorialValue) {
-        this.learningStyleSensorialValue = learningStyleSensorialValue;
-    }
-
-    public int getLearningStyleIntuitiveValue() {
-        return learningStyleIntuitiveValue;
-    }
-
-    public void setLearningStyleIntuitiveValue(int learningStyleIntuitiveValue) {
-        this.learningStyleIntuitiveValue = learningStyleIntuitiveValue;
-    }
-
-    public int getLearningStyleVisualValue() {
-        return learningStyleVisualValue;
-    }
-
-    public void setLearningStyleVisualValue(int learningStyleVisualValue) {
-        this.learningStyleVisualValue = learningStyleVisualValue;
-    }
-
-    public int getLearningStyleVerbalValue() {
-        return learningStyleVerbalValue;
-    }
-
-    public void setLearningStyleVerbalValue(int learningStyleVerbalValue) {
-        this.learningStyleVerbalValue = learningStyleVerbalValue;
-    }
-
-    public int getLearningStyleSequencialValue() {
-        return learningStyleSequencialValue;
-    }
-
-    public void setLearningStyleSequencialValue(int learningStyleSequencialValue) {
-        this.learningStyleSequencialValue = learningStyleSequencialValue;
-    }
-
-    public int getLearningStyleGlobalValue() {
-        return learningStyleGlobalValue;
-    }
-
-    public void setLearningStyleGlobalValue(int learningStyleGlobalValue) {
-        this.learningStyleGlobalValue = learningStyleGlobalValue;
     }
     
     

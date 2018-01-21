@@ -23,17 +23,17 @@ public class PPA extends FitnessFunction {
     public PPA() {
     }
 
-    public PPA(ArrayList<LearningMaterial> learningMaterials, Learner learner, ArrayList<Concept> concepts) {
-        this.learningMaterials = learningMaterials;
-        this.learner = learner;
-        this.concepts = concepts;
-        this.listToShuffle = Util.initializeShuffleList(this.learningMaterials.size());
+    public PPA(HashMap<Integer,LearningMaterial> learningMaterials, Learner learner, HashMap<String,Concept> concepts) {
+        PPA.learningMaterials = learningMaterials;
+        PPA.learner = learner;
+        PPA.concepts = concepts;
+        this.listToShuffle = Util.initializeShuffleList(PPA.learningMaterials.size());
     }
 
-    public PPA(ArrayList<LearningMaterial> LearningMaterials, Learner learner, ArrayList<Concept> concepts, Population population) {
-        this.learningMaterials = LearningMaterials;
-        this.learner = learner;
-        this.concepts = concepts;
+    public PPA(HashMap<Integer,LearningMaterial> LearningMaterials, Learner learner, HashMap<String,Concept> concepts, Population population) {
+        PPA.learningMaterials = LearningMaterials;
+        PPA.learner = learner;
+        PPA.concepts = concepts;
         this.population = population;
     }
 

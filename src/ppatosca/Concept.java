@@ -18,17 +18,20 @@ public class Concept {
     public Concept() {
     }
     
-
-    public Concept(int id, String name, String abbreviation, int level) {
+    public Concept(int id, String name, String abbreviation) {
         this.id = id;
         this.name = name;
         this.abbreviation = abbreviation;
-        this.level = level;
     }
+    public Concept(String name, String abbreviation) {
+        this.name = name;
+        this.abbreviation = abbreviation;
 
-    public Concept(int id, String name, ArrayList<LearningMaterial> LMs) {
+    }
+    public Concept(int id, String name,String abbreviation, ArrayList<LearningMaterial> LMs) {
         this.id = id;
         this.name = name;
+        this.abbreviation = abbreviation;
         this.LMs = LMs;
     }
 
