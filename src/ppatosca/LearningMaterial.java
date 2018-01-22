@@ -1,7 +1,8 @@
 package ppatosca;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -15,18 +16,37 @@ public class LearningMaterial {
     private String type;
     private int typicalLearningTime;
     private Double difficulty;
-    private String[] learningResourceType;
+    private String[] learningResourceTypes;
     private String interativityLevel;
     private String interativityType;
     // noLOM
     private ArrayList<Concept> coveredConcepts;
-    private int learningStyleActiveValue;
-    private int learningStyleReflexiveValue;
+
+    private int learningStyleActiveValue = 0;
+    private int learningStyleReflexiveValue = 0;
+    private int learningStyleSensoryValue = 0;
+    private int learningStyleIntuitiveValue = 0;
+    private int learningStyleVisualValue = 0;
+    private int learningStyleVerbalValue = 0;
+    private int learningStyleSequentialValue = 0;
+    private int learningStyleGlobalValue = 0;
 
     public LearningMaterial() {
     }
 
-    public LearningMaterial(int id, String name, String type, String typicalLearningTime, String difficulty, String[] learningResourceType, String interativityLevel, String interativityType) {
+    public LearningMaterial(int id, String name, String type, String typicalLearningTime, String difficulty, String[] learningResourceTypes, String interativityLevel, String interativityType) {
+        List<String> learningResourceTypePossibleActiveValues = Arrays.asList("exercise", "simulation", "questionnaire", "test", "experiment");
+        List<String> learningResourceTypePossibleReflexiveValues = Arrays.asList("simulation", "diagram", "figure", "graphic", "slide", "table", "narrative text", "test", "problem declaration");
+
+        List<String> learningResourceTypePossibleSensoryValues = Arrays.asList("exercise", "simulation", "graphic", "slide", "test", "table", "narrative text", "experiment", "problem declaration");
+        List<String> learningResourceTypePossibleIntuitiveValues = Arrays.asList("simulation", "questionnaire", "diagram", "test", "figure", "slide", "narrative text");
+
+        List<String> learningResourceTypePossibleVisualValues = Arrays.asList("simulation", "diagram", "figure", "graphic", "slide", "table");
+        List<String> learningResourceTypePossibleVerbalValues = Arrays.asList("slide", "narrative text", "reading");
+
+        List<String> learningResourceTypePossibleSequentialValues = Arrays.asList("exercise", "simulation", "diagram", "slide", "narrative text", "experiment");
+        List<String> learningResourceTypePossibleGlobalValues = Arrays.asList("diagram", "figure", "graphic", "slide", "table", "narrative text");
+
         int hour = 0;
         int minute = 0;
         int second = 0;
@@ -36,7 +56,7 @@ public class LearningMaterial {
 
         if (difficulty.equals("very difficult") || difficulty.equals("very difficulty")) {
             this.difficulty = 1d;
-        } else if (difficulty.equals("difficult") || difficulty.equals("difficulty"))  {
+        } else if (difficulty.equals("difficult") || difficulty.equals("difficulty")) {
             this.difficulty = 0.75d;
         } else if (difficulty.equals("easy")) {
             this.difficulty = 0.25d;
@@ -45,33 +65,71 @@ public class LearningMaterial {
         } else {
             this.difficulty = 0.5d;
         }
-        this.learningResourceType = learningResourceType;
 
         typicalLearningTime = typicalLearningTime.replace("PT", "");
         if (typicalLearningTime.contains("H")) {
             hour = Integer.parseInt(typicalLearningTime.split("H")[0]);
-            if (typicalLearningTime.split("H").length == 2) {                
+            if (typicalLearningTime.split("H").length == 2) {
                 typicalLearningTime = typicalLearningTime.split("H")[1];
             }
         }
         if (typicalLearningTime.contains("M")) {
             minute = Integer.parseInt(typicalLearningTime.split("M")[0]);
-            if (typicalLearningTime.split("M").length == 2) {                
+            if (typicalLearningTime.split("M").length == 2) {
                 typicalLearningTime = typicalLearningTime.split("M")[1];
-            }            
+            }
         }
         if (typicalLearningTime.contains("S")) {
             second = Integer.parseInt(typicalLearningTime.replace("S", ""));
         }
-        this.typicalLearningTime = (hour * 360) + (minute * 60) + second;
+        this.typicalLearningTime = (hour * 3600) + (minute * 60) + second;
 
-        this.interativityLevel = interativityLevel;
+        for (String learningResourceType : learningResourceTypes) {
+            if (learningResourceTypePossibleActiveValues.contains(learningResourceType)) {
+                this.learningStyleActiveValue++;
+            }
+            if (learningResourceTypePossibleReflexiveValues.contains(learningResourceType)) {
+                this.learningStyleReflexiveValue++;
+            }
+            if (learningResourceTypePossibleSensoryValues.contains(learningResourceType)) {
+                this.learningStyleSensoryValue++;
+            }
+            if (learningResourceTypePossibleIntuitiveValues.contains(learningResourceType)) {
+                this.learningStyleIntuitiveValue++;
+            }
+            if (learningResourceTypePossibleVisualValues.contains(learningResourceType)) {
+                this.learningStyleVisualValue++;
+            }
+            if (learningResourceTypePossibleVerbalValues.contains(learningResourceType)) {
+                this.learningStyleVerbalValue++;
+            }
+            if (learningResourceTypePossibleSequentialValues.contains(learningResourceType)) {
+                this.learningStyleSequentialValue++;
+            }
+            if (learningResourceTypePossibleGlobalValues.contains(learningResourceType)) {
+                this.learningStyleGlobalValue++;
+            }
 
-        this.interativityType = interativityType;
+        }
+        if (interativityLevel.equals("low")) {
+            this.learningStyleActiveValue += 1;
+        }else if (interativityLevel.equals("medium")) {
+            this.learningStyleActiveValue += 2;
+        }else if(interativityLevel.equals("high")){
+            this.learningStyleActiveValue += 3;
+        }else if(interativityLevel.equals("very high")){
+            this.learningStyleActiveValue += 4;
+        }
         
-        //TODO associate learning style values based on table from the paper
-        this.learningStyleActiveValue = 0;
-        this.learningStyleReflexiveValue = 0;
+        if(interativityType.equals("active")){
+            this.learningStyleActiveValue++;
+        }else if(interativityType.equals("expositive")){
+            this.learningStyleReflexiveValue++;
+        }else if(interativityType.equals("mixed")){
+            this.learningStyleActiveValue++;
+            this.learningStyleReflexiveValue++;           
+        }
+
     }
 
     public String getType() {
@@ -122,14 +180,13 @@ public class LearningMaterial {
         this.coveredConcepts = coveredConcepts;
     }
 
-    public String[] getLearningResourceType() {
-        return learningResourceType;
+    public String[] getLearningResourceTypes() {
+        return learningResourceTypes;
     }
 
-    public void setLearningResourceType(String[] learningResourceType) {
-        this.learningResourceType = learningResourceType;
+    public void setLearningResourceTypes(String[] learningResourceTypes) {
+        this.learningResourceTypes = learningResourceTypes;
     }
-
 
     public String getInterativityLevel() {
         return interativityLevel;
@@ -162,8 +219,54 @@ public class LearningMaterial {
     public void setLearningStyleReflexiveValue(int learningStyleReflexiveValue) {
         this.learningStyleReflexiveValue = learningStyleReflexiveValue;
     }
-    
-    
+
+    public int getLearningStyleSensoryValue() {
+        return learningStyleSensoryValue;
+    }
+
+    public void setLearningStyleSensoryValue(int learningStyleSensoryValue) {
+        this.learningStyleSensoryValue = learningStyleSensoryValue;
+    }
+
+    public int getLearningStyleIntuitiveValue() {
+        return learningStyleIntuitiveValue;
+    }
+
+    public void setLearningStyleIntuitiveValue(int learningStyleIntuitiveValue) {
+        this.learningStyleIntuitiveValue = learningStyleIntuitiveValue;
+    }
+
+    public int getLearningStyleVisualValue() {
+        return learningStyleVisualValue;
+    }
+
+    public void setLearningStyleVisualValue(int learningStyleVisualValue) {
+        this.learningStyleVisualValue = learningStyleVisualValue;
+    }
+
+    public int getLearningStyleVerbalValue() {
+        return learningStyleVerbalValue;
+    }
+
+    public void setLearningStyleVerbalValue(int learningStyleVerbalValue) {
+        this.learningStyleVerbalValue = learningStyleVerbalValue;
+    }
+
+    public int getLearningStyleSequentialValue() {
+        return learningStyleSequentialValue;
+    }
+
+    public void setLearningStyleSequentialValue(int learningStyleSequentialValue) {
+        this.learningStyleSequentialValue = learningStyleSequentialValue;
+    }
+
+    public int getLearningStyleGlobalValue() {
+        return learningStyleGlobalValue;
+    }
+
+    public void setLearningStyleGlobalValue(int learningStyleGlobalValue) {
+        this.learningStyleGlobalValue = learningStyleGlobalValue;
+    }
 
     @Override
     public String toString() {

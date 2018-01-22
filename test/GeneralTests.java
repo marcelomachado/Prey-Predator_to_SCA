@@ -14,12 +14,12 @@ public class GeneralTests {
     
 
     public static void main(String[] args) {
-//        if (Objects.equals(Math.round(25.211d), Math.round(25.21d))) {
-//            System.out.println("Igual");
-//        }
-//        for (int i = 0; i < 128; i++) {
-//            System.out.println(Integer.toBinaryString(i));
-//        }
+        if (Objects.equals(Math.round(25.211d), Math.round(25.21d))) {
+            System.out.println("Igual");
+        }
+        for (int i = 0; i < 128; i++) {
+            System.out.println(Integer.toBinaryString(i));
+        }
 
         //printBin("", 4);
         binaryVectorPermutation(vector,vector.length);

@@ -618,8 +618,8 @@ public class PPA extends FitnessFunction {
         ArrayList<Individual> individuals = new ArrayList<>();
         for (int i = 0; i < individualsQuantity; i++) {
             Individual individual = new Individual(i, individualSize);
-            individual.setPrey(generateRandomPrey(individualSize)); //usefull
-            //individual.setPrey(generateIndividualTest()); // test
+           // individual.setPrey(generateRandomPrey(individualSize)); //usefull
+            individual.setPrey(generateIndividualTest()); // test
             individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
             individuals.add(individual);
 
@@ -662,7 +662,7 @@ public class PPA extends FitnessFunction {
         //int[] prey = new int[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
         //int[] prey = new int[]{0, 0, 1, 0, 0};
         //int[] prey = new int[]{1, 1, 1, 1, 1};
-        int[] prey = new int[]{0, 1, 1, 0, 0};
+        int[] prey = new int[]{1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0};
         //int[] prey = new int[]{1, 0, 0, 0, 0};
         //int[] prey = new int[]{0, 1, 1, 0, 0};
         //int[] prey = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
@@ -697,6 +697,9 @@ public class PPA extends FitnessFunction {
             case 8:
                 // Concepts + Balance + difficulty + Time
                 return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
+            case 9:
+                 // Concepts + Balance + difficulty + Time
+                return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey),learningStyleObjetiveFunction(learningStyleActiveReflexiveObjetiveFunction(prey),learningStyleSensoryIntuitiveObjetiveFunction(prey),learningStyleVisualVerbalObjetiveFunction(prey),learningStyleSequentialGlobalObjetiveFunction(prey))), 2);
             default:
                 // Concepts + Balance + difficulty + Time
                 return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
