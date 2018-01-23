@@ -175,8 +175,8 @@ public class Course {
                         learningGoals.add(concepts.get(learnerLearningGoal));
                     }
                     String registrationCode = ccp_info[0];
-                    int learnerLowerTime = Integer.parseInt(ccp_info[1]);
-                    int learnerUpperTime = Integer.parseInt(ccp_info[2]);
+                    float learnerLowerTime = Float.parseFloat(ccp_info[1]);
+                    float learnerUpperTime = Float.parseFloat(ccp_info[2]);
                     int atvref = Integer.parseInt(ccp_info[3]);
                     int senint = Integer.parseInt(ccp_info[4]);
                     int visver = Integer.parseInt(ccp_info[5]);

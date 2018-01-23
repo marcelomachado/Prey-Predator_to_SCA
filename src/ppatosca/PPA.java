@@ -618,8 +618,8 @@ public class PPA extends FitnessFunction {
         ArrayList<Individual> individuals = new ArrayList<>();
         for (int i = 0; i < individualsQuantity; i++) {
             Individual individual = new Individual(i, individualSize);
-           // individual.setPrey(generateRandomPrey(individualSize)); //usefull
-            individual.setPrey(generateIndividualTest()); // test
+            individual.setPrey(generateRandomPrey(individualSize)); //usefull
+            //individual.setPrey(generateIndividualTest()); // test
             individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
             individuals.add(individual);
 
@@ -662,8 +662,8 @@ public class PPA extends FitnessFunction {
         //int[] prey = new int[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
         //int[] prey = new int[]{0, 0, 1, 0, 0};
         //int[] prey = new int[]{1, 1, 1, 1, 1};
-        int[] prey = new int[]{1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0};
-        //int[] prey = new int[]{1, 0, 0, 0, 0};
+        int[] prey = new int[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0};
+        //int[] prey = new int[]{1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 };
         //int[] prey = new int[]{0, 1, 1, 0, 0};
         //int[] prey = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 

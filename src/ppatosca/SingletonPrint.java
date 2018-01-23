@@ -31,4 +31,7 @@ public final class SingletonPrint {
         System.out.println(out);
     }
     
+    public void free(){
+        out.delete(0, out.length());
+    }
 }

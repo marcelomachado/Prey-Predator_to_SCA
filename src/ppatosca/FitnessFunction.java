@@ -187,11 +187,10 @@ public class FitnessFunction {
                 else{
                     sum+=Math.abs(0 - learner.getAtvref()); 
                 }                   
-                sum/=6;
             }
         }
 
-        return (qntt != 0) ? (sum / qntt) : COURSE_COMPLETED;
+        return (qntt != 0) ? ((sum/6)/qntt) : COURSE_COMPLETED;
     }
     // 06
     public static double learningStyleSensoryIntuitiveObjetiveFunction(int[] individual) {
@@ -212,11 +211,11 @@ public class FitnessFunction {
                 else{
                     sum+=Math.abs(0 - learner.getSenint()); 
                 }                   
-                sum/=6;
+                
             }
         }
 
-        return (qntt != 0) ? (sum / qntt) : COURSE_COMPLETED;
+        return (qntt != 0) ? ((sum/6) / qntt) : COURSE_COMPLETED;
     }
     // 07
     public static double learningStyleVisualVerbalObjetiveFunction(int[] individual) {
@@ -237,11 +236,11 @@ public class FitnessFunction {
                 else{
                     sum+=Math.abs(0 - learner.getVisver()); 
                 }                   
-                sum/=6;
+
             }
         }
 
-        return (qntt != 0) ? (sum / qntt) : COURSE_COMPLETED;
+        return (qntt != 0) ? ((sum/6) / qntt) : COURSE_COMPLETED;
     }
     
     // 08
@@ -263,11 +262,10 @@ public class FitnessFunction {
                 else{
                     sum+=Math.abs(0 - learner.getSeqglo()); 
                 }                   
-                sum/=6;
             }
         }
 
-        return (qntt != 0) ? (sum / qntt) : COURSE_COMPLETED;
+        return (qntt != 0) ? ((sum/6) / qntt) : COURSE_COMPLETED;
     }
 
 
