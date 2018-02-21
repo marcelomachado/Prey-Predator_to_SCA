@@ -36,9 +36,9 @@ public class LearningMaterial {
 
     public LearningMaterial(int id, String name, String type, String typicalLearningTime, String difficulty, String[] learningResourceTypes, String interativityLevel, String interativityType) {
         List<String> learningResourceTypePossibleActiveValues = Arrays.asList("exercise", "simulation", "questionnaire", "test", "experiment");
-        List<String> learningResourceTypePossibleReflexiveValues = Arrays.asList("simulation", "diagram", "figure", "graphic", "slide", "table", "narrative text", "test", "problem declaration");
+        List<String> learningResourceTypePossibleReflexiveValues = Arrays.asList("simulation", "diagram", "figure", "graphic", "slide", "table", "narrative text", "test", "problems declaration");
 
-        List<String> learningResourceTypePossibleSensoryValues = Arrays.asList("exercise", "simulation", "graphic", "slide", "test", "table", "narrative text", "experiment", "problem declaration");
+        List<String> learningResourceTypePossibleSensoryValues = Arrays.asList("exercise", "simulation", "graphic", "slide", "test", "table", "narrative text", "experiment", "problems declaration");
         List<String> learningResourceTypePossibleIntuitiveValues = Arrays.asList("simulation", "questionnaire", "diagram", "test", "figure", "slide", "narrative text");
 
         List<String> learningResourceTypePossibleVisualValues = Arrays.asList("simulation", "diagram", "figure", "graphic", "slide", "table");
@@ -55,15 +55,17 @@ public class LearningMaterial {
         this.type = type;
 
         if (difficulty.equals("very difficult") || difficulty.equals("very difficulty")) {
-            this.difficulty = 1d;
+            this.difficulty = 5d;
         } else if (difficulty.equals("difficult") || difficulty.equals("difficulty")) {
-            this.difficulty = 0.75d;
+            this.difficulty = 4d;
         } else if (difficulty.equals("easy")) {
-            this.difficulty = 0.25d;
+            this.difficulty = 2d;
         } else if (difficulty.equals("very easy")) {
-            this.difficulty = 0d;
-        } else {
-            this.difficulty = 0.5d;
+            this.difficulty = 1d;
+        } else if(difficulty.equals("medium")){           
+            this.difficulty = 3d;
+        } else{
+            System.out.println("Dificuldade não mapeada: "+ difficulty);
         }
 
         typicalLearningTime = typicalLearningTime.replace("PT", "");
@@ -119,6 +121,10 @@ public class LearningMaterial {
             this.learningStyleActiveValue += 3;
         }else if(interativityLevel.equals("very high")){
             this.learningStyleActiveValue += 4;
+        }else if(interativityLevel.equals("very low")){
+           // Apenas para debug
+        } else{
+            System.out.println("nivel de interatividade não mapeado: "+interativityLevel);
         }
         
         if(interativityType.equals("active")){
@@ -128,6 +134,8 @@ public class LearningMaterial {
         }else if(interativityType.equals("mixed")){
             this.learningStyleActiveValue++;
             this.learningStyleReflexiveValue++;           
+        }else{
+            System.out.println("Tipo de interatividade não mapeado: "+interativityType);
         }
 
     }

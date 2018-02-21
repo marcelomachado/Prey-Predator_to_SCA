@@ -59,26 +59,21 @@ public class PPAtoSCA {
                 //System.out.println("Fim");
 //        printer.out();
                 //System.out.println(bestIndividual.toString());
-              
+
                 String sequencing = "";
+                int tempo = 0;
                 for (int i = 0; i < bestIndividual.getSize(); i++) {
-                    if (bestIndividual.getPrey()[i] == 1) {                        
+                    if (bestIndividual.getPrey()[i] == 1) {
                         sequencing += i + " ";
+                        tempo += course.getLearningMaterials().get(i).getTypicalLearningTime();
                     }
                 }
-                System.out.println(learner.getRegistrationCode() + "\t" + sequencing.trim()+"\t"+bestIndividual.getSurvivalValue());
-                txtFile.append(learner.getRegistrationCode() + "\t" + sequencing.trim()+"\t"+bestIndividual.getSurvivalValue()+"\n");
+                System.out.println(learner.getRegistrationCode() + "\t" + sequencing.trim() + "\t" + bestIndividual.getSurvivalValue() + "\t" + tempo + "\t" + learner.getUpperTime());
+                txtFile.append(learner.getRegistrationCode() + "\t" + sequencing.trim() + "\t" + bestIndividual.getSurvivalValue() + "\n");
                 learnerCurriculumSequencing.put(learner.getRegistrationCode(), sequencing.trim());
             }
             txtFile.close();
         }
 
-        //System.out.println();
-        //for (Individual ind : bestIndividuals) {
-        // for (int i = 0; i < ind.getPrey().length; i++) {
-        //System.out.print(ind.getPrey()[i] + " ");
-        //   }
-        //System.out.println("Survival value: " + ind.getSurvivalValue());
-        // }
     }
 }

@@ -25,6 +25,7 @@ public class LearningStyle {
             int learnerSenInt, int learningMaterialSen, int learningMaterialInt,
             int learnerVisVer, int learningMaterialVis, int learningMaterialVer,
             int learnerSeqGlo, int learningMaterialSeq, int learningMaterialGlo) {
+        
         int learningMaterialMaxAtv = 6;
         int learningMaterialMaxRef = 6;
         int atvRef;

@@ -83,6 +83,7 @@ public class Course {
             Element xmlElement;
             for (File lomFIle : lomFIles) {
                 xmlElement = Util.readXMLFile(lomFIle);
+                //System.out.println(lomFIle.getName());
                 try {
                     int materialId = Integer.parseInt(xmlElement.getElementsByTagName("entry").item(0).getTextContent());
                     //TODO alterar parara capturar lista de tecnical types;
@@ -119,7 +120,7 @@ public class Course {
 
                     learningMaterials.put(materialId, learningMaterial);
                 } catch (NullPointerException e) {
-                    System.out.println("Problema no arquivo " + lomFIle.getName());
+                    System.out.println("Problema " + e.toString() + " no arquivo: " + lomFIle.getName());
                 }
             }
             /**
@@ -136,22 +137,26 @@ public class Course {
                 for (int i = 2; i < ccp_info.length; i++) {
                     String conceptAbbreviation = ccp_info[i];
                     Concept conceptMaterial = concepts.get(conceptAbbreviation);
-                    // Insert concept in material list
-                    if (learningMaterial.getCoveredConcepts() == null) {
-                        ArrayList<Concept> coveredConcepts = new ArrayList<>();
-                        coveredConcepts.add(conceptMaterial);
-                        learningMaterial.setCoveredConcepts(coveredConcepts);
-                    } else {
-                        learningMaterial.getCoveredConcepts().add(conceptMaterial);
-                    }
+                    try {
+                        // Insert concept in material list
+                        if (learningMaterial.getCoveredConcepts() == null) {
+                            ArrayList<Concept> coveredConcepts = new ArrayList<>();
+                            coveredConcepts.add(conceptMaterial);
+                            learningMaterial.setCoveredConcepts(coveredConcepts);
+                        } else {
+                            learningMaterial.getCoveredConcepts().add(conceptMaterial);
+                        }
 
-                    // Insert material in concept list
-                    if (conceptMaterial.getLMs() == null) {
-                        ArrayList<LearningMaterial> lMs = new ArrayList<>();
-                        lMs.add(learningMaterial);
-                        conceptMaterial.setLMs(lMs);
-                    } else {
-                        conceptMaterial.getLMs().add(learningMaterial);
+                        // Insert material in concept list
+                        if (conceptMaterial.getLMs() == null) {
+                            ArrayList<LearningMaterial> lMs = new ArrayList<>();
+                            lMs.add(learningMaterial);
+                            conceptMaterial.setLMs(lMs);
+                        } else {
+                            conceptMaterial.getLMs().add(learningMaterial);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
 
@@ -204,16 +209,20 @@ public class Course {
                 String conceptAbbreviation = ccp_info[1];
                 Double conceptScore = Double.parseDouble(ccp_info[2]);
                 Learner learner = learners.get(learnerRegistrationCode);
-                
+
                 concept = concepts.get(conceptAbbreviation);
-                // Normalize score
-                conceptScore = (conceptScore - 1)/4;
-                if (learner.getScore() == null) {
-                    score = new HashMap<>();
-                    score.put(concept, conceptScore);
-                    learner.setScore(score);
-                } else {
-                    learner.getScore().put(concept, conceptScore);
+                try {
+                    // Normalize score
+                    //conceptScore = (conceptScore - 1) / 4;
+                    if (learner.getScore() == null) {
+                        score = new HashMap<>();
+                        score.put(concept, conceptScore);
+                        learner.setScore(score);
+                    } else {
+                        learner.getScore().put(concept, conceptScore);
+                    }
+                } catch (Exception e) {
+
                 }
 
                 line = br.readLine();

@@ -621,6 +621,7 @@ public class PPA extends FitnessFunction {
             individual.setPrey(generateRandomPrey(individualSize)); //usefull
             //individual.setPrey(generateIndividualTest()); // test
             individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
+            //System.out.println(individual.getSurvivalValue());
             individuals.add(individual);
 
             if (individual.getSurvivalValue() > worst_survival_value) {
@@ -662,7 +663,7 @@ public class PPA extends FitnessFunction {
         //int[] prey = new int[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
         //int[] prey = new int[]{0, 0, 1, 0, 0};
         //int[] prey = new int[]{1, 1, 1, 1, 1};
-        int[] prey = new int[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0};
+        int[] prey = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
         //int[] prey = new int[]{1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 };
         //int[] prey = new int[]{0, 1, 1, 0, 0};
         //int[] prey = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
@@ -699,10 +700,13 @@ public class PPA extends FitnessFunction {
                 return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
             case 9:
                  // Concepts + Balance + difficulty + Time
-                return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey),learningStyleObjetiveFunction(learningStyleActiveReflexiveObjetiveFunction(prey),learningStyleSensoryIntuitiveObjetiveFunction(prey),learningStyleVisualVerbalObjetiveFunction(prey),learningStyleSequentialGlobalObjetiveFunction(prey))), 2);
+                
+                //3ª Semana return Util.round(executeFitnessFunction(0.4*conceptsObjetiveFunction(prey), 0.001*timeObjetiveFunction(prey), 0.2*balanceObjetiveFunction(prey), 0.2*difficultyObjetiveFunction(prey),0.2*learningStyleObjetiveFunction(learningStyleActiveReflexiveObjetiveFunction(prey),learningStyleSensoryIntuitiveObjetiveFunction(prey),learningStyleVisualVerbalObjetiveFunction(prey),learningStyleSequentialGlobalObjetiveFunction(prey))), 3);
+                // 4ª semana    
+                return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), (1d/600d)*timeObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey),learningStyleObjetiveFunction(learningStyleActiveReflexiveObjetiveFunction(prey),learningStyleSensoryIntuitiveObjetiveFunction(prey),learningStyleVisualVerbalObjetiveFunction(prey),learningStyleSequentialGlobalObjetiveFunction(prey))), 3);
             default:
                 // Concepts + Balance + difficulty + Time
-                return Util.round(executeFitnessFunction(conceptsObjetiveFunction(prey), timeObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
+                return Util.round(executeFitnessFunction(0.25*conceptsObjetiveFunction(prey), 0.25*timeObjetiveFunction(prey), balanceObjetiveFunction(prey), difficultyObjetiveFunction(prey)), 2);
         }
 
     }
