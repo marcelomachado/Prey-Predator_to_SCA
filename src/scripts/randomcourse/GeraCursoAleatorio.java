@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -109,8 +108,7 @@ public class GeraCursoAleatorio {
             w.append("<entry>" + Integer.toString(i) + "</entry>\n");
             w.append("<title><string language=\"pt-BR\">a</string>\n"
                     + "</title>\n");
-            w.append("<technical><format>video/mp4</format>\n");
-            w.append("<educational>\n");
+            w.append("<technical><format>video/mp4</format></technical>\n");
             int h = new Random().nextInt(24);
             String hora = (h != 0) ? Integer.toString(h) + "H" : "";
 
@@ -184,7 +182,6 @@ public class GeraCursoAleatorio {
                 w.append("<learningResourceType><source>LOMv1.0</source>\n" +
 "<value>"+tipos.get(j)+"</value></learningResourceType>\n");
             }
-            buffWrite.append("\n");
             w.append("</educational>\n");
             w.append("</lom>");
             w.close();
