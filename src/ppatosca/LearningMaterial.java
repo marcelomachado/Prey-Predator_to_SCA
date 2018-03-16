@@ -54,18 +54,26 @@ public class LearningMaterial {
         this.name = name;
         this.type = type;
 
-        if (difficulty.equals("very difficult") || difficulty.equals("very difficulty")) {
-            this.difficulty = 5d;
-        } else if (difficulty.equals("difficult") || difficulty.equals("difficulty")) {
-            this.difficulty = 4d;
-        } else if (difficulty.equals("easy")) {
-            this.difficulty = 2d;
-        } else if (difficulty.equals("very easy")) {
-            this.difficulty = 1d;
-        } else if(difficulty.equals("medium")){           
-            this.difficulty = 3d;
-        } else{
-            System.out.println("Dificuldade não mapeada: "+ difficulty);
+        switch (difficulty) {
+            case "very difficult":
+                this.difficulty = 5d;
+                break;
+        //System.out.print(id+"&"+difficulty+"&");
+            case "difficult":
+                this.difficulty = 4d;
+                break;
+            case "easy":
+                this.difficulty = 2d;
+                break;
+            case "very easy":
+                this.difficulty = 1d;
+                break;
+            case "medium":
+                this.difficulty = 3d;
+                break;
+            default:
+                System.out.println("Dificuldade não mapeada: "+ difficulty);
+                break;
         }
 
         typicalLearningTime = typicalLearningTime.replace("PT", "");
@@ -85,7 +93,7 @@ public class LearningMaterial {
             second = Integer.parseInt(typicalLearningTime.replace("S", ""));
         }
         this.typicalLearningTime = (hour * 3600) + (minute * 60) + second;
-
+        //System.out.print(this.typicalLearningTime+"&");
         for (String learningResourceType : learningResourceTypes) {
             if (learningResourceTypePossibleActiveValues.contains(learningResourceType)) {
                 this.learningStyleActiveValue++;
@@ -113,31 +121,69 @@ public class LearningMaterial {
             }
 
         }
-        if (interativityLevel.equals("low")) {
-            this.learningStyleActiveValue += 1;
-        }else if (interativityLevel.equals("medium")) {
-            this.learningStyleActiveValue += 2;
-        }else if(interativityLevel.equals("high")){
-            this.learningStyleActiveValue += 3;
-        }else if(interativityLevel.equals("very high")){
-            this.learningStyleActiveValue += 4;
-        }else if(interativityLevel.equals("very low")){
-           // Apenas para debug
-        } else{
-            System.out.println("nivel de interatividade não mapeado: "+interativityLevel);
+        switch (interativityLevel) {
+            case "low":
+                this.learningStyleActiveValue += 1;
+                break;
+            case "medium":
+                this.learningStyleActiveValue += 2;
+                break;
+            case "high":
+                this.learningStyleActiveValue += 3;
+                break;
+            case "very high":
+                this.learningStyleActiveValue += 4;
+                break;
+        // Apenas para debug
+            case "very low":
+                break;
+            default:
+                System.out.println("nivel de interatividade não mapeado: "+interativityLevel);
+                break;
         }
         
-        if(interativityType.equals("active")){
-            this.learningStyleActiveValue++;
-        }else if(interativityType.equals("expositive")){
-            this.learningStyleReflexiveValue++;
-        }else if(interativityType.equals("mixed")){
-            this.learningStyleActiveValue++;
-            this.learningStyleReflexiveValue++;           
-        }else{
-            System.out.println("Tipo de interatividade não mapeado: "+interativityType);
+        switch (interativityType) {
+            case "active":
+                this.learningStyleActiveValue++;
+                break;
+            case "expositive":
+                this.learningStyleReflexiveValue++;
+                break;
+            case "mixed":
+                this.learningStyleActiveValue++;
+                this.learningStyleReflexiveValue++;
+                break;
+            default:
+                System.out.println("Tipo de interatividade não mapeado: "+interativityType);
+                break;
         }
-
+        //        if(learningStyleActiveValue > learningStyleReflexiveValue)
+//            System.out.print("ativo,");
+//        else if(learningStyleActiveValue < learningStyleReflexiveValue)
+//            System.out.print("reflexivo,");
+//        else
+//            System.out.print("neutro,");
+//        System.out.print("&");
+//        if(learningStyleSensoryValue >learningStyleIntuitiveValue)
+//            System.out.print("sensorial,");
+//        else if(learningStyleSensoryValue >learningStyleIntuitiveValue)
+//            System.out.print("intuitivo,");
+//        else
+//            System.out.print("neutro,");
+//        
+//        if(learningStyleVisualValue >learningStyleVerbalValue)
+//            System.out.print("visual,");
+//        else if(learningStyleVisualValue <learningStyleVerbalValue)
+//            System.out.print("verbal,");
+//        else
+//            System.out.print("neutro,");        
+//        if(learningStyleSequentialValue >learningStyleGlobalValue)
+//            System.out.print("sequencial");
+//        else if(learningStyleSequentialValue <learningStyleGlobalValue)
+//            System.out.print("global");
+//        else
+//            System.out.print("neutro");
+//        System.out.println("");
     }
 
     public String getType() {

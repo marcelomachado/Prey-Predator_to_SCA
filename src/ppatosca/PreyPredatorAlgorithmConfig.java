@@ -45,6 +45,11 @@ public class PreyPredatorAlgorithmConfig {
 
     }
 
+    public PreyPredatorAlgorithmConfig() {
+    }
+    
+    
+
     public int getMovementQuantity() {
         return movementQuantity;
     }

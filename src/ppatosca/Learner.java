@@ -33,60 +33,120 @@ public class Learner {
         this.upperTime = (int)(upperTime*3600);
         
         this.learningGoals = learningGoals;
-        if (atvref == -11 || atvref == -9) {
-            this.atvref = -3;
-        } else if (atvref == -7 || atvref == -5) {
-            this.atvref = -2;
-        } else if (atvref == -3 || atvref == -1) {
-            this.atvref = -1;
-        }else if (atvref == 11 || atvref == 9) {
-            this.atvref = 3;
-        } else if (atvref == 7 || atvref == 5) {
-            this.atvref = 2;
-        } else if (atvref == 3 || atvref == 1) {
-            this.atvref = 1;
+        switch (atvref) {
+            case -11:
+            case -9:
+                this.atvref = -3;
+                break;
+            case -7:
+            case -5:
+                this.atvref = -2;
+                break;
+            case -3:
+            case -1:
+                this.atvref = -1;
+                break;
+            case 11:
+            case 9:
+                this.atvref = 3;
+                break;
+            case 7:
+            case 5:
+                this.atvref = 2;
+                break;
+            case 3:
+            case 1:
+                this.atvref = 1;
+                break;
+            default:
+                break;
         }
         
-        if (senint == -11 || senint == -9) {
-            this.senint = -3;
-        } else if (senint == -7 || senint == -5) {
-            this.senint = -2;
-        } else if (senint == -3 || senint == -1) {
-            this.senint = -1;
-        }else if (senint == 11 || senint == 9) {
-            this.senint = 3;
-        } else if (senint == 7 || senint == 5) {
-            this.senint = 2;
-        } else if (senint == 3 || senint == 1) {
-            this.senint = 1;
+        switch (senint) {
+            case -11:
+            case -9:
+                this.senint = -3;
+                break;
+            case -7:
+            case -5:
+                this.senint = -2;
+                break;
+            case -3:
+            case -1:
+                this.senint = -1;
+                break;
+            case 11:
+            case 9:
+                this.senint = 3;
+                break;
+            case 7:
+            case 5:
+                this.senint = 2;
+                break;
+            case 3:
+            case 1:
+                this.senint = 1;
+                break;
+            default:
+                break;
         }
         
-        if (visver == -11 || visver == -9) {
-            this.visver = -3;
-        } else if (visver == -7 || visver == -5) {
-            this.visver = -2;
-        } else if (visver == -3 || visver == -1) {
-            this.visver = -1;
-        }else if (visver == 11 || visver == 9) {
-            this.visver = 3;
-        } else if (visver == 7 || visver == 5) {
-            this.visver = 2;
-        } else if (visver == 3 || visver == 1) {
-            this.visver = 1;
+        switch (visver) {
+            case -11:
+            case -9:
+                this.visver = -3;
+                break;
+            case -7:
+            case -5:
+                this.visver = -2;
+                break;
+            case -3:
+            case -1:
+                this.visver = -1;
+                break;
+            case 11:
+            case 9:
+                this.visver = 3;
+                break;
+            case 7:
+            case 5:
+                this.visver = 2;
+                break;
+            case 3:
+            case 1:
+                this.visver = 1;
+                break;
+            default:
+                break;
         }
         
-        if (seqglo == -11 || seqglo == -9) {
-            this.seqglo = -3;
-        } else if (seqglo == -7 || seqglo == -5) {
-            this.seqglo = -2;
-        } else if (seqglo == -3 || seqglo == -1) {
-            this.seqglo = -1;
-        }else if (seqglo == 11 || seqglo == 9) {
-            this.seqglo = 3;
-        } else if (seqglo == 7 || seqglo == 5) {
-            this.seqglo = 2;
-        } else if (seqglo == 3 || seqglo == 1) {
-            this.seqglo = 1;
+        switch (seqglo) {
+            case -11:
+            case -9:
+                this.seqglo = -3;
+                break;
+            case -7:
+            case -5:
+                this.seqglo = -2;
+                break;
+            case -3:
+            case -1:
+                this.seqglo = -1;
+                break;
+            case 11:
+            case 9:
+                this.seqglo = 3;
+                break;
+            case 7:
+            case 5:
+                this.seqglo = 2;
+                break;
+            case 3:
+            case 1:
+                this.seqglo = 1;
+                break;
+            default:
+                break;
         }
         
     }

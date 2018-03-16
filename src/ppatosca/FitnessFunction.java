@@ -28,7 +28,7 @@ public class FitnessFunction {
     }
 
     public void setLearner(Learner learner) {
-        this.learner = learner;
+        FitnessFunction.learner = learner;
     }
 
     public static HashMap<String, Concept> getConcepts() {
@@ -50,17 +50,15 @@ public class FitnessFunction {
     // O1
     public static double conceptsObjetiveFunction(int[] individual) {
         int penalty = 0;
-        double sum = 0d;
-        Map<Concept,Integer> learningGoalsCoveredByTheindividual = new HashMap<>();
+        Map<Concept,Integer> learningGoalsCoveredByIndividual = new HashMap<>();
         for (int i = 0; i < individual.length; i++) {
             if (individual[i] == 1) {
-
                 LearningMaterial learningMaterial = learningMaterials.get(i);
                 //Each covered concept
                 for(Concept coveredConcept: learningMaterial.getCoveredConcepts()){
                     // Penalty: Learner don't have to learn this concept                    
                     if(learner.getLearningGoals().contains(coveredConcept)){
-                        learningGoalsCoveredByTheindividual.put(coveredConcept, 0);
+                        learningGoalsCoveredByIndividual.put(coveredConcept, 0);
                     }
                     else{
                         penalty++;
@@ -69,33 +67,32 @@ public class FitnessFunction {
             }
         }
         //Penalty: Don't cover all learning goals
-        penalty +=2*(learner.getLearningGoals().size() - learningGoalsCoveredByTheindividual.size());
+        penalty = learner.getLearningGoals().stream().filter((learningGoal) -> (!learningGoalsCoveredByIndividual.containsKey(learningGoal))).map((_item) -> 2).reduce(penalty, Integer::sum);        
 
         return penalty;
     }
-//    public static double conceptsObjetiveFunction(int[] individual) {
-//        int qntt = 0;
-//        double sum = 0d;
-//
-//        for (int i = 0; i < individual.length; i++) {
-//            if (individual[i] == 1) {
-//                qntt++;
-//
-//                for (Concept concept : concepts.values()){ 
-//                    if(concept.getLMs() == null){
-//                        sum += Math.abs(-((learner.getLearningGoals().contains(concept)) ? 1 : 0));
-//                    }
-//                    else{
-//                        sum += Math.abs((concept.getLMs().contains(learningMaterials.get(i)) ? 1 : 0) - ((learner.getLearningGoals().contains(concept)) ? 1 : 0));
-//                        
-//                    }
-//                }
-//            }
-//        }
-//
-//        return (qntt != 0) ? (sum / qntt) : COURSE_COMPLETED;
-//    }
+    public static double conceptsObjetiveFunctionArtigo(int[] individual) {
+        int qntt = 0;
+        double sum = 0d;
 
+        for (int i = 0; i < individual.length; i++) {
+            if (individual[i] == 1) {
+                qntt++;
+
+                for (Concept concept : concepts.values()){ 
+                    if(concept.getLMs() == null){
+                        sum += Math.abs(-((learner.getLearningGoals().contains(concept)) ? 1 : 0));
+                    }
+                    else{
+                        sum += Math.abs((concept.getLMs().contains(learningMaterials.get(i)) ? 1 : 0) - ((learner.getLearningGoals().contains(concept)) ? 1 : 0));
+                        
+                    }
+                }
+            }
+        }
+
+        return (qntt != 0) ? (sum / qntt) : COURSE_COMPLETED;
+    }
     // O2
     public static double difficultyObjetiveFunction(int[] individual) {
         double sum = 0d;
@@ -125,7 +122,6 @@ public class FitnessFunction {
 
         return (qntt != 0) ? (sum / qntt) : COURSE_COMPLETED;
     }
-
     // O3
     public static double timeObjetiveFunction(int[] individual) {
         int totalTime = 0;
@@ -137,12 +133,12 @@ public class FitnessFunction {
         }
         return Math.max(0d, (learner.getLowerTime() - totalTime)) + Math.max(0d, (totalTime - learner.getUpperTime()));
     }
-
     // O4
     public static double balanceObjetiveFunction(int[] individual) {
         double sum = 0d;
         int learningGoal;
         int i;
+        int relevantConcepts;
 
         // Dividend: the amount of concepts covered by learn material
         int conceptsCoveredByLM = 0;
@@ -162,7 +158,7 @@ public class FitnessFunction {
         double div = (double) conceptsCoveredByLM / conceptsLearnShouldLearn;
 
         for (Concept concept : concepts.values()) {
-            int relevantConcepts = 0;
+            relevantConcepts = 0;
             // Elj
             learningGoal = ((learner.getLearningGoals().contains(concept)) ? 1 : 0);
             if (learningGoal == 0) {
@@ -191,95 +187,64 @@ public class FitnessFunction {
         }
         return leaningStyleValue / learningStyles.length;
     }
-
     // O5
     public static double learningStyleActiveReflexiveObjetiveFunction(int[] individual) {
         int qntt = 0;
         double sum = 0d;
+        int materialActiveReflexiveValue;
 
         for (int i = 0; i < individual.length; i++) {
             if (individual[i] == 1) {
                 qntt++;
-                int materialActiveReflexiveValue = learningMaterials.get(i).getLearningStyleActiveValue() - learningMaterials.get(i).getLearningStyleReflexiveValue();
-
-                if (materialActiveReflexiveValue > 0) {
-                    sum += Math.abs(3 - learner.getAtvref());
-                } else if (materialActiveReflexiveValue < 0) {
-                    sum += Math.abs(-3 - learner.getAtvref());
-                } else {
-                    sum += Math.abs(0 - learner.getAtvref());
-                }
+                materialActiveReflexiveValue = learningMaterials.get(i).getLearningStyleActiveValue() - learningMaterials.get(i).getLearningStyleReflexiveValue();
+                sum += Math.abs(3*Integer.signum(materialActiveReflexiveValue) - learner.getAtvref());
             }
         }
 
         return (qntt != 0) ? ((sum) / qntt) : COURSE_COMPLETED;
     }
-
     // 06
     public static double learningStyleSensoryIntuitiveObjetiveFunction(int[] individual) {
         int qntt = 0;
+        int materialSensoryIntuitiveValue;
         double sum = 0d;
 
         for (int i = 0; i < individual.length; i++) {
             if (individual[i] == 1) {
                 qntt++;
-                int materialSensoryIntuitiveValue = learningMaterials.get(i).getLearningStyleSensoryValue() - learningMaterials.get(i).getLearningStyleIntuitiveValue();
-
-                if (materialSensoryIntuitiveValue > 0) {
-                    sum += Math.abs(3 - learner.getSenint());
-                } else if (materialSensoryIntuitiveValue < 0) {
-                    sum += Math.abs(-3 - learner.getSenint());
-                } else {
-                    sum += Math.abs(0 - learner.getSenint());
-                }
-
+                materialSensoryIntuitiveValue = learningMaterials.get(i).getLearningStyleSensoryValue() - learningMaterials.get(i).getLearningStyleIntuitiveValue();
+                sum += Math.abs(3*Integer.signum(materialSensoryIntuitiveValue) - learner.getSenint());
             }
         }
 
         return (qntt != 0) ? ((sum) / qntt) : COURSE_COMPLETED;
     }
-
     // 07
     public static double learningStyleVisualVerbalObjetiveFunction(int[] individual) {
         int qntt = 0;
+        int materialVisualVerbalValue;
         double sum = 0d;
 
         for (int i = 0; i < individual.length; i++) {
             if (individual[i] == 1) {
                 qntt++;
-                int materialVisualVerbalValue = learningMaterials.get(i).getLearningStyleVisualValue() - learningMaterials.get(i).getLearningStyleVerbalValue();
-
-                if (materialVisualVerbalValue > 0) {
-                    sum += Math.abs(3 - learner.getVisver());
-                } else if (materialVisualVerbalValue < 0) {
-                    sum += Math.abs(-3 - learner.getVisver());
-                } else {
-                    sum += Math.abs(0 - learner.getVisver());
-                }
-
+                materialVisualVerbalValue = learningMaterials.get(i).getLearningStyleVisualValue() - learningMaterials.get(i).getLearningStyleVerbalValue();
+                sum += Math.abs(3*Integer.signum(materialVisualVerbalValue) - learner.getVisver());                
             }
         }
 
         return (qntt != 0) ? ((sum) / qntt) : COURSE_COMPLETED;
     }
-
     // 08
     public static double learningStyleSequentialGlobalObjetiveFunction(int[] individual) {
         int qntt = 0;
         double sum = 0d;
-
+        int materialSequentialGlobalValue;
         for (int i = 0; i < individual.length; i++) {
             if (individual[i] == 1) {
                 qntt++;
-                int materialSequentialGlobalValue = learningMaterials.get(i).getLearningStyleSequentialValue() - learningMaterials.get(i).getLearningStyleGlobalValue();
-
-                if (materialSequentialGlobalValue > 0) {
-                    sum += Math.abs(3 - learner.getSeqglo());
-                } else if (materialSequentialGlobalValue < 0) {
-                    sum += Math.abs(-3 - learner.getSeqglo());
-                } else {
-                    sum += Math.abs(0 - learner.getSeqglo());
-                }
+                materialSequentialGlobalValue = learningMaterials.get(i).getLearningStyleSequentialValue() - learningMaterials.get(i).getLearningStyleGlobalValue();
+                sum += Math.abs(3*Integer.signum(materialSequentialGlobalValue) - learner.getSeqglo());  
             }
         }
 

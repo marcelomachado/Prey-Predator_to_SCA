@@ -1,4 +1,4 @@
-package geracursoaleatorio;
+package scripts.randomcourse;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

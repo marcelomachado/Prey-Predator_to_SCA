@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,8 +13,6 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,17 +30,12 @@ public class Util {
             sortByValueDesc(Map<K, V> map) {
         List<Map.Entry<K, V>> list
                 = new LinkedList<>(map.entrySet());
-        Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
-            @Override
-            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
-                return (o2.getValue()).compareTo(o1.getValue());
-            }
-        });
+        Collections.sort(list, (Map.Entry<K, V> o1, Map.Entry<K, V> o2) -> (o2.getValue()).compareTo(o1.getValue()));
 
         Map<K, V> result = new LinkedHashMap<>();
-        for (Map.Entry<K, V> entry : list) {
+        list.stream().forEach((entry) -> {
             result.put(entry.getKey(), entry.getValue());
-        }
+        });
         return result;
     }
 
@@ -51,17 +43,12 @@ public class Util {
             sortByValueAsc(Map<K, V> map) {
         List<Map.Entry<K, V>> list
                 = new LinkedList<>(map.entrySet());
-        Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
-            @Override
-            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
-                return (o1.getValue()).compareTo(o2.getValue());
-            }
-        });
+        Collections.sort(list, (Map.Entry<K, V> o1, Map.Entry<K, V> o2) -> (o1.getValue()).compareTo(o2.getValue()));
 
         Map<K, V> result = new LinkedHashMap<>();
-        for (Map.Entry<K, V> entry : list) {
+        list.stream().forEach((entry) -> {
             result.put(entry.getKey(), entry.getValue());
-        }
+        });
         return result;
     }
 
