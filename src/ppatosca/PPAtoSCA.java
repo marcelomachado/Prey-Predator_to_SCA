@@ -25,24 +25,18 @@ public class PPAtoSCA {
 
         /**
          * Population
-         */
-            //HashMap<String, String> learnerCurriculumSequencing = new HashMap<>();
-        
+         */        
         for (Learner learner : course.getLearners().values()) {
             //printer.free();
             PPA ppa = new PPA(course.getLearningMaterials(), learner, course.getConcepts());
-            ppa.setFitnessFunctions(ffc.getFitnessFunction());
-            // ArrayList<Individual> bestIndividuals = new ArrayList<>();
+            ppa.setFitnessFunctions(ffc.getFitnessFunction());            
             ppa.generatePopulation(ppac.getPopulationSize(), course.getLearningMaterials().size());
             ppa.updatePopulation(ppac.getMaxBestPreyQuantity(), ppac.getMaxPredatorQuantity());
-            //printer.addString("População Original\n");
-            //printer.addString(ppa.getPopulation().toString());
             
             long tempoInicial = System.currentTimeMillis();
             for (int j = 1; j <= ppac.getMovementQuantity(); j++) {
                 Population populationClone = Population.clone(ppa.getPopulation());
-                //printer.addString("\n\n************** MOVIMENTO " + j + " **************\n");
-                //printer.addString(populationClone.toString());
+                //printer.addString("\n\n************** MOVIMENTO " + j + " **************\n");                
                 for (Individual individual : populationClone.getIndividuals()) {
                     ppa.moveIndividual(individual, ppac.getDistanceFactor(), ppac.getSurvivalValueFactor(), ppac.getMinimumStepLength(), ppac.getMaximumStepLength(), 1, ppac.getFollowedPreysQuantity(), ppac.getFollowUp(), ppac.getQuantityBestRandomPreys());
                 }
