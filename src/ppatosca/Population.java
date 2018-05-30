@@ -79,8 +79,7 @@ public class Population {
 
         return returned;
     }
-    // TODO: verificar validade deste método após alteração da popuulação
-    // TODO: criar um método de teste
+    
     protected static Population clone(Population original) throws CloneNotSupportedException {
         Population clone = new Population();
         clone.individuals = new ArrayList<>();
