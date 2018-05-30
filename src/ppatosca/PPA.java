@@ -69,12 +69,6 @@ public class PPA extends FitnessFunction {
 
         Object[] orderedPopulation = populationSurvivalValues.keySet().toArray();
         int bestPreyId = (int) orderedPopulation[0];
-        //if (populationSurvivalValues.get(bestPreyId) == 0d) {
-            //printer.addString("Melhor sequência encontrada:" + Util.preyToString(population.getIndividuals().get(bestPreyId).getPrey()));
-            //System.out.println("Melhor sequência encontrada:" + Util.preyToString(population.getIndividuals().get(bestPreyId).getPrey()));
-            //Util.printPrey(population.getIndividuals().get((int) orderedPopulation[0]).getPrey());
-            //System.exit(0);
-       // }
 
         ArrayList<Integer> bestPreysIds = new ArrayList<>();
         Double bestSurvivalValue = populationSurvivalValues.get(bestPreyId);
@@ -130,17 +124,11 @@ public class PPA extends FitnessFunction {
      */
     public Individual moveIndividual(Individual prey, Double distanceFactor, Double survivalValueFactor, int minimumStepLength, int maximumStepLength, int selector, int followedPreysQuantity, Double followUp, int quantityBestRandomPreys) throws CloneNotSupportedException {
         if (population.getBestPreysId().contains(prey.getId())) {
-            ////printer.addString("A presa que irá movimentar neste momento é a melhor presa: " + prey.getId()+"\n");
-            //localSearch(individual);
             moveBestPrey(prey, minimumStepLength);
-            ////printer.addString("");
         } else if (prey.getId() == population.getPredatorId()) {
-            ////printer.addString("Movendo o predador: " + prey.getId()+"\n"); // debug
             movePredator(prey, minimumStepLength, maximumStepLength, followedPreysQuantity);
         } else {
-            ////printer.addString("Presa comum se movimentando: " + prey.getId()+"\n");
             movePrey(prey, distanceFactor, survivalValueFactor, minimumStepLength, maximumStepLength, quantityBestRandomPreys, followUp, selector);
-
         }
 
         return prey;
@@ -154,13 +142,8 @@ public class PPA extends FitnessFunction {
      * @throws CloneNotSupportedException
      */
     public void moveBestPrey(Individual individual, int minimumStepLength) throws CloneNotSupportedException {
-        ////printer.addString(individual.toString()+"\n");
-        //int[] vet1 = individual.getPrey().clone(); //Apenas para debug
-        ////printer.addString("Gerando vetor randômico com melhor valor de sobrevivência:\n");
         individual.setPrey(generateBestRandomDirection(individual.getPrey(), 10, minimumStepLength));
         individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
-       // //printer.addString(Util.diff(vet1, individual.getPrey())+"\n");// debug
-        ////printer.addString(individual.toString()+"\n");
     }
 
     public void movePreySimilarity(Individual individual, Double distanceFactor, Double survivalValueFactor, int minimumStepLength, int maximumStepLength, int randomBestPreyQuantity, Double followUp, int returnSelector) throws CloneNotSupportedException {
@@ -171,9 +154,6 @@ public class PPA extends FitnessFunction {
         Individual predator = population.getIndividuals().get(population.getPredatorId());
 
         if (rand <= followUp) { // Follow best preys
-            //printer.addString("Esta presa irá se movimentar seguindo as melhores presas\n");
-            //printer.addString(individual.toString()+"\n");
-
             Double followValue;
             Map<Integer, Double> followUpValue = new HashMap<>();
             ArrayList<Individual> individuals = population.getIndividuals();
@@ -182,22 +162,16 @@ public class PPA extends FitnessFunction {
                 if (ind.getSurvivalValue() < individual.getSurvivalValue()) {
                     followValue = Util.round((distanceFactor * Util.cosineSimilarity(individual, ind)) + (survivalValueFactor * (1 / ind.getSurvivalValue())), 2);
                     followUpValue.put(ind.getId(), followValue);
-                    //printer.addString("seguida: " + ind.getId() + " follow up: " + followValue+"\n");
                 }
             }
 
             stepLength = stepLengthBySimilarity(individual, predator, maximumStepLength, 1d);
-            //stepLength = stepLengthByHamming(individual, predator, maximumStepLength, 1d);
             switch (returnSelector) {
                 case 1:
-                    //printer.addString("Se movendo de acordo com a roleta em " + stepLength + " passos:\n");
                     moveDirectionByRoulletResult(individual, followUpValue, stepLength);
-                    //printer.addString(individual.toString()+"\n");
                     break;
                 case 2:
-                    ////printer.addString("Se movendo de acordo com a maioria em "+stepLength+" passos: ");
                     moveDirectionByMajority(individual, followUpValue, stepLength);
-                    ////printer.addString(individual.toString());
                     break;
                 default:
                     moveDirectionByMajority(individual, followUpValue, stepLength);
@@ -207,30 +181,16 @@ public class PPA extends FitnessFunction {
             steps = shuffleSteps(stepLength);
             // Generate random prey: yr
             int[] bestRandomPrey = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, minimumStepLength);
-            //printer.addString("Melhor presa gerada (yr)\n");
-            //Util.printPrey(bestRandomPrey); //debug
-            //printer.addString("Seguindo melhor presa randômica (yr) em " + stepLength + " passos.\n");
-//            int[] vet1 = individual.getPrey().clone(); //Apenas para debug
-            //Util.printPrey(vet1); //debug
             for (int i = 0; i < stepLength; i++) {
                 individual.getPrey()[steps.get(i)] = bestRandomPrey[steps.get(i)];
             }
-
-            //printer.addString(Util.diff(vet1, individual.getPrey()));
-            //Util.printPrey(individual.getPrey()); //debug
         } else { // Generate to best directions and compare witch is better, i.e. away from predator
-
-            //printer.addString("Esta presa está fugindo do predador (yr e -yr)\n");
             int[] randomDirection = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, minimumStepLength);
             int[] randomDirectionComplement = Util.generateComplementaryVector(randomDirection);
-//            int[] vet1 = individual.getPrey().clone(); //Apenas para debug
-            //printer.addString(individual.toString()+"\n");
             uniformProbabilityDistribution = new Random().nextDouble();
             stepLength = (int) Math.round(maximumStepLength * uniformProbabilityDistribution);
             steps = shuffleSteps(stepLength);
-            //printer.addString("Quantidade de passos = " + stepLength);
-            if (Util.cosineSimilarity(randomDirection, predator.getPrey()) <= Util.cosineSimilarity(randomDirectionComplement, predator.getPrey())) {
-                //if (Util.hammingDistance(randomDirection, predator.getPrey()) >= Util.hammingDistance(randomDirectionComplement, predator.getPrey())) {
+            if (Util.cosineSimilarity(randomDirection, predator.getPrey()) <= Util.cosineSimilarity(randomDirectionComplement, predator.getPrey())) {                
                 for (int i = 0; i < stepLength; i++) {
                     individual.getPrey()[steps.get(i)] = randomDirection[steps.get(i)];
                 }
@@ -239,13 +199,9 @@ public class PPA extends FitnessFunction {
                     individual.getPrey()[steps.get(i)] = randomDirectionComplement[steps.get(i)];
                 }
             }
-            //printer.addString(Util.diff(vet1, individual.getPrey())+"\n"); // debug
-            //Util.printPrey(individual.getPrey()); //debug
         }
         // Update SV
         individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
-        //printer.addString("Novo valor de sobrevivência " + individual.getSurvivalValue()+"\n");
-
     }
 
     /**
@@ -272,8 +228,6 @@ public class PPA extends FitnessFunction {
         List<Integer> steps;
 
         if (rand <= followUp) { // Follow best preys
-            ////printer.addString("Esta presa irá se movimentar seguindo as melhores presas\n");
-            ////printer.addString(individual.toString()+"\n");
             Double followValue;
             Map<Integer, Double> followUpValue = new HashMap<>();
             ArrayList<Individual> individuals = population.getIndividuals();
@@ -285,26 +239,15 @@ public class PPA extends FitnessFunction {
                     survivalValueComponent = followedIndividual.getSurvivalValue() / individual.getSurvivalValue();
                     followValue = (2 + (-distanceFactor * distanceComponent - survivalValueFactor * survivalValueComponent)) / 2;
                     followUpValue.put(followedIndividual.getId(), followValue);
-                    ////printer.addString("seguida: " + followedIndividual.getId() + " follow up: " + followValue+"\n");
                 }
             }
-
-            //stepLength = stepLengthBySimilarity(individual,predator, maximumStepLength, 1d);
             stepLength = stepLengthByHamming(individual, predator, maximumStepLength, 1d);
-           // //printer.addString("Quantidade de passos na direção das melhores = " + stepLength+"\n");
             switch (returnSelector) {
-                case 1:
-                    ////printer.addString("Se movendo de acordo com a roleta \n");
-//                    int[] vet1 = individual.getPrey().clone(); //debug                    
+                case 1:               
                     moveDirectionByRoulletResult(individual, followUpValue, stepLength);
-                    //Util.printPrey(vet1); // debug
-                    ////printer.addString(Util.diff(vet1, individual.getPrey())+"\n"); // debug
-                    ////printer.addString(individual.toString()); // debug
                     break;
                 case 2:
-                    ////printer.addString("Se movendo de acordo com a maioria em " + stepLength + " passos: \n");
                     moveDirectionByMajority(individual, followUpValue, stepLength);
-                    ////printer.addString(individual.toString());
                     break;
                 default:
                     moveDirectionByMajority(individual, followUpValue, stepLength);
@@ -315,27 +258,16 @@ public class PPA extends FitnessFunction {
             steps = shuffleSteps(stepLength);
             // Generate random prey: yr
             int[] bestRandomPrey = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, minimumStepLength);
-            ////printer.addString("Melhor presa gerada (yr)\n");
-            //Util.printPrey(bestRandomPrey); //debug
-            ////printer.addString("Seguindo melhor presa randômica (yr) em " + stepLength + " passos.\n");
-            //int[] vet1 = individual.getPrey().clone(); //Apenas para debug
-           // Util.printPrey(vet1); //debug
             for (int i = 0; i < stepLength; i++) {
                 individual.getPrey()[steps.get(i)] = bestRandomPrey[steps.get(i)];
             }
 
-            ////printer.addString(Util.diff(vet1, individual.getPrey())+"\n"); // debug
-            //Util.printPrey(individual.getPrey()); //debug
-        } else { // Generate to best directions and compare witch is better, i.e. away from predator
-            ////printer.addString("Esta presa está fugindo do predador (yr e -yr)\n");
+        } else { // Generate to best directions and compare witch is better, i.e. away from predator            
             int[] randomDirection = generateBestRandomDirection(individual.getPrey(), randomBestPreyQuantity, minimumStepLength);
             int[] randomDirectionComplement = Util.generateComplementaryVector(randomDirection);
-//            int[] vet1 = individual.getPrey().clone(); //Apenas para debug
-            ////printer.addString(individual.toString()+"\n"); // debug
             uniformProbabilityDistribution = new Random().nextDouble();
             stepLength = (int) Math.round(maximumStepLength * uniformProbabilityDistribution);
-            steps = shuffleSteps(stepLength);
-            ////printer.addString("Quantidade de passos = " + stepLength+"\n"); // debug
+            steps = shuffleSteps(stepLength);            
             if (Util.hammingDistance(randomDirection, predator.getPrey()) >= Util.hammingDistance(randomDirectionComplement, predator.getPrey())) {
                 for (int i = 0; i < stepLength; i++) {
                     individual.getPrey()[steps.get(i)] = randomDirection[steps.get(i)];
@@ -345,14 +277,10 @@ public class PPA extends FitnessFunction {
                     individual.getPrey()[steps.get(i)] = randomDirectionComplement[steps.get(i)];
                 }
             }
-            ////printer.addString(Util.diff(vet1, individual.getPrey())+"\n"); // debug
-            //Util.printPrey(individual.getPrey()); //debug
         }
 
         // Update SV
         individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
-        ////printer.addString("Novo valor de sobrevivência " + individual.getSurvivalValue()+"\n");//debug
-
     }
 
     /**
@@ -363,44 +291,33 @@ public class PPA extends FitnessFunction {
      * @param followedPreysQuantity the number of worst preys predator will
      * follow
      */
-    public void movePredator(Individual predator, int minimumStepLength, int maximumStepLength, int followedPreysQuantity) {
-        //printer.addString(predator.toString());
+    public void movePredator(Individual predator, int minimumStepLength, int maximumStepLength, int followedPreysQuantity) {        
         // Position of the second worst prey
         int followedPreyPosition = population.getOrdinaryPreysIds().size() - 1;
         // Second worst prey
         Individual followedPrey = population.getIndividuals().get(population.getOrdinaryPreysIds().get(followedPreyPosition));
 
         int[] randomDirection = generateRandomPrey(followedPrey.getSize());
-        //printer.addString("Direção randômica yr gerada:\n");//debug
-        //Util.printPrey(randomDirection); //debug
         Double uniformProbabilityDistribution = new Random().nextDouble();
 
         int stepLength;
         List<Integer> steps;
         // lambda_max * [0..1]
         stepLength = (int) Math.round(maximumStepLength * uniformProbabilityDistribution);
-        steps = shuffleSteps(stepLength);
-
-        //printer.addString("Direção randômica seguida em " + stepLength + " passos\n");//debug
+        steps = shuffleSteps(stepLength);        
         //Random Direction yr
         for (int i = 0; i < stepLength; i++) {
             predator.getPrey()[steps.get(i)] = randomDirection[steps.get(i)];
-        }
-        //printer.addString(Util.diff(randomDirection, predator.getPrey())+"\n"); // debug
+        }        
         uniformProbabilityDistribution = new Random().nextDouble();
         stepLength = (int) Math.round(minimumStepLength * uniformProbabilityDistribution);
         steps = shuffleSteps(stepLength);
-        //printer.addString("Seguindo segunda pior presa " + followedPrey.getId() + " em " + stepLength + " passos\n"); //debug
-        //int[] vet1 = predator.getPrey().clone(); // debug
         //Following the second worst prey        
         for (int i = 0; i < stepLength; i++) {
             predator.getPrey()[steps.get(i)] = followedPrey.getPrey()[steps.get(i)];
         }
-        //printer.addString(Util.diff(vet1, predator.getPrey())+"\n"); //debug
 
         predator.setSurvivalValue(generateSurvivalValue(predator.getPrey()));
-        //printer.addString(predator.toString()); //debug
-
     }
 
     /**
@@ -543,13 +460,6 @@ public class PPA extends FitnessFunction {
             }
 
         }
-        if (isBetter) // debug
-        {
-            //printer.addString("Encontrada uma melhor presa\n"); // debug
-        } else // debug
-        {
-            //printer.addString("Nenhuma presa melhor\n"); // debug
-        }
         return bestPrey;
     }
 
@@ -591,17 +501,14 @@ public class PPA extends FitnessFunction {
         int roulletQuantity = 0;
         for (Double value : followUpValue.values()) {
             div += Math.pow(value, 2);
-        }
-        //printer.addString("Roleta: "); // debug
+        }        
         for (Integer key : followUpValue.keySet()) {
             roulletQuantity += Math.round((Math.pow(followUpValue.get(key), 2) / div) * (followUpValue.size()));
             for (int i = roulletStart; i < roullet.length && i < roulletQuantity; i++) {
-                roullet[i] = key;
-                //printer.addString(roullet[i] + " ");// debug
+                roullet[i] = key;                
             }
             roulletStart = roulletQuantity;
         }
-        //printer.addString("\n");
         return roullet;
     }
 
@@ -621,31 +528,11 @@ public class PPA extends FitnessFunction {
         ArrayList<Individual> individuals = new ArrayList<>();
         for (int i = 0; i < individualsQuantity; i++) {
             Individual individual = new Individual(i, individualSize);
-            individual.setPrey(generateRandomPrey(individualSize)); //usefull
-            //individual.setPrey(generateIndividualTest()); // test
-            individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));
-            //System.out.println(individual.getSurvivalValue());
+            individual.setPrey(generateRandomPrey(individualSize)); //usefull            
+            individual.setSurvivalValue(generateSurvivalValue(individual.getPrey()));            
             individuals.add(individual);
-
-//            if (individual.getSurvivalValue() > worst_survival_value) {
-//                worst_survival_value = individual.getSurvivalValue();
-//                worst_survival_value_id = i;
-//            }
-//            if (individual.getSurvivalValue() < better_survival_value) {
-//                better_survival_value = individual.getSurvivalValue();
-//                best_survival_value_id = i;
-//            }
-
         }
         Population pop = new Population(individuals);
-//        if (pop.getBestPreysId() == null) {
-//            //ArrayList<Integer> bestPreysIds = new ArrayList<>();
-//           // bestPreysIds.add(best_survival_value_id);
-//        } else {
-//            pop.getBestPreysId().add(best_survival_value_id);
-//        }
-//        //pop.setBestPreyId(best_survival_value_id);
-//        pop.setPredatorId(worst_survival_value_id);
         this.population = pop;
     }
 
@@ -660,17 +547,7 @@ public class PPA extends FitnessFunction {
 
     // debug
     public static int[] generateIndividualTest() {
-
-        //int[] prey = new int[]{1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1};
-        //int[] prey = new int[]{0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0};
-        //int[] prey = new int[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
-        //int[] prey = new int[]{0, 0, 1, 0, 0};
-        //int[] prey = new int[]{1, 1, 1, 1, 1};
         int[] prey = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
-        //int[] prey = new int[]{1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 };
-        //int[] prey = new int[]{0, 1, 1, 0, 0};
-        //int[] prey = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-
         return prey;
     }
 
