@@ -25,10 +25,8 @@ public class Learner {
     }
 
     public Learner(String registrationCode, float lowerTime, float upperTime, int atvref, int senint, int visver, int seqglo, ArrayList<Concept> learningGoals) {
-        this.registrationCode = registrationCode;
-        
-        // Time is in hours than we must convert to seconds
-        
+        this.registrationCode = registrationCode;        
+        // Time is in hours than we must convert to seconds        
         this.lowerTime = (int)(lowerTime*3600);
         this.upperTime = (int)(upperTime*3600);
         
