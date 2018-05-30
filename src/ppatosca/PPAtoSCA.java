@@ -18,16 +18,12 @@ public class PPAtoSCA {
         Individual bestIndividual = null;
         Individual individualX;
         Course course = new Course(args[0]);
-        // Configuration: prey predator args 
-        //Configuration:  fitness function args
         FitnessFunctionConfig ffc = new FitnessFunctionConfig(args[2]);
-        //SingletonPrint printer = SingletonPrint.getInstance();
 
         /**
          * Population
          */        
-        for (Learner learner : course.getLearners().values()) {
-            //printer.free();
+        for (Learner learner : course.getLearners().values()) {            
             PPA ppa = new PPA(course.getLearningMaterials(), learner, course.getConcepts());
             ppa.setFitnessFunctions(ffc.getFitnessFunction());            
             ppa.generatePopulation(ppac.getPopulationSize(), course.getLearningMaterials().size());
@@ -41,9 +37,7 @@ public class PPAtoSCA {
                     ppa.moveIndividual(individual, ppac.getDistanceFactor(), ppac.getSurvivalValueFactor(), ppac.getMinimumStepLength(), ppac.getMaximumStepLength(), 1, ppac.getFollowedPreysQuantity(), ppac.getFollowUp(), ppac.getQuantityBestRandomPreys());
                 }
                 ppa.setPopulation(populationClone);
-
                 ppa.updatePopulation(ppac.getMaxBestPreyQuantity(), ppac.getMaxPredatorQuantity());
-
 
                 individualX = ppa.getPopulation().getIndividuals().get(ppa.getPopulation().getBestPreysId().get(0)).clone();
                 if (bestIndividual == null) {
@@ -51,10 +45,8 @@ public class PPAtoSCA {
                 } else if (individualX.getSurvivalValue() < bestIndividual.getSurvivalValue()) {
                     bestIndividual = individualX;
                 }
-
             }
-            tempoFinal = System.currentTimeMillis() - tempoInicial;
-               
+            tempoFinal = System.currentTimeMillis() - tempoInicial;               
         }
         final double fitnessOuter = bestIndividual.getSurvivalValue();
         final long timeOuter = tempoFinal;
