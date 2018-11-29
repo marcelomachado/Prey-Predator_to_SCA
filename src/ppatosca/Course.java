@@ -52,26 +52,7 @@ public class Course {
                 concepts.put(abbreviation, new Concept(conceptName, abbreviation));
                 line = br.readLine();
             }
-//            stream = new FileInputStream(new File(courseConfig.getPrerequisitesFile()));
-//            reader = new InputStreamReader(stream);
-//            br = new BufferedReader(reader);
 
-            /**
-             * Prerequisites
-             */
-//            line = br.readLine();
-//            while (line != null) {
-//                ccp_info = line.split(";");
-//                if (ccp_info.length > 1) {
-//                    ArrayList<Concept> prerequisites = new ArrayList<>();
-//                    for (int i = 1; i < ccp_info.length; i++) {
-//                        prerequisites.add(concepts.get(Integer.parseInt(ccp_info[i])));
-//                    }
-//                    concepts.get(Integer.parseInt(ccp_info[0])).setPrerequisites(prerequisites);
-//                }
-//
-//                line = br.readLine();
-//            }
             /**
              * Learning Materials
              */
@@ -83,7 +64,7 @@ public class Course {
             Element xmlElement;
             for (File lomFIle : lomFIles) {
                 xmlElement = Util.readXMLFile(lomFIle);
-                //System.out.println(lomFIle.getName());
+               
                 try {
                     int materialId = Integer.parseInt(xmlElement.getElementsByTagName("entry").item(0).getTextContent());
                     //TODO alterar parara capturar lista de tecnical types;

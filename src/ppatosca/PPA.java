@@ -11,7 +11,7 @@ import java.util.Random;
 /**
  *
  * @author gtbavi Class with the main implementation of Prey-Pradator Algorithm
- * for Adaptive Course Generation
+ * for Adaptive Curriculum Sequencing problem
  */
 public class PPA extends FitnessFunction {
 
@@ -542,12 +542,6 @@ public class PPA extends FitnessFunction {
         for (int i = 0; i < size; i++) {
             prey[i] = random.nextInt(2);
         }
-        return prey;
-    }
-
-    // debug
-    public static int[] generateIndividualTest() {
-        int[] prey = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
         return prey;
     }
 

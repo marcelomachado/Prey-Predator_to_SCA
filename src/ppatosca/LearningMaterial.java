@@ -57,8 +57,7 @@ public class LearningMaterial {
         switch (difficulty) {
             case "very difficult":
                 this.difficulty = 5d;
-                break;
-        //System.out.print(id+"&"+difficulty+"&");
+                break;        
             case "difficult":
                 this.difficulty = 4d;
                 break;
@@ -92,8 +91,7 @@ public class LearningMaterial {
         if (typicalLearningTime.contains("S")) {
             second = Integer.parseInt(typicalLearningTime.replace("S", ""));
         }
-        this.typicalLearningTime = (hour * 3600) + (minute * 60) + second;
-        //System.out.print(this.typicalLearningTime+"&");
+        this.typicalLearningTime = (hour * 3600) + (minute * 60) + second;       
         for (String learningResourceType : learningResourceTypes) {
             if (learningResourceTypePossibleActiveValues.contains(learningResourceType)) {
                 this.learningStyleActiveValue++;
@@ -157,33 +155,6 @@ public class LearningMaterial {
                 System.out.println("Tipo de interatividade não mapeado: "+interativityType);
                 break;
         }
-        //        if(learningStyleActiveValue > learningStyleReflexiveValue)
-//            System.out.print("ativo,");
-//        else if(learningStyleActiveValue < learningStyleReflexiveValue)
-//            System.out.print("reflexivo,");
-//        else
-//            System.out.print("neutro,");
-//        System.out.print("&");
-//        if(learningStyleSensoryValue >learningStyleIntuitiveValue)
-//            System.out.print("sensorial,");
-//        else if(learningStyleSensoryValue >learningStyleIntuitiveValue)
-//            System.out.print("intuitivo,");
-//        else
-//            System.out.print("neutro,");
-//        
-//        if(learningStyleVisualValue >learningStyleVerbalValue)
-//            System.out.print("visual,");
-//        else if(learningStyleVisualValue <learningStyleVerbalValue)
-//            System.out.print("verbal,");
-//        else
-//            System.out.print("neutro,");        
-//        if(learningStyleSequentialValue >learningStyleGlobalValue)
-//            System.out.print("sequencial");
-//        else if(learningStyleSequentialValue <learningStyleGlobalValue)
-//            System.out.print("global");
-//        else
-//            System.out.print("neutro");
-//        System.out.println("");
     }
 
     public String getType() {
