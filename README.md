@@ -1,4 +1,4 @@
-# Prey-Predator to SCA problem
+# Algoritmo Presa-Predador para o problema de Sequenciamento Curricular Adaptivo
 
 Implementação do Algoritmo Presa-Predador a partir de uma modelagem binária de indíviduos. A discussão do assunto está endereçada
 no artigo "Uma Abordagem Evolutiva para o Problema de Sequenciamento Curricular Adaptativo".
@@ -8,7 +8,7 @@ Embora a implementação esteja focada em um problema específico (Sequenciament
 A abordagem original do Algoritmo Presa-Predador (utilizando um espaço real e não binário) pode ser encontrada no trabalho intitulado : "Prey-Predator Algorithm: A New Metaheuristic Algorithm for Optimization Problems".
 
 
-## Citation
+## Citação
 
 Se você utilizar essa implementação em suas pesquisas, por favor cite o artigo a seguir:
 
