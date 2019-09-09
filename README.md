@@ -13,6 +13,21 @@ A abordagem original do Algoritmo Presa-Predador (utilizando um espaço real e n
 Se você utilizar essa implementação em suas pesquisas, por favor cite o artigo a seguir:
 
 ```bibtex
+@article{machado2019solving,
+  title={Solving the Adaptive Curriculum Sequencing Problem with Prey-Predator Algorithm},
+  author={Machado, Marcelo de Oliveira Costa and Barr{\'e}re, Eduardo and Souza, Jairo},
+  journal={International Journal of Distance Education Technologies (IJDET)},
+  volume={17},
+  number={4},
+  pages={71--93},
+  year={2019},
+  publisher={IGI Global}
+}
+```
+
+ou
+
+```bibtex
 @inproceedings{machado2018abordagem,
   title={Uma Abordagem Evolutiva para o Problema de Sequenciamento Curricular Adaptativo},
   author={Machado, Marcelo and Barr{\'e}re, Eduardo and Souza, Jairo},
